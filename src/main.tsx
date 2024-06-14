@@ -10,7 +10,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 );
 
 // Force update latest version
-if ("serviceWorker" in navigator) {
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
   let refreshing: boolean = false;
 
   navigator.serviceWorker.addEventListener("controllerchange", () => {

@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "coverage": "vitest run --coverage",
+    "storybook": "storybook dev",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "react": "18.2.0",
@@ -15,6 +19,15 @@
     "react-router-dom": "6.23.1"
   },
   "devDependencies": {
+    "@storybook/addon-designs": "8.0.2",
+    "@storybook/addon-essentials": "8.1.9",
+    "@storybook/addon-interactions": "8.1.9",
+    "@storybook/addon-links": "8.1.9",
+    "@storybook/addon-onboarding": "8.1.9",
+    "@storybook/blocks": "8.1.9",
+    "@storybook/react": "8.1.9",
+    "@storybook/react-vite": "8.1.9",
+    "@storybook/test": "8.1.9",
     "@types/node": "20.14.2",
     "@types/react": "18.2.66",
     "@types/react-dom": "18.2.22",
@@ -22,13 +35,19 @@
     "@typescript-eslint/eslint-plugin": "7.2.0",
     "@typescript-eslint/parser": "7.2.0",
     "@vitejs/plugin-react-swc": "3.5.0",
+    "@vitest/coverage-istanbul": "1.6.0",
+    "@vitest/coverage-v8": "1.6.0",
     "eslint": "8.57.0",
     "eslint-import-resolver-typescript": "3.6.1",
+    "eslint-plugin-import": "2.29.1",
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-react-refresh": "0.4.6",
+    "eslint-plugin-storybook": "0.8.0",
+    "storybook": "8.1.9",
     "typescript": "5.2.2",
     "vite": "5.2.0",
-    "vite-plugin-pwa": "0.20.0"
+    "vite-plugin-pwa": "0.20.0",
+    "vitest": "1.6.0"
   },
   "packageManager": "yarn@4.3.0+sha512.1606bef7c84bc7d83b8576063de2fd08f7d69f9939015bed800f9585a002390268ecc777e9feeba7e26e9556aef6beaad4806968db2182ab5dd3e955ab3b9a0b",
   "engines": {

@@ -32,4 +32,12 @@ dist-ssr
 !.yarn/sdks
 !.yarn/versions
 
+# Vitest
+coverage
+
+# Storybook
+*storybook.log
+storybook-static
+
 # Other
+

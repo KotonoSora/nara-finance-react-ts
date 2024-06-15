@@ -23,7 +23,9 @@
     /* Path Aliases */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@library/*": ["nara-ui-library/src/*"],
+      "@library-components/*": ["nara-ui-library/components/*"]
     }
   },
   "include": ["src"],

@@ -77,6 +77,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),
+      "@library": resolve(__dirname, "nara-ui-library/src"),
+      "@library-components": resolve(__dirname, "nara-ui-library/components"),
     },
   },
   build: {

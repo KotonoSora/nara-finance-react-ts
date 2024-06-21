@@ -47,4 +47,5 @@ storybook-static
 /e2e-playwright/**/*-snapshots
 
 # Other
-
+.npmrc
+.yarnrc.yml

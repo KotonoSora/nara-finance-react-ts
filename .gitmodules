@@ -1,4 +1,0 @@
-[submodule "ui-library"]
-	path = nara-ui-library
-	url = git@github.com:KotonoSora/nara-ui-library.git
-	branch = beta-1

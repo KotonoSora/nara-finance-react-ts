@@ -77,17 +77,16 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),
-      "@library": resolve(__dirname, "nara-ui-library/src"),
-      "@library-components": resolve(__dirname, "nara-ui-library/components"),
     },
   },
   build: {
     rollupOptions: {
       output: {
-        entryFileNames: "assets/[name].[hash].js",
-        chunkFileNames: "assets/[name].[hash].js",
-        assetFileNames: "assets/[name].[hash].[ext]",
+        entryFileNames: "js/[name].[hash].js",
+        chunkFileNames: "js/[name].[hash].js",
+        assetFileNames: "[ext]/[name].[hash][extname]",
       },
     },
+    emptyOutDir: true,
   },
 });

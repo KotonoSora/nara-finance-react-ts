@@ -2725,13 +2725,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kotonosora/nara-ui-library@npm:0.0.3-beta-1-path-2":
-  version: 0.0.3-beta-1-path-2
-  resolution: "@kotonosora/nara-ui-library@npm:0.0.3-beta-1-path-2::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kotonosora%2Fnara-ui-library%2F0.0.3-beta-1-path-2%2Fe19f9aec80f08fe7010dd50fd292522830ec63de"
+"@kotonosora/nara-ui-library@npm:0.0.3-beta-1-path-3":
+  version: 0.0.3-beta-1-path-3
+  resolution: "@kotonosora/nara-ui-library@npm:0.0.3-beta-1-path-3::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kotonosora%2Fnara-ui-library%2F0.0.3-beta-1-path-3%2F5305fcbd8fa00b67804bba8a1b376cb0c8f072ba"
   dependencies:
     react: "npm:18.2.0"
     react-dom: "npm:18.2.0"
-  checksum: 10c0/57631dcf273539aeebd08b1895b56e3c6a11c301b79c0ea1f7c516b60f1a283e83426d39d1e01e1bf562195be657da91595059967595ee8fb97540189c32b35c
+  checksum: 10c0/9f8b8d6b44a7d67741246d8dc81964b21ffdd2c90542e40f0ee0e1b2fd09e96260c7390ea4082d64b1979fcabbff2023b26c7c1a42a77e06db7796afa82547d9
   languageName: node
   linkType: hard
 
@@ -10446,7 +10446,7 @@ __metadata:
     "@commitlint/config-conventional": "npm:19.2.2"
     "@commitlint/cz-commitlint": "npm:19.2.0"
     "@commitlint/prompt-cli": "npm:19.3.1"
-    "@kotonosora/nara-ui-library": "npm:0.0.3-beta-1-path-2"
+    "@kotonosora/nara-ui-library": "npm:0.0.3-beta-1-path-3"
     "@playwright/test": "npm:1.44.1"
     "@storybook/addon-designs": "npm:8.0.2"
     "@storybook/addon-essentials": "npm:8.1.9"

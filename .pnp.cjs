@@ -31,7 +31,7 @@ const RAW_RUNTIME_STATE =
           ["@commitlint/config-conventional", "npm:19.2.2"],\
           ["@commitlint/cz-commitlint", "virtual:fe1e13eeac302bf51c1951ee30084d46fad207087a72a7b189c537a84eed94fbeb872478ac813b72f02f118dc532459b3fbbe232e3ce34677dcb7ee0044f24af#npm:19.2.0"],\
           ["@commitlint/prompt-cli", "npm:19.3.1"],\
-          ["@kotonosora/nara-ui-library", "npm:0.0.3-beta-1-path-2::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kotonosora%2Fnara-ui-library%2F0.0.3-beta-1-path-2%2Fe19f9aec80f08fe7010dd50fd292522830ec63de"],\
+          ["@kotonosora/nara-ui-library", "npm:0.0.3-beta-1-path-3::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kotonosora%2Fnara-ui-library%2F0.0.3-beta-1-path-3%2F5305fcbd8fa00b67804bba8a1b376cb0c8f072ba"],\
           ["@playwright/test", "npm:1.44.1"],\
           ["@storybook/addon-designs", "virtual:fe1e13eeac302bf51c1951ee30084d46fad207087a72a7b189c537a84eed94fbeb872478ac813b72f02f118dc532459b3fbbe232e3ce34677dcb7ee0044f24af#npm:8.0.2"],\
           ["@storybook/addon-essentials", "npm:8.1.9"],\
@@ -5035,12 +5035,12 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@kotonosora/nara-ui-library", [\
-      ["npm:0.0.3-beta-1-path-2::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kotonosora%2Fnara-ui-library%2F0.0.3-beta-1-path-2%2Fe19f9aec80f08fe7010dd50fd292522830ec63de", {\
-        "packageLocation": "../../../.yarn/berry/cache/@kotonosora-nara-ui-library-npm-0.0.3-beta-1-path-2-69e20f53e2-10c0.zip/node_modules/@kotonosora/nara-ui-library/",\
+      ["npm:0.0.3-beta-1-path-3::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kotonosora%2Fnara-ui-library%2F0.0.3-beta-1-path-3%2F5305fcbd8fa00b67804bba8a1b376cb0c8f072ba", {\
+        "packageLocation": "../../../.yarn/berry/cache/@kotonosora-nara-ui-library-npm-0.0.3-beta-1-path-3-484c4cfb54-10c0.zip/node_modules/@kotonosora/nara-ui-library/",\
         "packageDependencies": [\
-          ["@kotonosora/nara-ui-library", "npm:0.0.3-beta-1-path-2::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kotonosora%2Fnara-ui-library%2F0.0.3-beta-1-path-2%2Fe19f9aec80f08fe7010dd50fd292522830ec63de"],\
+          ["@kotonosora/nara-ui-library", "npm:0.0.3-beta-1-path-3::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kotonosora%2Fnara-ui-library%2F0.0.3-beta-1-path-3%2F5305fcbd8fa00b67804bba8a1b376cb0c8f072ba"],\
           ["react", "npm:18.2.0"],\
-          ["react-dom", "virtual:69e20f53e217c472670083484566556da7962d7e9a0e39318d10ce1c8f4910a4c8a3223bf64d472369fad77e195f95bf5517b3f67b8b13a0730381424bf9a6e3#npm:18.2.0"]\
+          ["react-dom", "virtual:484c4cfb54ba249015d13462496354e646f20b0a27699e61e185e1fef8fc9d42b991e9085282d0824fe7bfce403590dbd6bdc823468d503d6522ce1bcfd45dd5#npm:18.2.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -15182,7 +15182,7 @@ const RAW_RUNTIME_STATE =
           ["@commitlint/config-conventional", "npm:19.2.2"],\
           ["@commitlint/cz-commitlint", "virtual:fe1e13eeac302bf51c1951ee30084d46fad207087a72a7b189c537a84eed94fbeb872478ac813b72f02f118dc532459b3fbbe232e3ce34677dcb7ee0044f24af#npm:19.2.0"],\
           ["@commitlint/prompt-cli", "npm:19.3.1"],\
-          ["@kotonosora/nara-ui-library", "npm:0.0.3-beta-1-path-2::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kotonosora%2Fnara-ui-library%2F0.0.3-beta-1-path-2%2Fe19f9aec80f08fe7010dd50fd292522830ec63de"],\
+          ["@kotonosora/nara-ui-library", "npm:0.0.3-beta-1-path-3::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kotonosora%2Fnara-ui-library%2F0.0.3-beta-1-path-3%2F5305fcbd8fa00b67804bba8a1b376cb0c8f072ba"],\
           ["@playwright/test", "npm:1.44.1"],\
           ["@storybook/addon-designs", "virtual:fe1e13eeac302bf51c1951ee30084d46fad207087a72a7b189c537a84eed94fbeb872478ac813b72f02f118dc532459b3fbbe232e3ce34677dcb7ee0044f24af#npm:8.0.2"],\
           ["@storybook/addon-essentials", "npm:8.1.9"],\
@@ -17565,10 +17565,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:69e20f53e217c472670083484566556da7962d7e9a0e39318d10ce1c8f4910a4c8a3223bf64d472369fad77e195f95bf5517b3f67b8b13a0730381424bf9a6e3#npm:18.2.0", {\
-        "packageLocation": "./.yarn/__virtual__/react-dom-virtual-b0e7ab201e/4/.yarn/berry/cache/react-dom-npm-18.2.0-dd675bca1c-10c0.zip/node_modules/react-dom/",\
+      ["virtual:484c4cfb54ba249015d13462496354e646f20b0a27699e61e185e1fef8fc9d42b991e9085282d0824fe7bfce403590dbd6bdc823468d503d6522ce1bcfd45dd5#npm:18.2.0", {\
+        "packageLocation": "./.yarn/__virtual__/react-dom-virtual-a1f5bf9b0b/4/.yarn/berry/cache/react-dom-npm-18.2.0-dd675bca1c-10c0.zip/node_modules/react-dom/",\
         "packageDependencies": [\
-          ["react-dom", "virtual:69e20f53e217c472670083484566556da7962d7e9a0e39318d10ce1c8f4910a4c8a3223bf64d472369fad77e195f95bf5517b3f67b8b13a0730381424bf9a6e3#npm:18.2.0"],\
+          ["react-dom", "virtual:484c4cfb54ba249015d13462496354e646f20b0a27699e61e185e1fef8fc9d42b991e9085282d0824fe7bfce403590dbd6bdc823468d503d6522ce1bcfd45dd5#npm:18.2.0"],\
           ["@types/react", null],\
           ["loose-envify", "npm:1.4.0"],\
           ["react", "npm:18.2.0"],\

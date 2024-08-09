@@ -4581,9 +4581,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nara-vite-react-boilerplate@workspace:.":
+"nara-finance@workspace:.":
   version: 0.0.0-use.local
-  resolution: "nara-vite-react-boilerplate@workspace:."
+  resolution: "nara-finance@workspace:."
   dependencies:
     "@eslint/js": "npm:9.8.0"
     "@types/node": "npm:22.1.0"

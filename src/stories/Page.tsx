@@ -3,7 +3,7 @@ import React from "react";
 import { Header } from "./Header";
 import "./page.css";
 import reactLogo from "@/assets/react.svg";
-import viteLogo from "/vite.svg";
+import viteLogo from "#/vite.svg";
 
 type User = {
   name: string;
@@ -65,7 +65,7 @@ export const Page: React.FC = () => {
             rel="noopener noreferrer"
           >
             Storybook tutorials
-          </a>
+          </a>{" "}
           . Read more in the{" "}
           <a
             href="https://storybook.js.org/docs"
@@ -73,7 +73,7 @@ export const Page: React.FC = () => {
             rel="noopener noreferrer"
           >
             docs
-          </a>
+          </a>{" "}
           .
         </p>
         <div className="tip-wrapper">

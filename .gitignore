@@ -46,6 +46,13 @@ storybook-static
 /playwright/.cache/
 /e2e-playwright/**/*-snapshots
 
+# SonarQube
+.scannerwork
+sonar-project.properties
+
+# Vitest
+coverage
+
 # Other
 .npmrc
 .yarnrc.yml

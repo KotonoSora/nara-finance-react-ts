@@ -1,12 +1,18 @@
 import React from "react";
 
-import { MyButton, MyTitle, Typography } from "@kotonosora/nara-ui-library";
+import {
+  MyButton,
+  MyTitle,
+  Typography,
+  Logo,
+} from "@kotonosora/nara-ui-library";
 
 const Home: React.FC = () => {
   return (
     <div>
       <h2>Home Page</h2>
       <div>huhu bug</div>
+      <Logo />
       <MyTitle label="title from library " />
       <MyButton primary label="button from library" />
       <Typography text={`Typography here weight 400`} theme="default" />

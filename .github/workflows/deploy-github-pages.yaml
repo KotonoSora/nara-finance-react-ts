@@ -1,36 +1,51 @@
-# .github/workflows/deploy-github-pages.yaml
-
-# Workflow name
-name: Build and Publish Page to GitHub Pages
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
 
 on:
-  # Event for the workflow to run on
+  # Runs on pushes targeting the default branch
   push:
-    branches:
-      - 'gh-pages' # Replace with the branch you want to deploy from
+    branches: ['gh-pages']
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets the GITHUB_TOKEN permissions to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# List of jobs
+# Allow one concurrent deployment
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
 jobs:
+  # Single deploy job since we're just deploying
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    # Job steps
     steps:
-      # Manual Checkout
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       # Set up Bun
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2.0.1
 
-      #👇 Add Storybook build and deploy to GitHub Pages as a step in the workflow
-      - uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
+      - name: Install dependencies
+        run: bun install
+      - name: Build
+        run: bun run build
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          install_command: bun install # default: npm ci
-          build_command: bun run build # default: npm run build-storybook
-          path: dist # default: dist/storybook
-          checkout: false # default: true
+          # Upload dist folder
+          path: './dist'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -6,7 +6,8 @@ import { defineConfig } from 'vite'
 import pwa from './plugins/pwa'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig({  
+  base: 'nara-finance-react-ts',
   plugins: [react(), pwa],
   resolve: {
     alias: {

@@ -17,6 +17,9 @@ permissions:
 # List of jobs
 jobs:
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     # Job steps
     steps:
@@ -27,10 +30,17 @@ jobs:
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2.0.1
 
-      #👇 Add Storybook build and deploy to GitHub Pages as a step in the workflow
-      - uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
+      - name: Install dependencies
+        run: bun install
+      - name: Build
+        run: bun run build
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          install_command: bun install # default: npm ci
-          build_command: bun run build # default: npm run build-storybook
-          path: dist # default: dist/storybook
-          checkout: false # default: true
+          # Upload dist folder
+          path: './dist'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

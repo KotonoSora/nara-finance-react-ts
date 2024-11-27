@@ -7,7 +7,7 @@ export default VitePWA({
     name: 'nara',
     short_name: 'nara',
     description: 'nara',
-    start_url: '/',
+    start_url: '/nara-finance-react-ts',
     display: 'standalone',
     background_color: '#fff',
     theme_color: '#fff',

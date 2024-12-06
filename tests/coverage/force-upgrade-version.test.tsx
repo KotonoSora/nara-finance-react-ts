@@ -68,7 +68,7 @@ describe('forceUpgradeVersion', () => {
 
     forceUpgradeVersion()
 
-    const serviceWorkerUrl = import.meta.env.BASE_URL === '/' ? '/sw.js' : import.meta.env.BASE_URL + '/sw.js'
+    const serviceWorkerUrl = import.meta.env.BASE_URL + 'sw.js'
 
     expect(navigator.serviceWorker.register).toHaveBeenCalledWith(serviceWorkerUrl)
   })

@@ -9,7 +9,7 @@ export function forceUpgradeVersion() {
       window.location.reload()
     })
 
-    const serviceWorkerUrl = import.meta.env.BASE_URL === '/' ? '/sw.js' : import.meta.env.BASE_URL + '/sw.js'
+    const serviceWorkerUrl = import.meta.env.BASE_URL + 'sw.js'
 
     navigator.serviceWorker.register(serviceWorkerUrl).then((registration: ServiceWorkerRegistration) => {
       registration.addEventListener('updatefound', () => {

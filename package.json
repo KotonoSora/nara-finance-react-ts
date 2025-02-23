@@ -1,11 +1,11 @@
 {
-  "name": "@kotonosora/nara-vite-react-boilerplate",
+  "name": "@kotonosora/nara-finance-react-ts",
   "repository": {
     "type": "git",
-    "url": "git@github.com:KotonoSora/nara-vite-react-boilerplate.git"
+    "url": "git@github.com:KotonoSora/nara-finance-react-ts.git"
   },
   "private": true,
-  "version": "4.0.2",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "build": "react-router build",

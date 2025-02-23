@@ -10,6 +10,6 @@ VALUE_FROM_CLOUDFLARE = "Hello from Cloudflare"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "your-database-name"
-database_id = "your-database-id"
+database_name = "$D1_DATABASE_NAME"
+database_id = "$D1_DATABASE_ID"
 migrations_dir = "drizzle"

@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:  # Define environment variables once for the entire job
+    env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       D1_DATABASE_ID: ${{ secrets.D1_DATABASE_ID }}
@@ -25,6 +25,12 @@ jobs:
 
       - name: Install dependencies
         run: bun install
+
+      - name: Replace Database ID in Wrangler Config
+        run: |
+          sed -i 's|your-database-name|'"$D1_DATABASE_NAME"'|g' wrangler.toml
+          sed -i 's|your-database-id|'"$D1_DATABASE_ID"'|g' wrangler.toml
+        shell: bash
 
       - name: Run D1 Migrations
         run: bun run db:migrate-production

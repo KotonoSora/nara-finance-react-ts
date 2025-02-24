@@ -1,16 +1,10 @@
 import clsx from "clsx";
-import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 import type { Route } from "./+types/page";
 
 import { Button } from "~/components/ui/button";
-import { Calendar } from "~/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -20,13 +14,20 @@ export function meta({}: Route.MetaArgs) {
 }
 
 interface DayItem {
+  month: number;
   day: number;
   isCurrentMonth: boolean;
   isWeekend: boolean;
   isToday: boolean;
 }
 
-const DayCell = ({ day, isCurrentMonth, isWeekend, isToday }: DayItem) => {
+const DayCell = ({
+  month,
+  day,
+  isCurrentMonth,
+  isWeekend,
+  isToday,
+}: DayItem) => {
   return (
     <div
       className={clsx(
@@ -39,22 +40,23 @@ const DayCell = ({ day, isCurrentMonth, isWeekend, isToday }: DayItem) => {
         },
       )}
     >
-      {day}
+      {day === 1 ? `${day}/${month + 1}` : day}
     </div>
   );
 };
 
 export default function Page() {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
-  const [open, setOpen] = useState<boolean>(false);
   const year: number = currentDate.getFullYear();
   const month: number = currentDate.getMonth();
   const today: number = new Date().getDate();
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
   const daysInMonth: number = new Date(year, month + 1, 0).getDate();
+  const nextMonth: number = new Date(year, month + 2, 0).getMonth();
   const firstDayOfWeek: number = (new Date(year, month, 1).getDay() + 6) % 7;
   const prevMonthDays: number = new Date(year, month, 0).getDate();
+  const prevMonth: number = new Date(year, month, 0).getMonth();
   const daysOfWeek: string[] = [
     "Mon",
     "Tue",
@@ -64,15 +66,21 @@ export default function Page() {
     "Sat",
     "Sun",
   ];
+  const titleCurrentMonth: string = new Intl.DateTimeFormat("vi-VN", {
+    year: "numeric",
+    month: "numeric",
+  }).format(currentDate);
 
-  let items: DayItem[] = [
+  const items: DayItem[] = [
     ...Array.from({ length: firstDayOfWeek }, (_, i) => ({
+      month: prevMonth,
       day: prevMonthDays - firstDayOfWeek + i + 1,
       isCurrentMonth: false,
-      isWeekend: (i + 1) % 7 === 0 || (i + 2) % 7 === 0,
+      isWeekend: false,
       isToday: false,
     })),
     ...Array.from({ length: daysInMonth }, (_, i) => ({
+      month,
       day: i + 1,
       isCurrentMonth: true,
       isWeekend:
@@ -80,25 +88,17 @@ export default function Page() {
       isToday:
         i + 1 === today && month === currentMonth && year === currentYear,
     })),
+    ...Array.from(
+      { length: 7 - ((firstDayOfWeek + daysInMonth) % 7) },
+      (_, i) => ({
+        month: nextMonth,
+        day: i + 1,
+        isCurrentMonth: false,
+        isWeekend: false,
+        isToday: false,
+      }),
+    ),
   ];
-
-  while (items.length % 7 !== 0) {
-    items.push({
-      day: items.length - daysInMonth - firstDayOfWeek + 1,
-      isCurrentMonth: false,
-      isWeekend: items.length % 7 === 5 || items.length % 7 === 6,
-      isToday: false,
-    });
-  }
-
-  const weeks: DayItem[] = [];
-  for (let i = 0; i < items.length; i += 7) {
-    const week = items.slice(i, i + 7);
-    if (week.some((item) => item.isCurrentMonth)) {
-      weeks.push(...week);
-    }
-  }
-  items = weeks;
 
   const changeMonth = (offset: number) => {
     setCurrentDate(new Date(year, month + offset, 1));
@@ -111,30 +111,9 @@ export default function Page() {
           <Button onClick={() => changeMonth(-1)} variant="outline">
             <ChevronLeft size={20} />
           </Button>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="ghost"
-                className="text-xl font-bold flex items-center gap-2"
-              >
-                {`${year}-${String(month + 1).padStart(2, "0")}`}{" "}
-                <ChevronDown size={18} />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent align="center" className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={currentDate}
-                onSelect={(date) => {
-                  if (date) {
-                    setCurrentDate(date);
-                  }
-                  setOpen(false);
-                }}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
+          <div className="text-xl font-bold flex items-center gap-2">
+            {titleCurrentMonth}
+          </div>
           <Button onClick={() => changeMonth(1)} variant="outline">
             <ChevronRight size={20} />
           </Button>

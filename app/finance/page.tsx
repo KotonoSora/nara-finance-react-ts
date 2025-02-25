@@ -1,6 +1,7 @@
 import type { Route } from "./+types/page";
 
 import Calendar from "./calendar/calendar";
+import List from "./detail/list";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -10,5 +11,10 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Page() {
-  return <Calendar />;
+  return (
+    <div className="flex flex-col gap-2 w-screen">
+      <Calendar />
+      <List />
+    </div>
+  );
 }

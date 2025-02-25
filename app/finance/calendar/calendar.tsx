@@ -1,51 +1,11 @@
-import clsx from "clsx";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-import type { Route } from "./+types/page";
-
 import { Button } from "~/components/ui/button";
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Calendar" },
-    { name: "description", content: "Calendar for detail" },
-  ];
-}
+import DayCell from "./day-cell";
 
-interface DayItem {
-  month: number;
-  day: number;
-  isCurrentMonth: boolean;
-  isWeekend: boolean;
-  isToday: boolean;
-}
-
-const DayCell = ({
-  month,
-  day,
-  isCurrentMonth,
-  isWeekend,
-  isToday,
-}: DayItem) => {
-  return (
-    <div
-      className={clsx(
-        `p-4 text-center flex justify-center items-start h-full border border-gray-300`,
-        {
-          "text-black": isCurrentMonth,
-          "text-gray-400": !isCurrentMonth,
-          "text-red-500": isWeekend,
-          "bg-green-50": isToday,
-        },
-      )}
-    >
-      {day === 1 ? `${day}/${month + 1}` : day}
-    </div>
-  );
-};
-
-export default function Page() {
+export default function Calendar() {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const year: number = currentDate.getFullYear();
   const month: number = currentDate.getMonth();
@@ -66,7 +26,7 @@ export default function Page() {
     "Sat",
     "Sun",
   ];
-  const titleCurrentMonth: string = new Intl.DateTimeFormat("vi-VN", {
+  const titleCurrentMonth: string = new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "numeric",
   }).format(currentDate);

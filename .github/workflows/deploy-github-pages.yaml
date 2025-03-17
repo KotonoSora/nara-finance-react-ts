@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - gh-pages  # Runs only on gh-pages
+      - feature/calendar
 
 jobs:
   deploy:
@@ -30,6 +31,11 @@ jobs:
         run: |
           sed -i 's|your-database-name|'"$D1_DATABASE_NAME"'|g' wrangler.toml
           sed -i 's|your-database-id|'"$D1_DATABASE_ID"'|g' wrangler.toml
+        shell: bash
+
+      - name: Replace Database ID in Drizzle Config
+        run: |
+          sed -i 's|your-database-id|'"$D1_DATABASE_ID"'|g' drizzle.config.ts
         shell: bash
 
       - name: Run D1 Migrations

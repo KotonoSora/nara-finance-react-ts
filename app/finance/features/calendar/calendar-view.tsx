@@ -2,8 +2,9 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "~/components/ui/button";
-import DayCell from "~/finance/calendar/day-cell";
-import { isDateInRange } from "~/finance/utils/date";
+import DayCell from "~/finance/features/calendar/day-cell";
+import { isDateInRange } from "~/finance/shared/utils/date";
+import { getTransactionSummaryForDate } from "~/finance/shared/utils/transaction";
 
 export default function Calendar({
   calendarDetail,
@@ -11,8 +12,8 @@ export default function Calendar({
   currentViewDate,
   onDateSelect,
   onMonthChange,
-  getTransactionSummary,
   onDateRangeSelect,
+  transactions,
 }: ICalendarProps) {
   const { daysOfWeek, currentDate, currentMonth, currentYear } = calendarDetail;
 
@@ -73,7 +74,7 @@ export default function Calendar({
       isToday: boolean;
     },
   ): DayCellProps => {
-    const summary = getTransactionSummary?.(date);
+    const summary = getTransactionSummaryForDate(date, transactions);
     const isInDateRange =
       dragStart && dragEnd ? isDateInRange(date, dragStart, dragEnd) : false;
 

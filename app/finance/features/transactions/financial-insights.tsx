@@ -10,10 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { getCategoryColor } from "~/finance/utils/categories";
-import { getChangeType } from "~/finance/utils/finance";
+import { getCategoryColor } from "~/finance/shared/utils/categories";
+import { getChangeType } from "~/finance/shared/utils/finance";
 
-const SpendingChart = lazy(() => import("./spending-chart"));
+const SpendingChart = lazy(
+  () => import("~/finance/features/transactions/spending-chart"),
+);
 
 export default function FinancialInsights({
   summary,
@@ -145,7 +147,7 @@ export default function FinancialInsights({
               defaultValue="month"
               onValueChange={(val) => console.log(val)}
             >
-              <SelectTrigger className="w-[120px] h-8">
+              <SelectTrigger className="h-8">
                 <SelectValue placeholder="Select view" />
               </SelectTrigger>
               <SelectContent>
@@ -175,6 +177,8 @@ export default function FinancialInsights({
                         onCategorySelect(category as TransactionCategory)
                     : undefined
                 }
+                budgets={summary.budgets}
+                trends={summary.trends}
               />
             </Suspense>
           </div>

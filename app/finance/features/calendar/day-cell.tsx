@@ -75,14 +75,22 @@ export default function DayCell(props: DayCellProps) {
       summaryText.push(`Expenses: $${transactionSummary.expense.toFixed(2)}`);
     }
     return (
-      <>
-        <div className="font-medium">{`${transactionCount} Transaction${transactionCount > 1 ? "s" : ""}`}</div>
+      <div className="p-2 text-sm">
+        <div className="font-semibold mb-1">{`${transactionCount} Transaction${
+          transactionCount > 1 ? "s" : ""
+        }`}</div>
         {summaryText.map((text, i) => (
-          <div key={i} className="text-sm">
+          <div
+            key={i}
+            className={clsx("font-medium", {
+              "text-green-600": text.includes("Income"),
+              "text-red-600": text.includes("Expenses"),
+            })}
+          >
             {text}
           </div>
         ))}
-      </>
+      </div>
     );
   };
 
@@ -96,6 +104,10 @@ export default function DayCell(props: DayCellProps) {
             onMouseDown={onMouseDown}
             onMouseEnter={onMouseEnter}
             onMouseUp={onMouseUp}
+            role="gridcell"
+            aria-label={`${day} ${new Date(2024, month).toLocaleString("default", { month: "long" })}${
+              transactionCount ? `, ${transactionCount} transactions` : ""
+            }`}
           >
             <div className="relative flex flex-col items-center gap-1">
               <span className="relative z-10 h-8 w-8 flex items-center justify-center rounded-full">

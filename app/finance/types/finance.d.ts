@@ -31,14 +31,8 @@ interface ICalendarProps {
   currentViewDate: Date;
   onDateSelect: (date: Date) => void;
   onMonthChange: (date: Date) => void;
-  getTransactionSummary?: (date: Date) => {
-    count: number;
-    summary: {
-      income: number;
-      expense: number;
-    };
-  } | null;
   onDateRangeSelect?: (range: DateRange) => void;
+  transactions: Transaction[];
 }
 
 type TransactionType = "income" | "expense" | "investment";
@@ -58,11 +52,35 @@ interface Transaction {
   description: string;
 }
 
+/**
+ * Represents a budget limit and spending for a specific category
+ */
+interface Budget {
+  category: TransactionCategory;
+  limit: number;
+  spent: number;
+  period: "monthly" | "yearly";
+}
+
+/**
+ * Represents spending trend analysis for a category
+ */
+interface CategoryTrend {
+  category: TransactionCategory;
+  values: number[]; // Historical spending values
+  trend: "increasing" | "decreasing" | "stable";
+  forecast: number; // Predicted next value
+}
+
 interface FinancialSummary {
   totalIncome: number;
   totalExpenses: number;
   savings: number;
   categorySummary: Record<TransactionCategory, number>;
+  budgets: Budget[];
+  trends: CategoryTrend[];
+  forecastedExpenses: number;
+  forecastedSavings: number;
 }
 
 interface TableSort {
@@ -132,4 +150,6 @@ interface SpendingChartProps {
     color: string;
   }>;
   onCategorySelect?: (category: string) => void;
+  budgets?: Budget[];
+  trends?: CategoryTrend[];
 }

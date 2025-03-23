@@ -30,8 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-
-const FinancialInsights = lazy(() => import("./financial-insights"));
+import FinancialInsights from "~/finance/features/transactions/financial-insights";
 
 export default function List({
   selectedDate,
@@ -79,7 +78,13 @@ export default function List({
             </div>
           }
         >
-          <FinancialInsights summary={summary} dateRange={filters.dateRange} />
+          <FinancialInsights
+            summary={summary}
+            dateRange={filters.dateRange}
+            onCategorySelect={(category) =>
+              setFilters((f) => ({ ...f, category }))
+            }
+          />
         </Suspense>
       )}
 

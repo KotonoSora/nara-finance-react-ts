@@ -1,12 +1,20 @@
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 
 import type { Route } from "./+types/finance";
 
 import { Button } from "~/components/ui/button";
-import Calendar from "~/finance/calendar/calendar";
-import List from "~/finance/detail/list";
-import { MOCK_DATA } from "~/finance/utils/mock";
+import BudgetSection from "~/finance/features/analysis/budget-section";
+import Calendar from "~/finance/features/calendar/calendar-view";
+import List from "~/finance/features/transactions/transaction-list";
+import { MOCK_DATA } from "~/finance/shared/utils/mock";
+
+const TrendAnalysis = lazy(
+  () => import("~/finance/features/analysis/trend-analysis"),
+);
+const IncomeExpenseChart = lazy(
+  () => import("~/finance/features/analysis/income-expense-chart"),
+);
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -40,28 +48,6 @@ export default function Finance({ loaderData }: Route.ComponentProps) {
     loaderData.nowDate,
   );
 
-  const getTransactionSummaryForDate = (date: Date) => {
-    const dayTransactions = MOCK_DATA.transactions.filter(
-      (t) => t.date.toDateString() === date.toDateString(),
-    );
-
-    if (dayTransactions.length === 0) return null;
-
-    return {
-      count: dayTransactions.length,
-      summary: {
-        income: dayTransactions.reduce(
-          (sum, t) => sum + (t.type === "income" ? t.amount : 0),
-          0,
-        ),
-        expense: dayTransactions.reduce(
-          (sum, t) => sum + (t.type === "expense" ? t.amount : 0),
-          0,
-        ),
-      },
-    };
-  };
-
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
   };
@@ -89,17 +75,42 @@ export default function Finance({ loaderData }: Route.ComponentProps) {
         </div>
 
         <div className="grid lg:grid-cols-[_2fr_3fr] md:grid-cols-1 gap-4 md:gap-6">
-          <aside className="h-fit">
+          <aside className="space-y-4 md:space-y-6">
             <Calendar
               calendarDetail={loaderData}
               selectedDate={selectedDate}
               currentViewDate={currentViewDate}
               onDateSelect={handleDateSelect}
               onMonthChange={handleMonthChange}
-              getTransactionSummary={getTransactionSummaryForDate}
+              transactions={MOCK_DATA.transactions}
             />
+            <BudgetSection budgets={MOCK_DATA.summary.budgets} />
           </aside>
-          <main className="w-full">
+          <main className="space-y-4 md:space-y-6">
+            <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+              <Suspense
+                fallback={
+                  <div className="h-[300px] rounded-lg border bg-card animate-pulse flex items-center justify-center">
+                    <span className="text-muted-foreground">
+                      Loading chart...
+                    </span>
+                  </div>
+                }
+              >
+                <IncomeExpenseChart summary={MOCK_DATA.summary} />
+              </Suspense>
+              <Suspense
+                fallback={
+                  <div className="h-[300px] rounded-lg border bg-card animate-pulse flex items-center justify-center">
+                    <span className="text-muted-foreground">
+                      Loading trends...
+                    </span>
+                  </div>
+                }
+              >
+                <TrendAnalysis trends={MOCK_DATA.summary.trends} />
+              </Suspense>
+            </div>
             <List
               selectedDate={selectedDate}
               transactions={MOCK_DATA.transactions}

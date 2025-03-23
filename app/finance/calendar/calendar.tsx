@@ -5,31 +5,25 @@ import { Button } from "~/components/ui/button";
 
 import DayCell from "./day-cell";
 
-export default function Calendar() {
-  const [currentDate, setCurrentDate] = useState<Date>(new Date());
-  const year: number = currentDate.getFullYear();
-  const month: number = currentDate.getMonth();
-  const today: number = new Date().getDate();
-  const currentMonth = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
+export default function Calendar(props: ICalendarProps) {
+  const { calendarDetail } = props;
+  const { nowDate, currentYear, currentMonth, currentDate, daysOfWeek } =
+    calendarDetail;
+
+  const [selectedDate, setCurrentDate] = useState<Date>(nowDate);
+  const year: number = selectedDate.getFullYear();
+  const month: number = selectedDate.getMonth();
+
   const daysInMonth: number = new Date(year, month + 1, 0).getDate();
   const nextMonth: number = new Date(year, month + 2, 0).getMonth();
   const firstDayOfWeek: number = (new Date(year, month, 1).getDay() + 6) % 7;
   const prevMonthDays: number = new Date(year, month, 0).getDate();
   const prevMonth: number = new Date(year, month, 0).getMonth();
-  const daysOfWeek: string[] = [
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thu",
-    "Fri",
-    "Sat",
-    "Sun",
-  ];
+
   const titleCurrentMonth: string = new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "numeric",
-  }).format(currentDate);
+  }).format(selectedDate);
 
   const items: DayItem[] = [
     ...Array.from({ length: firstDayOfWeek }, (_, i) => ({
@@ -46,7 +40,7 @@ export default function Calendar() {
       isWeekend:
         (firstDayOfWeek + i) % 7 === 5 || (firstDayOfWeek + i) % 7 === 6,
       isToday:
-        i + 1 === today && month === currentMonth && year === currentYear,
+        i + 1 === currentDate && month === currentMonth && year === currentYear,
     })),
     ...Array.from(
       { length: 7 - ((firstDayOfWeek + daysInMonth) % 7) },
@@ -65,7 +59,7 @@ export default function Calendar() {
   };
 
   return (
-    <div className="w-screen h-screen p-4 flex flex-col">
+    <div className="p-4 flex flex-col">
       <div className="w-full pb-4">
         <div className="flex justify-between items-center mb-4">
           <Button onClick={() => changeMonth(-1)} variant="outline">
@@ -86,7 +80,7 @@ export default function Calendar() {
           ))}
         </div>
       </div>
-      <div className="flex-grow grid grid-cols-7 border border-gray-300">
+      <div className="flex-grow grid grid-cols-7 border">
         {items.map((item, index) => (
           <DayCell key={index} {...item} />
         ))}

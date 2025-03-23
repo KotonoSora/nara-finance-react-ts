@@ -1,21 +1,133 @@
 import clsx from "clsx";
 
-export default function DayCell(props: DayItem) {
-  const { month, day, isCurrentMonth, isWeekend, isToday } = props;
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
+
+export default function DayCell(props: DayCellProps) {
+  const {
+    month,
+    day,
+    isCurrentMonth,
+    isWeekend,
+    isToday,
+    selected,
+    onDateClick,
+    transactionCount = 0,
+    transactionSummary,
+    isInRange,
+    onMouseDown,
+    onMouseEnter,
+    onMouseUp,
+  } = props;
+
+  const handleClick = () => {
+    if (onDateClick) {
+      // Use proper year from current view
+      const now = new Date();
+      onDateClick(new Date(now.getFullYear(), month, day));
+    }
+  };
+
+  const baseClassName = clsx(
+    "relative p-2 text-sm flex justify-center items-center transition-all duration-200",
+    "min-h-[72px]", // Ensure minimum height for 3 lines
+    // Base styles
+    "hover:bg-accent/50 hover:backdrop-blur-sm",
+    "before:absolute before:inset-0 before:z-0",
+    "cursor-pointer select-none",
+    {
+      // Current month styles
+      "bg-background": isCurrentMonth && !isWeekend && !isToday && !selected,
+
+      // Weekend styles
+      "bg-destructive/5 hover:bg-destructive/10": isWeekend && isCurrentMonth,
+      "text-destructive font-medium": isWeekend && isCurrentMonth,
+
+      // Other month styles
+      "text-muted-foreground/50 hover:text-muted-foreground": !isCurrentMonth,
+      "bg-muted/30": !isCurrentMonth,
+
+      // Today styles
+      "before:border-2 before:border-primary": isToday && !selected,
+      "text-primary font-semibold": isToday && !selected,
+
+      // Selected styles
+      "before:bg-primary": selected,
+      "text-primary-foreground font-bold": selected,
+      "hover:before:bg-primary/90": selected,
+
+      // Range selection styles
+      "bg-primary/20": isInRange && !selected,
+    },
+  );
+
+  const getTransactionSummaryText = () => {
+    if (!transactionCount) return null;
+    const summaryText = [];
+    if (transactionSummary?.income) {
+      summaryText.push(`Income: $${transactionSummary.income.toFixed(2)}`);
+    }
+    if (transactionSummary?.expense) {
+      summaryText.push(`Expenses: $${transactionSummary.expense.toFixed(2)}`);
+    }
+    return (
+      <>
+        <div className="font-medium">{`${transactionCount} Transaction${transactionCount > 1 ? "s" : ""}`}</div>
+        {summaryText.map((text, i) => (
+          <div key={i} className="text-sm">
+            {text}
+          </div>
+        ))}
+      </>
+    );
+  };
 
   return (
-    <div
-      className={clsx(
-        `p-4 text-center flex justify-center items-start border`,
-        {
-          "text-destructive": isWeekend,
-          "text-foreground": isCurrentMonth && !isWeekend,
-          "text-muted": !isCurrentMonth,
-          "text-primary": isToday && !isWeekend,
-        },
-      )}
-    >
-      {day === 1 ? `${day}/${month + 1}` : day}
-    </div>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div
+            className={baseClassName}
+            onClick={handleClick}
+            onMouseDown={onMouseDown}
+            onMouseEnter={onMouseEnter}
+            onMouseUp={onMouseUp}
+          >
+            <div className="relative flex flex-col items-center gap-1">
+              <span className="relative z-10 h-8 w-8 flex items-center justify-center rounded-full">
+                {day === 1 ? `${day}/${month + 1}` : day}
+              </span>
+              {transactionCount > 0 && (
+                <div className="flex flex-col items-center text-[10px] leading-tight">
+                  {transactionSummary && (
+                    <>
+                      {transactionSummary.income > 0 && (
+                        <span className="text-green-600 font-medium">
+                          +${transactionSummary.income.toFixed(2)}
+                        </span>
+                      )}
+                      {transactionSummary.expense > 0 && (
+                        <span className="text-red-600 font-medium">
+                          -${transactionSummary.expense.toFixed(2)}
+                        </span>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </TooltipTrigger>
+        {transactionCount > 0 && (
+          <TooltipContent side="bottom">
+            {getTransactionSummaryText()}
+          </TooltipContent>
+        )}
+      </Tooltip>
+    </TooltipProvider>
   );
 }

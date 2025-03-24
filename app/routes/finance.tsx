@@ -1,20 +1,15 @@
 import { Plus } from "lucide-react";
-import { lazy, Suspense, useState } from "react";
+import { useState } from "react";
 
 import type { Route } from "./+types/finance";
 
 import { Button } from "~/components/ui/button";
 import BudgetSection from "~/finance/features/analysis/budget-section";
+import IncomeExpenseChart from "~/finance/features/analysis/income-expense-chart";
+import TrendAnalysis from "~/finance/features/analysis/trend-analysis";
 import Calendar from "~/finance/features/calendar/calendar-view";
 import List from "~/finance/features/transactions/transaction-list";
 import { MOCK_DATA } from "~/finance/shared/utils/mock";
-
-const TrendAnalysis = lazy(
-  () => import("~/finance/features/analysis/trend-analysis"),
-);
-const IncomeExpenseChart = lazy(
-  () => import("~/finance/features/analysis/income-expense-chart"),
-);
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -88,28 +83,8 @@ export default function Finance({ loaderData }: Route.ComponentProps) {
           </aside>
           <main className="space-y-4 md:space-y-6">
             <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-              <Suspense
-                fallback={
-                  <div className="h-[300px] rounded-lg border bg-card animate-pulse flex items-center justify-center">
-                    <span className="text-muted-foreground">
-                      Loading chart...
-                    </span>
-                  </div>
-                }
-              >
-                <IncomeExpenseChart summary={MOCK_DATA.summary} />
-              </Suspense>
-              <Suspense
-                fallback={
-                  <div className="h-[300px] rounded-lg border bg-card animate-pulse flex items-center justify-center">
-                    <span className="text-muted-foreground">
-                      Loading trends...
-                    </span>
-                  </div>
-                }
-              >
-                <TrendAnalysis trends={MOCK_DATA.summary.trends} />
-              </Suspense>
+              <IncomeExpenseChart summary={MOCK_DATA.summary} />
+              <TrendAnalysis trends={MOCK_DATA.summary.trends} />
             </div>
             <List
               selectedDate={selectedDate}

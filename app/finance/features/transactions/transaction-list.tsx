@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { format } from "date-fns";
 import { CalendarIcon, Search } from "lucide-react";
-import { lazy, Suspense, useState } from "react";
+import { useState } from "react";
 
 import type { DateRange } from "react-day-picker";
 
@@ -68,24 +68,13 @@ export default function List({
   return (
     <div className="space-y-4 md:space-y-6 px-1">
       {summary && (
-        <Suspense
-          fallback={
-            <div className="grid gap-3 md:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-              <div className="h-[120px] rounded-lg border bg-card animate-pulse" />
-              <div className="h-[120px] rounded-lg border bg-card animate-pulse" />
-              <div className="h-[120px] rounded-lg border bg-card animate-pulse sm:col-span-2 md:col-span-1" />
-              <div className="h-[200px] col-span-full rounded-lg border bg-card animate-pulse" />
-            </div>
+        <FinancialInsights
+          summary={summary}
+          dateRange={filters.dateRange}
+          onCategorySelect={(category) =>
+            setFilters((f) => ({ ...f, category }))
           }
-        >
-          <FinancialInsights
-            summary={summary}
-            dateRange={filters.dateRange}
-            onCategorySelect={(category) =>
-              setFilters((f) => ({ ...f, category }))
-            }
-          />
-        </Suspense>
+        />
       )}
 
       <Card>

@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { format, startOfMonth } from "date-fns";
-import { lazy, Suspense } from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
@@ -10,12 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import SpendingChart from "~/finance/features/transactions/spending-chart";
 import { getCategoryColor } from "~/finance/shared/utils/categories";
 import { getChangeType } from "~/finance/shared/utils/finance";
-
-const SpendingChart = lazy(
-  () => import("~/finance/features/transactions/spending-chart"),
-);
 
 export default function FinancialInsights({
   summary,
@@ -160,27 +156,17 @@ export default function FinancialInsights({
         </CardHeader>
         <CardContent className="px-4 md:px-6">
           <div className="h-[300px]">
-            <Suspense
-              fallback={
-                <div className="h-full flex items-center justify-center">
-                  <div className="animate-pulse text-muted-foreground">
-                    Loading chart...
-                  </div>
-                </div>
+            <SpendingChart
+              data={chartData}
+              onCategorySelect={
+                onCategorySelect
+                  ? (category: string) =>
+                      onCategorySelect(category as TransactionCategory)
+                  : undefined
               }
-            >
-              <SpendingChart
-                data={chartData}
-                onCategorySelect={
-                  onCategorySelect
-                    ? (category: string) =>
-                        onCategorySelect(category as TransactionCategory)
-                    : undefined
-                }
-                budgets={summary.budgets}
-                trends={summary.trends}
-              />
-            </Suspense>
+              budgets={summary.budgets}
+              trends={summary.trends}
+            />
           </div>
         </CardContent>
       </Card>

@@ -9,7 +9,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function loader({}: Route.LoaderArgs) {
+export async function clientLoader({}: Route.ClientLoaderArgs) {
   const nowDate = new Date();
   const currentYear: number = nowDate.getFullYear();
   const currentMonth: number = nowDate.getMonth();
@@ -26,6 +26,10 @@ export async function loader({}: Route.LoaderArgs) {
   ];
 
   return { nowDate, currentYear, currentMonth, currentDate, daysOfWeek };
+}
+
+export function HydrateFallback() {
+  return <div>Loading...</div>;
 }
 
 export default function FinanceDemo({ loaderData }: Route.ComponentProps) {

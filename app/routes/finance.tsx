@@ -1,6 +1,7 @@
 import type { Route } from "./+types/finance";
 
 import { Finance } from "~/finance/finance";
+import { MOCK_DATA } from "~/finance/shared/utils/mock";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,7 +10,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function clientLoader({}: Route.ClientLoaderArgs) {
+export async function loader({ context }: Route.LoaderArgs) {
   const nowDate = new Date();
   const currentYear: number = nowDate.getFullYear();
   const currentMonth: number = nowDate.getMonth();
@@ -25,11 +26,15 @@ export async function clientLoader({}: Route.ClientLoaderArgs) {
     "Sun",
   ];
 
-  return { nowDate, currentYear, currentMonth, currentDate, daysOfWeek };
-}
-
-export function HydrateFallback() {
-  return <div>Loading...</div>;
+  return {
+    nowDate,
+    currentYear,
+    currentMonth,
+    currentDate,
+    daysOfWeek,
+    transactions: MOCK_DATA.transactions,
+    summary: MOCK_DATA.summary,
+  };
 }
 
 export default function FinanceDemo({ loaderData }: Route.ComponentProps) {

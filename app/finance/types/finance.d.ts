@@ -17,16 +17,21 @@ interface DragDropProps {
 
 interface DayItem extends DayItemBase, DragDropProps {}
 
-interface ICalendarDetail {
+interface CalendarData {
   nowDate: Date;
   currentYear: number;
   currentMonth: number;
   currentDate: number;
   daysOfWeek: string[];
+  daysInMonth: number;
+  firstDayOfWeek: number;
+  prevMonthDays: number;
+  prevMonth: number;
+  nextMonth: number;
 }
 
 interface ICalendarProps {
-  calendarDetail: ICalendarDetail;
+  calendarDetail: CalendarData;
   selectedDate: Date | null;
   currentViewDate: Date;
   onDateSelect: (date: Date) => void;
@@ -152,4 +157,13 @@ interface SpendingChartProps {
   onCategorySelect?: (category: string) => void;
   budgets?: Budget[];
   trends?: CategoryTrend[];
+}
+
+interface FinanceProps {
+  loaderData: FinanceData & CalendarData;
+}
+
+interface FinanceData {
+  transactions: Transaction[];
+  summary: FinancialSummary;
 }

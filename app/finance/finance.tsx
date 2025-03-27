@@ -19,7 +19,7 @@ const List = lazy(
   () => import("~/finance/features/transactions/transaction-list"),
 );
 
-export function Finance({ loaderData }: any) {
+export function Finance({ loaderData }: FinanceProps) {
   const { transactions, summary, nowDate } = loaderData;
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [currentViewDate, setCurrentViewDate] = useState<Date>(nowDate);

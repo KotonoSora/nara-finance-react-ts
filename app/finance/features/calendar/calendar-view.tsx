@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import DayCell from "~/finance/features/calendar/day-cell";
 import { isDateInRange } from "~/finance/shared/utils/date";
+import { formatDate } from "~/finance/shared/utils/locale";
 import { getTransactionSummaryForDate } from "~/finance/shared/utils/transaction";
 
 export default function Calendar({
@@ -15,28 +16,32 @@ export default function Calendar({
   onDateRangeSelect,
   transactions,
 }: ICalendarProps) {
-  const { daysOfWeek, currentDate, currentMonth, currentYear } = calendarDetail;
+  const {
+    daysOfWeek,
+    currentDate,
+    currentMonth,
+    currentYear,
+    daysInMonth,
+    firstDayOfWeek,
+    prevMonthDays,
+    prevMonth,
+    nextMonth,
+  } = calendarDetail;
 
-  const year: number = currentViewDate.getFullYear();
-  const month: number = currentViewDate.getMonth();
-
-  const daysInMonth: number = new Date(year, month + 1, 0).getDate();
-  const nextMonth: number = new Date(year, month + 2, 0).getMonth();
-  const firstDayOfWeek: number = (new Date(year, month, 1).getDay() + 6) % 7;
-  const prevMonthDays: number = new Date(year, month, 0).getDate();
-  const prevMonth: number = new Date(year, month, 0).getMonth();
-
-  const titleCurrentMonth: string = new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "numeric",
-  }).format(currentViewDate);
+  const titleCurrentMonth = formatDate(currentViewDate);
 
   const handleDateClick = (date: Date) => {
     onDateSelect(date);
   };
 
   const changeMonth = (offset: number) => {
-    onMonthChange(new Date(year, month + offset, 1));
+    onMonthChange(
+      new Date(
+        currentViewDate.getFullYear(),
+        currentViewDate.getMonth() + offset,
+        1,
+      ),
+    );
   };
 
   const [dragStart, setDragStart] = useState<Date | null>(null);
@@ -97,7 +102,7 @@ export default function Calendar({
     // Previous month days
     ...Array.from({ length: firstDayOfWeek }, (_, i) => {
       const date = new Date(
-        year,
+        currentViewDate.getFullYear(),
         prevMonth,
         prevMonthDays - firstDayOfWeek + i + 1,
       );
@@ -112,17 +117,21 @@ export default function Calendar({
 
     // Current month days
     ...Array.from({ length: daysInMonth }, (_, i) => {
-      const date = new Date(year, month, i + 1);
+      const date = new Date(
+        currentViewDate.getFullYear(),
+        currentViewDate.getMonth(),
+        i + 1,
+      );
       return createDayItem(date, {
-        month,
+        month: currentViewDate.getMonth(),
         day: i + 1,
         isCurrentMonth: true,
         isWeekend:
           (firstDayOfWeek + i) % 7 === 5 || (firstDayOfWeek + i) % 7 === 6,
         isToday:
           i + 1 === currentDate &&
-          month === currentMonth &&
-          year === currentYear,
+          currentViewDate.getMonth() === currentMonth &&
+          currentViewDate.getFullYear() === currentYear,
       });
     }),
 
@@ -130,7 +139,7 @@ export default function Calendar({
     ...Array.from(
       { length: 7 - ((firstDayOfWeek + daysInMonth) % 7) },
       (_, i) => {
-        const date = new Date(year, nextMonth, i + 1);
+        const date = new Date(currentViewDate.getFullYear(), nextMonth, i + 1);
         return createDayItem(date, {
           month: nextMonth,
           day: i + 1,
@@ -154,12 +163,7 @@ export default function Calendar({
           >
             <ChevronLeft className="h-5 w-5" />
           </Button>
-          <div className="font-semibold text-lg">
-            {new Intl.DateTimeFormat("en-US", {
-              month: "long",
-              year: "numeric",
-            }).format(currentViewDate)}
-          </div>
+          <div className="font-semibold text-lg">{titleCurrentMonth}</div>
           <Button
             onClick={() => changeMonth(1)}
             variant="ghost"

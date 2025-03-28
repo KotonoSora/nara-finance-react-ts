@@ -14,8 +14,9 @@ export default defineConfig(({ isSsrBuild }) => ({
         }
       : undefined,
     cssCodeSplit: true,
+    sourcemap: false,
     minify: "esbuild",
-    target: "es2022",
+    target: "esnext",
   },
   ssr: {
     target: "webworker",

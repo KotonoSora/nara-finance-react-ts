@@ -51,7 +51,7 @@ export function Finance({ loaderData }: FinanceProps) {
         </div>
 
         <div className="grid lg:grid-cols-[_2fr_3fr] md:grid-cols-1 gap-4 md:gap-6">
-          <aside className="space-y-4 md:space-y-6">
+          <aside className="space-y-4 md:space-y-6 [content-visibility:auto] [contain-intrinsic-size:600px]">
             <Suspense
               fallback={
                 <div className="h-[400px] animate-pulse bg-muted rounded-lg" />
@@ -74,8 +74,8 @@ export function Finance({ loaderData }: FinanceProps) {
               <BudgetSection budgets={summary.budgets} />
             </Suspense>
           </aside>
-          <main className="space-y-4 md:space-y-6">
-            <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+          <main className="space-y-4 md:space-y-6 [content-visibility:auto] [contain-intrinsic-size:1000px]">
+            <div className="grid md:grid-cols-2 gap-4 md:gap-6 [content-visibility:auto] [contain-intrinsic-size:600px]">
               <Suspense
                 fallback={
                   <div className="h-[300px] animate-pulse bg-muted rounded-lg" />

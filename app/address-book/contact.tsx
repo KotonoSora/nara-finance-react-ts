@@ -1,16 +1,29 @@
-import { Form } from "react-router";
+import { Form, useFetcher } from "react-router";
 
 import type { ContactRecord } from "~/address-book/data";
+import type { Route } from "./+types/contact";
 
-export default function Contact() {
-  const contact = {
-    first: "Your",
-    last: "Name",
-    avatar: "https://placecats.com/200/200",
-    twitter: "your_handle",
-    notes: "Some notes",
-    favorite: true,
-  };
+import { getContact, updateContact } from "./data";
+
+export async function loader({ params }: Route.LoaderArgs) {
+  const contact = await getContact(params.contactId);
+
+  if (!contact) {
+    throw new Response("Not Found", { status: 404 });
+  }
+
+  return { contact };
+}
+
+export async function action({ params, request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  return updateContact(params.contactId, {
+    favorite: formData.get("favorite") === "true",
+  });
+}
+
+export default function Contact({ loaderData }: Route.ComponentProps) {
+  const { contact } = loaderData;
 
   return (
     <div id="contact">
@@ -69,11 +82,18 @@ export default function Contact() {
   );
 }
 
-function Favorite({ contact }: { contact: Pick<ContactRecord, "favorite"> }) {
-  const favorite = contact.favorite;
+function Favorite({
+  contact,
+}: {
+  contact: Pick<ContactRecord, "favorite" | "id">;
+}) {
+  const fetcher = useFetcher();
+  const favorite = fetcher.formData
+    ? fetcher.formData.get("favorite") === "true"
+    : contact.favorite;
 
   return (
-    <Form method="post">
+    <fetcher.Form key={contact.id} method="post">
       <button
         aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
         name="favorite"
@@ -81,6 +101,6 @@ function Favorite({ contact }: { contact: Pick<ContactRecord, "favorite"> }) {
       >
         {favorite ? "★" : "☆"}
       </button>
-    </Form>
+    </fetcher.Form>
   );
 }

@@ -2,7 +2,6 @@ import { Plus } from "lucide-react";
 import { lazy, Suspense, useState } from "react";
 
 import { Button } from "~/components/ui/button";
-import { MOCK_DATA } from "~/finance/shared/utils/mock";
 
 const BudgetSection = lazy(
   () => import("~/finance/features/analysis/budget-section"),
@@ -20,11 +19,10 @@ const List = lazy(
   () => import("~/finance/features/transactions/transaction-list"),
 );
 
-export function Finance({ loaderData }: any) {
+export function Finance({ loaderData }: FinanceProps) {
+  const { transactions, summary, nowDate } = loaderData;
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [currentViewDate, setCurrentViewDate] = useState<Date>(
-    loaderData.nowDate,
-  );
+  const [currentViewDate, setCurrentViewDate] = useState<Date>(nowDate);
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
@@ -65,7 +63,7 @@ export function Finance({ loaderData }: any) {
                 currentViewDate={currentViewDate}
                 onDateSelect={handleDateSelect}
                 onMonthChange={handleMonthChange}
-                transactions={MOCK_DATA.transactions}
+                transactions={transactions}
               />
             </Suspense>
             <Suspense
@@ -73,7 +71,7 @@ export function Finance({ loaderData }: any) {
                 <div className="h-[200px] animate-pulse bg-muted rounded-lg" />
               }
             >
-              <BudgetSection budgets={MOCK_DATA.summary.budgets} />
+              <BudgetSection budgets={summary.budgets} />
             </Suspense>
           </aside>
           <main className="space-y-4 md:space-y-6">
@@ -83,14 +81,14 @@ export function Finance({ loaderData }: any) {
                   <div className="h-[300px] animate-pulse bg-muted rounded-lg" />
                 }
               >
-                <IncomeExpenseChart summary={MOCK_DATA.summary} />
+                <IncomeExpenseChart summary={summary} />
               </Suspense>
               <Suspense
                 fallback={
                   <div className="h-[300px] animate-pulse bg-muted rounded-lg" />
                 }
               >
-                <TrendAnalysis trends={MOCK_DATA.summary.trends} />
+                <TrendAnalysis trends={summary.trends} />
               </Suspense>
             </div>
             <Suspense
@@ -100,8 +98,8 @@ export function Finance({ loaderData }: any) {
             >
               <List
                 selectedDate={selectedDate}
-                transactions={MOCK_DATA.transactions}
-                summary={MOCK_DATA.summary}
+                transactions={transactions}
+                summary={summary}
               />
             </Suspense>
           </main>

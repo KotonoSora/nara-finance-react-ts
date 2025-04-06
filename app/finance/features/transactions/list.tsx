@@ -1,7 +1,8 @@
 import clsx from "clsx";
 import { format } from "date-fns";
-import { CalendarIcon, Search } from "lucide-react";
+import { CalendarIcon, FileDown, FileUp, Search } from "lucide-react";
 import { useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 import type { DateRange } from "react-day-picker";
 
@@ -31,17 +32,71 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import FinancialInsights from "~/finance/features/transactions/financial-insights";
+import { exportToCSV } from "~/finance/shared/utils/export";
+import { exportToPDF } from "~/finance/shared/utils/export-pdf";
+import { showExportToast } from "~/finance/shared/utils/notifications";
+
+import ImportDialog from "./import-dialog";
 
 export default function List({
   selectedDate,
   transactions = [],
   summary,
-}: IListProps) {
+  addTransactions,
+}: IListProps & { addTransactions: (transactions: Transaction[]) => void }) {
   const [filters, setFilters] = useState<TransactionFilters>({});
   const [sort, setSort] = useState<TableSort>({
     column: "date",
     direction: "desc",
   });
+  const [isImportOpen, setIsImportOpen] = useState(false);
+
+  // Keyboard shortcuts
+  useHotkeys("ctrl+i", (e) => {
+    e.preventDefault();
+    setIsImportOpen(true);
+  });
+
+  useHotkeys("ctrl+e", async (e) => {
+    e.preventDefault();
+    handleExportCSV();
+  });
+
+  useHotkeys("ctrl+shift+e", async (e) => {
+    e.preventDefault();
+    handleExportPDF();
+  });
+
+  const handleExportCSV = async () => {
+    const filename = `transactions-${new Date().toISOString().split("T")[0]}`;
+    const exportPromise = new Promise<ExportResult>((resolve, reject) => {
+      exportToCSV(transactions, filename)
+        .then(() => resolve({ filename: `${filename}.csv` }))
+        .catch(reject);
+    });
+
+    showExportToast(exportPromise);
+  };
+
+  const handleExportPDF = async () => {
+    if (!summary) {
+      throw new Error("Summary is required for PDF export");
+    }
+
+    const filename = `transactions-${new Date().toISOString().split("T")[0]}`;
+    const exportPromise = new Promise<ExportResult>((resolve, reject) => {
+      exportToPDF(transactions, summary, filename)
+        .then(() => resolve({ filename: `${filename}.pdf` }))
+        .catch(reject);
+    });
+
+    showExportToast(exportPromise);
+  };
+
+  const handleImport = (importedTransactions: Transaction[]) => {
+    addTransactions(importedTransactions);
+  };
+
   const formattedDate = selectedDate
     ? new Intl.DateTimeFormat("en-US", {
         weekday: "long",
@@ -235,6 +290,42 @@ export default function List({
           )}
         </CardContent>
       </Card>
+
+      <div className="flex gap-2 mb-4">
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-2"
+          onClick={() => setIsImportOpen(true)}
+        >
+          <FileUp className="h-4 w-4" />
+          Import (Ctrl+I)
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-2"
+          onClick={handleExportCSV}
+        >
+          <FileDown className="h-4 w-4" />
+          Export CSV (Ctrl+E)
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-2"
+          onClick={handleExportPDF}
+        >
+          <FileDown className="h-4 w-4" />
+          Export PDF (Ctrl+Shift+E)
+        </Button>
+      </div>
+
+      <ImportDialog
+        open={isImportOpen}
+        onOpenChange={setIsImportOpen}
+        onImport={handleImport}
+      />
     </div>
   );
 }

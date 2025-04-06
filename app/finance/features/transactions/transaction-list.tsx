@@ -1,6 +1,16 @@
 import clsx from "clsx";
 import { format } from "date-fns";
-import { CalendarIcon, Search } from "lucide-react";
+import {
+  CalendarIcon,
+  ChevronDown,
+  ChevronUp,
+  Download,
+  Edit2,
+  MoreVertical,
+  Search,
+  Trash2,
+  Upload,
+} from "lucide-react";
 import { useState } from "react";
 
 import type { DateRange } from "react-day-picker";
@@ -9,6 +19,13 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Calendar } from "~/components/ui/calendar";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import { Input } from "~/components/ui/input";
 import {
   Popover,
@@ -31,17 +48,41 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import FinancialInsights from "~/finance/features/transactions/financial-insights";
+import { exportToCSV } from "~/finance/shared/utils/export";
+import { exportToPDF } from "~/finance/shared/utils/export-pdf";
+import { showExportToast } from "~/finance/shared/utils/notifications";
+import { useFinanceShortcuts } from "~/finance/shared/utils/shortcuts";
+
+import DeleteTransactionDialog from "./delete-transaction-dialog";
+import ImportDialog from "./import-dialog";
+
+interface ListProps extends IListProps {
+  onAddTransaction?: (data: Omit<Transaction, "id">) => void;
+  onEditTransaction?: (transaction: Transaction) => void;
+  onDeleteTransaction?: (transactionId: string) => void;
+}
 
 export default function List({
   selectedDate,
   transactions = [],
   summary,
-}: IListProps) {
+  onAddTransaction,
+  onEditTransaction,
+  onDeleteTransaction,
+}: ListProps) {
   const [filters, setFilters] = useState<TransactionFilters>({});
+  const [isAddingTransaction, setIsAddingTransaction] = useState(false);
+  const [isDeletingTransaction, setIsDeletingTransaction] = useState(false);
+  const [transactionToDelete, setTransactionToDelete] =
+    useState<Transaction | null>(null);
   const [sort, setSort] = useState<TableSort>({
     column: "date",
     direction: "desc",
   });
+  const [isImportingTransactions, setIsImportingTransactions] = useState(false);
+  const [localTransactions, setLocalTransactions] = useState(transactions);
+  const [localSummary, setLocalSummary] = useState(summary);
+
   const formattedDate = selectedDate
     ? new Intl.DateTimeFormat("en-US", {
         weekday: "long",
@@ -62,7 +103,148 @@ export default function List({
         .includes(filters.searchTerm.toLowerCase())
     )
       return false;
+    if (filters.dateRange) {
+      const date = new Date(transaction.date);
+      if (date < filters.dateRange.from || date > filters.dateRange.to)
+        return false;
+    }
     return true;
+  });
+
+  const sortedTransactions = filteredTransactions.sort((a, b) => {
+    const direction = sort.direction === "asc" ? 1 : -1;
+    switch (sort.column) {
+      case "date":
+        return (
+          (new Date(a.date).getTime() - new Date(b.date).getTime()) * direction
+        );
+      case "amount":
+        return (a.amount - b.amount) * direction;
+      case "description":
+      case "category":
+      case "type":
+        return a[sort.column].localeCompare(b[sort.column]) * direction;
+      default:
+        return 0;
+    }
+  });
+
+  const toggleSort = (column: keyof Transaction) => {
+    setSort((prev) => ({
+      column,
+      direction:
+        prev.column === column
+          ? prev.direction === "asc"
+            ? "desc"
+            : "asc"
+          : "asc",
+    }));
+  };
+
+  const SortIcon = ({ column }: { column: keyof Transaction }) => {
+    if (sort.column !== column) return null;
+    return sort.direction === "asc" ? (
+      <ChevronUp className="h-4 w-4" />
+    ) : (
+      <ChevronDown className="h-4 w-4" />
+    );
+  };
+
+  const handleExport = async (format: "csv" | "pdf") => {
+    const timestamp = new Date().toISOString().split("T")[0];
+    const filename = `transactions-${timestamp}`;
+
+    const exportPromise = new Promise<ExportResult>(async (resolve, reject) => {
+      try {
+        if (format === "csv") {
+          await exportToCSV(filteredTransactions, filename);
+        } else if (localSummary) {
+          await exportToPDF(filteredTransactions, localSummary, filename);
+        }
+        resolve({ filename: `${filename}.${format}` });
+      } catch (error) {
+        reject(error);
+      }
+    });
+
+    showExportToast(exportPromise);
+  };
+
+  const handleClearFilters = () => {
+    setFilters({});
+  };
+
+  const handleEdit = (transaction: Transaction) => {
+    onEditTransaction?.(transaction);
+  };
+
+  const handleDeleteClick = (transaction: Transaction) => {
+    setTransactionToDelete(transaction);
+    setIsDeletingTransaction(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (transactionToDelete) {
+      onDeleteTransaction?.(transactionToDelete.id);
+      setIsDeletingTransaction(false);
+      setTransactionToDelete(null);
+    }
+  };
+
+  const handleImportTransactions = (newTransactions: Transaction[]) => {
+    // Add all imported transactions
+    setLocalTransactions((prev) => [...prev, ...newTransactions]);
+
+    // Update summary to reflect imported transactions
+    if (localSummary) {
+      setLocalSummary((prev) => {
+        if (!prev) return prev;
+
+        const newSummary: FinancialSummary = {
+          totalIncome: prev.totalIncome || 0,
+          totalExpenses: prev.totalExpenses || 0,
+          savings: prev.savings || 0,
+          categorySummary: { ...(prev.categorySummary || {}) },
+          budgets: [...(prev.budgets || [])],
+          trends: [...(prev.trends || [])],
+          forecastedExpenses: prev.forecastedExpenses || 0,
+          forecastedSavings: prev.forecastedSavings || 0,
+        };
+
+        newTransactions.forEach((transaction) => {
+          if (transaction.type === "expense") {
+            newSummary.totalExpenses += transaction.amount;
+            if (!newSummary.categorySummary[transaction.category]) {
+              newSummary.categorySummary[transaction.category] = 0;
+            }
+            newSummary.categorySummary[transaction.category] +=
+              transaction.amount;
+          } else if (transaction.type === "income") {
+            newSummary.totalIncome += transaction.amount;
+          }
+        });
+
+        newSummary.savings = newSummary.totalIncome - newSummary.totalExpenses;
+
+        return newSummary;
+      });
+    }
+  };
+
+  // Setup keyboard shortcuts
+  useFinanceShortcuts({
+    add: () =>
+      onAddTransaction?.({
+        date: selectedDate || new Date(),
+        type: "expense",
+        category: "other",
+        amount: 0,
+        description: "",
+      }),
+    cancel: handleClearFilters,
+    import: () => setIsImportingTransactions(true),
+    exportCSV: () => handleExport("csv"),
+    exportPDF: () => handleExport("pdf"),
   });
 
   return (
@@ -82,11 +264,36 @@ export default function List({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <h2 className="text-lg md:text-xl font-semibold">Transactions</h2>
             <div className="flex gap-2 w-full sm:w-auto">
-              <Button variant="outline" className="flex-1 sm:flex-initial">
+              <Button
+                variant="outline"
+                className="flex-1 sm:flex-initial"
+                onClick={handleClearFilters}
+              >
                 Clear Filters
               </Button>
-              <Button variant="outline" className="flex-1 sm:flex-initial">
-                Export CSV
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="flex-1 sm:flex-initial">
+                    <Download className="h-4 w-4 mr-2" />
+                    Export
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => handleExport("csv")}>
+                    Export as CSV
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleExport("pdf")}>
+                    Export as PDF
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button
+                variant="outline"
+                className="flex-1 sm:flex-initial"
+                onClick={() => setIsImportingTransactions(true)}
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                Import
               </Button>
             </div>
           </div>
@@ -97,6 +304,7 @@ export default function List({
               <Input
                 placeholder="Search transactions..."
                 className="pl-8 w-full"
+                value={filters.searchTerm || ""}
                 onChange={(e) =>
                   setFilters((f) => ({ ...f, searchTerm: e.target.value }))
                 }
@@ -144,6 +352,7 @@ export default function List({
               </Popover>
 
               <Select
+                value={filters.type}
                 onValueChange={(value: TransactionType) =>
                   setFilters((f) => ({ ...f, type: value }))
                 }
@@ -159,6 +368,7 @@ export default function List({
               </Select>
 
               <Select
+                value={filters.category}
                 onValueChange={(value: TransactionCategory) =>
                   setFilters((f) => ({ ...f, category: value }))
                 }
@@ -179,41 +389,117 @@ export default function List({
         </CardHeader>
 
         <CardContent className="p-0">
-          {filteredTransactions.length > 0 ? (
+          {sortedTransactions.length > 0 ? (
             <div className="relative px-4 md:px-6">
               <Table>
                 <TableHeader className="sticky top-0 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/75 z-10">
                   <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
+                    <TableHead
+                      className="cursor-pointer hover:text-primary transition-colors"
+                      onClick={() => toggleSort("date")}
+                    >
+                      <div className="flex items-center gap-2">
+                        Date
+                        <SortIcon column="date" />
+                      </div>
+                    </TableHead>
+                    <TableHead
+                      className="cursor-pointer hover:text-primary transition-colors"
+                      onClick={() => toggleSort("description")}
+                    >
+                      <div className="flex items-center gap-2">
+                        Description
+                        <SortIcon column="description" />
+                      </div>
+                    </TableHead>
+                    <TableHead
+                      className="cursor-pointer hover:text-primary transition-colors"
+                      onClick={() => toggleSort("category")}
+                    >
+                      <div className="flex items-center gap-2">
+                        Category
+                        <SortIcon column="category" />
+                      </div>
+                    </TableHead>
+                    <TableHead
+                      className="cursor-pointer hover:text-primary transition-colors"
+                      onClick={() => toggleSort("type")}
+                    >
+                      <div className="flex items-center gap-2">
+                        Type
+                        <SortIcon column="type" />
+                      </div>
+                    </TableHead>
+                    <TableHead
+                      className="text-right cursor-pointer hover:text-primary transition-colors"
+                      onClick={() => toggleSort("amount")}
+                    >
+                      <div className="flex items-center justify-end gap-2">
+                        Amount
+                        <SortIcon column="amount" />
+                      </div>
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredTransactions.map((transaction) => (
+                  {sortedTransactions.map((transaction) => (
                     <TableRow
                       key={transaction.id}
-                      className="hover:bg-muted/50 cursor-pointer transition-colors"
+                      className="group hover:bg-muted/50 cursor-pointer transition-colors"
                     >
                       <TableCell>
                         {format(transaction.date, "MMM d, yyyy")}
                       </TableCell>
                       <TableCell>{transaction.description}</TableCell>
                       <TableCell>
-                        <Badge variant="outline">{transaction.category}</Badge>
+                        <Badge variant="outline" className="capitalize">
+                          {transaction.category}
+                        </Badge>
                       </TableCell>
-                      <TableCell>{transaction.type}</TableCell>
-                      <TableCell
-                        className={clsx("text-right font-medium", {
-                          "text-green-600": transaction.type === "income",
-                          "text-red-600": transaction.type === "expense",
-                          "text-blue-600": transaction.type === "investment",
-                        })}
-                      >
-                        {transaction.type === "expense" ? "-" : "+"}$
-                        {transaction.amount.toFixed(2)}
+                      <TableCell className="capitalize">
+                        {transaction.type}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center justify-end gap-2">
+                          <span
+                            className={clsx("font-medium", {
+                              "text-green-600": transaction.type === "income",
+                              "text-red-600": transaction.type === "expense",
+                              "text-blue-600":
+                                transaction.type === "investment",
+                            })}
+                          >
+                            {transaction.type === "expense" ? "-" : "+"}$
+                            {transaction.amount.toFixed(2)}
+                          </span>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => handleEdit(transaction)}
+                              >
+                                <Edit2 className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => handleDeleteClick(transaction)}
+                                className="text-red-600"
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -227,14 +513,41 @@ export default function List({
               </div>
               <h3 className="font-semibold mb-2">No transactions found</h3>
               <p className="text-muted-foreground mb-4">
-                Start tracking your finances by adding transactions for this
-                period.
+                {filters.type || filters.category || filters.searchTerm
+                  ? "Try adjusting your filters"
+                  : "Start tracking your finances by adding transactions for this period"}
               </p>
-              <Button>Add Transaction</Button>
+              <Button
+                onClick={() =>
+                  onAddTransaction &&
+                  onAddTransaction({
+                    date: selectedDate || new Date(),
+                    type: "expense",
+                    category: "other",
+                    amount: 0,
+                    description: "",
+                  })
+                }
+              >
+                Add Transaction
+              </Button>
             </div>
           )}
         </CardContent>
       </Card>
+
+      <DeleteTransactionDialog
+        open={isDeletingTransaction}
+        onOpenChange={setIsDeletingTransaction}
+        onConfirm={handleConfirmDelete}
+        transaction={transactionToDelete || undefined}
+      />
+
+      <ImportDialog
+        open={isImportingTransactions}
+        onOpenChange={setIsImportingTransactions}
+        onImport={handleImportTransactions}
+      />
     </div>
   );
 }

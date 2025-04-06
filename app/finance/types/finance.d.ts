@@ -77,6 +77,20 @@ interface CategoryTrend {
   forecast: number; // Predicted next value
 }
 
+/**
+ * Represents the summary of transactions including totals and analysis
+ */
+interface TransactionSummary {
+  totalIncome: number;
+  totalExpenses: number;
+  savings: number;
+  categorySummary: Record<TransactionCategory, number>;
+  budgets?: Budget[];
+  trends?: CategoryTrend[];
+  forecastedExpenses?: number;
+  forecastedSavings?: number;
+}
+
 interface FinancialSummary {
   totalIncome: number;
   totalExpenses: number;
@@ -99,6 +113,8 @@ interface IListProps {
   onFilter?: (filters: TransactionFilters) => void;
   dateRange?: DateRange;
   summary?: FinancialSummary;
+  selectedCategory?: TransactionCategory | null;
+  onCategoryChange?: (category: TransactionCategory | null) => void;
 }
 
 interface TransactionFilters {
@@ -166,4 +182,8 @@ interface FinanceProps {
 interface FinanceData {
   transactions: Transaction[];
   summary: FinancialSummary;
+}
+
+interface ExportResult {
+  filename: string;
 }

@@ -22,6 +22,12 @@ export default function HomePage() {
             <Button variant="outline" asChild className="w-full">
               <Link to="/dashboard">Dashboard</Link>
             </Button>
+            <Button variant="outline" asChild className="w-full">
+              <Link to="/contacts">Address Book</Link>
+            </Button>
+            <Button variant="outline" asChild className="w-full">
+              <Link to="/finance">Finance</Link>
+            </Button>
           </div>
         </CardContent>
       </Card>

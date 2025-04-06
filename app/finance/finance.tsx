@@ -1,7 +1,11 @@
 import { Plus } from "lucide-react";
 import { lazy, Suspense, useState } from "react";
 
+import type { Route } from "./+types/finance";
+
 import { Button } from "~/components/ui/button";
+import { prepareCalendarData } from "~/finance/shared/utils/calendar";
+import { MOCK_DATA } from "~/finance/shared/utils/mock";
 
 const BudgetSection = lazy(
   () => import("~/finance/features/analysis/budget-section"),
@@ -19,7 +23,24 @@ const List = lazy(
   () => import("~/finance/features/transactions/transaction-list"),
 );
 
-export function Finance({ loaderData }: FinanceProps) {
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "Finance" },
+    { name: "description", content: "Finance Page Demo!" },
+  ];
+}
+
+export async function loader({}: Route.LoaderArgs) {
+  const calendarData = prepareCalendarData();
+
+  return {
+    ...calendarData,
+    transactions: MOCK_DATA.transactions,
+    summary: MOCK_DATA.summary,
+  };
+}
+
+export default function FinanceDemo({ loaderData }: Route.ComponentProps) {
   const { transactions, summary, nowDate } = loaderData;
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [currentViewDate, setCurrentViewDate] = useState<Date>(nowDate);

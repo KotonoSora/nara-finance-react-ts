@@ -29,8 +29,8 @@ jobs:
 
       - name: Replace Database ID in Wrangler Config
         run: |
-          sed -i 's|your-database-name|'"$D1_DATABASE_NAME"'|g' wrangler.toml
-          sed -i 's|your-database-id|'"$D1_DATABASE_ID"'|g' wrangler.toml
+          sed -i 's|your-database-name|'"$D1_DATABASE_NAME"'|g' wrangler.jsonc
+          sed -i 's|your-database-id|'"$D1_DATABASE_ID"'|g' wrangler.jsonc
         shell: bash
 
       - name: Replace Database ID in Drizzle Config

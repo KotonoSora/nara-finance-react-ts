@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { format } from "date-fns";
 import { CalendarIcon, FileDown, FileUp, Search } from "lucide-react";
-import { useState } from "react";
+import { lazy, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import type { DateRange } from "react-day-picker";
@@ -32,11 +32,15 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import FinancialInsights from "~/finance/features/transactions/financial-insights";
-import { exportToCSV } from "~/finance/shared/utils/export";
-import { exportToPDF } from "~/finance/shared/utils/export-pdf";
 import { showExportToast } from "~/finance/shared/utils/notifications";
 
 import ImportDialog from "./import-dialog";
+
+const exportToCSV = () =>
+  import("~/finance/shared/utils/export").then((mod) => mod.exportToCSV);
+
+const exportToPDF = () =>
+  import("~/finance/shared/utils/export-pdf").then((mod) => mod.exportToPDF);
 
 export default function List({
   selectedDate,
@@ -69,10 +73,14 @@ export default function List({
 
   const handleExportCSV = async () => {
     const filename = `transactions-${new Date().toISOString().split("T")[0]}`;
-    const exportPromise = new Promise<ExportResult>((resolve, reject) => {
-      exportToCSV(transactions, filename)
-        .then(() => resolve({ filename: `${filename}.csv` }))
-        .catch(reject);
+    const exportPromise = new Promise<ExportResult>(async (resolve, reject) => {
+      const exportCSVFunc = await exportToCSV();
+      try {
+        await exportCSVFunc(transactions, filename);
+        resolve({ filename: `${filename}.csv` });
+      } catch (error) {
+        reject(error);
+      }
     });
 
     showExportToast(exportPromise);
@@ -84,10 +92,14 @@ export default function List({
     }
 
     const filename = `transactions-${new Date().toISOString().split("T")[0]}`;
-    const exportPromise = new Promise<ExportResult>((resolve, reject) => {
-      exportToPDF(transactions, summary, filename)
-        .then(() => resolve({ filename: `${filename}.pdf` }))
-        .catch(reject);
+    const exportPromise = new Promise<ExportResult>(async (resolve, reject) => {
+      try {
+        const exportPDFFunc = await exportToPDF();
+        await exportPDFFunc(transactions, summary, filename);
+        resolve({ filename: `${filename}.pdf` });
+      } catch (error) {
+        reject(error);
+      }
     });
 
     showExportToast(exportPromise);

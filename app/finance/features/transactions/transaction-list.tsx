@@ -48,13 +48,17 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import FinancialInsights from "~/finance/features/transactions/financial-insights";
-import { exportToCSV } from "~/finance/shared/utils/export";
-import { exportToPDF } from "~/finance/shared/utils/export-pdf";
 import { showExportToast } from "~/finance/shared/utils/notifications";
 import { useFinanceShortcuts } from "~/finance/shared/utils/shortcuts";
 
 import DeleteTransactionDialog from "./delete-transaction-dialog";
 import ImportDialog from "./import-dialog";
+
+const exportToCSV = () =>
+  import("~/finance/shared/utils/export").then((mod) => mod.exportToCSV);
+
+const exportToPDF = () =>
+  import("~/finance/shared/utils/export-pdf").then((mod) => mod.exportToPDF);
 
 interface ListProps extends IListProps {
   onAddTransaction?: (data: Omit<Transaction, "id">) => void;
@@ -157,9 +161,11 @@ export default function List({
     const exportPromise = new Promise<ExportResult>(async (resolve, reject) => {
       try {
         if (format === "csv") {
-          await exportToCSV(filteredTransactions, filename);
+          const exportCSVFunc = await exportToCSV();
+          await exportCSVFunc(filteredTransactions, filename);
         } else if (localSummary) {
-          await exportToPDF(filteredTransactions, localSummary, filename);
+          const exportPDFFunc = await exportToPDF();
+          await exportPDFFunc(transactions, localSummary, filename);
         }
         resolve({ filename: `${filename}.${format}` });
       } catch (error) {

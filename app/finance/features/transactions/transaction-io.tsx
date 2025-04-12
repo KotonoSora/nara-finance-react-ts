@@ -2,9 +2,11 @@ import { toast } from "sonner";
 
 import { Button } from "~/components/ui/button";
 import { downloadCSV } from "~/finance/shared/utils/export";
-import { exportToPDF } from "~/finance/shared/utils/export-pdf";
 import { parseCSVTransactions } from "~/finance/shared/utils/import";
 import { showExportToast } from "~/finance/shared/utils/notifications";
+
+const exportToPDF = () =>
+  import("~/finance/shared/utils/export-pdf").then((mod) => mod.exportToPDF);
 
 interface TransactionIOProps {
   transactions: Transaction[];
@@ -61,7 +63,8 @@ export function TransactionIO({ transactions, onImport }: TransactionIOProps) {
 
     const exportPromise = new Promise<ExportResult>(async (resolve, reject) => {
       try {
-        await exportToPDF(transactions, summary, filename);
+        const exportPDFFunc = await exportToPDF();
+        await exportPDFFunc(transactions, summary, filename);
         resolve({ filename: `${filename}.pdf` });
       } catch (error) {
         reject(error);

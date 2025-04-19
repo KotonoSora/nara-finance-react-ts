@@ -19,6 +19,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check Node.js Version
+        run: node --version
+
+      - name: Check NODE_ENV
+        run: echo "Current NODE_ENV is: $NODE_ENV"
+
       - name: Install Bun
         uses: oven-sh/setup-bun@v1
         with:

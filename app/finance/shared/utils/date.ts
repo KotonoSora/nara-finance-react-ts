@@ -1,3 +1,12 @@
+import {
+  addMonths,
+  endOfMonth,
+  format,
+  isWithinInterval,
+  startOfMonth,
+  subMonths,
+} from "date-fns";
+
 /**
  * Determines if a date falls within a specified range
  * @param date - Date to check
@@ -15,9 +24,68 @@
  * isDateInRange(date, end, start)  // true (works with reversed range)
  * ```
  */
-export function isDateInRange(date: Date, start: Date, end: Date): boolean {
-  const [rangeStart, rangeEnd] = [start, end].sort(
-    (a, b) => a.getTime() - b.getTime(),
+export function isDateInRange(
+  date: Date,
+  rangeStart: Date,
+  rangeEnd: Date,
+): boolean {
+  return isWithinInterval(date, {
+    start: rangeStart < rangeEnd ? rangeStart : rangeEnd,
+    end: rangeStart < rangeEnd ? rangeEnd : rangeStart,
+  });
+}
+
+export function getMonthRangeFromDate(date: Date): DateRange {
+  return {
+    from: startOfMonth(date),
+    to: endOfMonth(date),
+  };
+}
+
+export function getDateRangeLabel(range: DateRange): string {
+  if (isSameMonth(range.from, range.to)) {
+    return format(range.from, "MMMM yyyy");
+  }
+
+  if (isSameYear(range.from, range.to)) {
+    return `${format(range.from, "MMM")} - ${format(range.to, "MMM yyyy")}`;
+  }
+
+  return `${format(range.from, "MMM yyyy")} - ${format(range.to, "MMM yyyy")}`;
+}
+
+export function isSameMonth(date1: Date, date2: Date): boolean {
+  return (
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth()
   );
-  return date >= rangeStart && date <= rangeEnd;
+}
+
+export function isSameYear(date1: Date, date2: Date): boolean {
+  return date1.getFullYear() === date2.getFullYear();
+}
+
+export function getNextMonth(date: Date): Date {
+  return addMonths(date, 1);
+}
+
+export function getPreviousMonth(date: Date): Date {
+  return subMonths(date, 1);
+}
+
+export function formatTransactionDate(date: Date): string {
+  return format(date, "MMM d, yyyy");
+}
+
+export function formatMonthYear(date: Date): string {
+  return format(date, "MMMM yyyy");
+}
+
+export function getRelativeDateRange(months: number): DateRange {
+  const end = new Date();
+  const start = subMonths(startOfMonth(end), months - 1);
+  return {
+    from: start,
+    to: end,
+  };
 }

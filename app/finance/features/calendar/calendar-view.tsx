@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import DayCell from "~/finance/features/calendar/day-cell";
 import { isDateInRange } from "~/finance/shared/utils/date";
-import { formatDate } from "~/finance/shared/utils/locale";
 import { getTransactionSummaryForDate } from "~/finance/shared/utils/transaction";
 
 export default function Calendar({
@@ -17,68 +16,66 @@ export default function Calendar({
   transactions,
 }: ICalendarProps) {
   const {
-    daysOfWeek,
-    currentDate,
-    currentMonth,
-    currentYear,
     daysInMonth,
+    daysOfWeek,
     firstDayOfWeek,
-    prevMonthDays,
     prevMonth,
     nextMonth,
+    currentYear,
+    currentMonth,
   } = calendarDetail;
-
-  const titleCurrentMonth = formatDate(currentViewDate);
-
-  const handleDateClick = (date: Date) => {
-    onDateSelect(date);
-  };
-
-  const changeMonth = (offset: number) => {
-    onMonthChange(
-      new Date(
-        currentViewDate.getFullYear(),
-        currentViewDate.getMonth() + offset,
-        1,
-      ),
-    );
-  };
 
   const [dragStart, setDragStart] = useState<Date | null>(null);
   const [dragEnd, setDragEnd] = useState<Date | null>(null);
+  const [isSelecting, setIsSelecting] = useState(false);
+
+  const titleCurrentMonth = new Date(
+    currentViewDate.getFullYear(),
+    currentViewDate.getMonth(),
+    1,
+  ).toLocaleString("default", { month: "long", year: "numeric" });
+
+  const changeMonth = (increment: number) => {
+    const nextDate = new Date(currentViewDate);
+    nextDate.setMonth(nextDate.getMonth() + increment);
+    onMonthChange(nextDate);
+  };
 
   const handleDragStart = (date: Date) => {
     setDragStart(date);
     setDragEnd(null);
+    setIsSelecting(true);
   };
 
   const handleDragEnter = (date: Date) => {
-    if (dragStart) {
+    if (isSelecting && dragStart) {
       setDragEnd(date);
     }
   };
 
   const handleDragEnd = () => {
-    if (dragStart && dragEnd) {
-      const [start, end] = [dragStart, dragEnd].sort(
-        (a, b) => a.getTime() - b.getTime(),
-      );
-      onDateRangeSelect?.({ from: start, to: end });
+    setIsSelecting(false);
+    if (dragStart && dragEnd && onDateRangeSelect) {
+      const range = {
+        from: dragStart < dragEnd ? dragStart : dragEnd,
+        to: dragStart < dragEnd ? dragEnd : dragStart,
+      };
+      onDateRangeSelect(range);
     }
-    setDragStart(null);
-    setDragEnd(null);
   };
 
-  const createDayItem = (
-    date: Date,
-    options: {
-      month: number;
-      day: number;
-      isCurrentMonth: boolean;
-      isWeekend: boolean;
-      isToday: boolean;
-    },
-  ): DayCellProps => {
+  const getDayOptions = (date: Date) => {
+    const options = {
+      month: currentMonth,
+      day: date.getDate(),
+      isCurrentMonth: date.getMonth() === currentMonth,
+      isWeekend: date.getDay() === 0 || date.getDay() === 6,
+      isToday: date.toDateString() === new Date().toDateString(),
+      selected: selectedDate
+        ? selectedDate.toDateString() === date.toDateString()
+        : false,
+    };
+
     const summary = getTransactionSummaryForDate(date, transactions);
     const isInDateRange =
       dragStart && dragEnd ? isDateInRange(date, dragStart, dragEnd) : false;
@@ -88,7 +85,7 @@ export default function Calendar({
       selected: selectedDate
         ? selectedDate.getTime() === date.getTime()
         : false,
-      onDateClick: handleDateClick,
+      onDateClick: () => handleClick(date),
       transactionCount: summary?.count || 0,
       transactionSummary: summary?.summary,
       onMouseDown: () => handleDragStart(date),
@@ -98,58 +95,40 @@ export default function Calendar({
     };
   };
 
-  const items = [
+  const handleClick = (date: Date) => {
+    if (!isSelecting) {
+      onDateSelect(date);
+    }
+  };
+
+  const getDaysGrid = () => {
+    const days = [];
+
     // Previous month days
-    ...Array.from({ length: firstDayOfWeek }, (_, i) => {
-      const date = new Date(
-        currentViewDate.getFullYear(),
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      const prevMonthDate = new Date(
+        currentYear,
         prevMonth,
-        prevMonthDays - firstDayOfWeek + i + 1,
+        daysInMonth - firstDayOfWeek + i + 1,
       );
-      return createDayItem(date, {
-        month: prevMonth,
-        day: prevMonthDays - firstDayOfWeek + i + 1,
-        isCurrentMonth: false,
-        isWeekend: false,
-        isToday: false,
-      });
-    }),
+      days.push(getDayOptions(prevMonthDate));
+    }
 
     // Current month days
-    ...Array.from({ length: daysInMonth }, (_, i) => {
-      const date = new Date(
-        currentViewDate.getFullYear(),
-        currentViewDate.getMonth(),
-        i + 1,
-      );
-      return createDayItem(date, {
-        month: currentViewDate.getMonth(),
-        day: i + 1,
-        isCurrentMonth: true,
-        isWeekend:
-          (firstDayOfWeek + i) % 7 === 5 || (firstDayOfWeek + i) % 7 === 6,
-        isToday:
-          i + 1 === currentDate &&
-          currentViewDate.getMonth() === currentMonth &&
-          currentViewDate.getFullYear() === currentYear,
-      });
-    }),
+    for (let i = 1; i <= daysInMonth; i++) {
+      const currentMonthDate = new Date(currentYear, currentMonth, i);
+      days.push(getDayOptions(currentMonthDate));
+    }
 
     // Next month days
-    ...Array.from(
-      { length: 7 - ((firstDayOfWeek + daysInMonth) % 7) },
-      (_, i) => {
-        const date = new Date(currentViewDate.getFullYear(), nextMonth, i + 1);
-        return createDayItem(date, {
-          month: nextMonth,
-          day: i + 1,
-          isCurrentMonth: false,
-          isWeekend: false,
-          isToday: false,
-        });
-      },
-    ),
-  ] as DayCellProps[];
+    const remainingCells = 42 - days.length; // 6 rows * 7 days = 42
+    for (let i = 1; i <= remainingCells; i++) {
+      const nextMonthDate = new Date(currentYear, nextMonth, i);
+      days.push(getDayOptions(nextMonthDate));
+    }
+
+    return days;
+  };
 
   return (
     <div className="rounded-xl border bg-card shadow-sm p-4">
@@ -173,21 +152,20 @@ export default function Calendar({
             <ChevronRight className="h-5 w-5" />
           </Button>
         </div>
-        <div className="grid grid-cols-7 text-center border-b pb-4">
-          {daysOfWeek.map((day, index) => (
+
+        <div className="grid grid-cols-7 gap-px">
+          {daysOfWeek.map((day, i) => (
             <div
-              key={index}
-              className="text-sm font-medium text-muted-foreground"
+              key={day}
+              className="text-center text-sm font-medium text-muted-foreground py-2"
             >
               {day}
             </div>
           ))}
+          {getDaysGrid().map((props, i) => (
+            <DayCell key={`${props.month}-${props.day}`} {...props} />
+          ))}
         </div>
-      </div>
-      <div className="grid grid-cols-7 gap-px mt-4">
-        {items.map((item, index) => (
-          <DayCell key={index} {...item} />
-        ))}
       </div>
     </div>
   );

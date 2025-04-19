@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - gh-pages  # Runs only on gh-pages
-      - feature/budget
 
 jobs:
   deploy:

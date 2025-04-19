@@ -14,17 +14,11 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       D1_DATABASE_ID: ${{ secrets.D1_DATABASE_ID }}
       D1_DATABASE_NAME: ${{ secrets.D1_DATABASE_NAME }}
+      NODE_ENV: production
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Check Node.js Version
-        run: node --version
-
-      - name: Check NODE_ENV
-        run: |
-          echo "Current NODE_ENV is: $NODE_ENV"
 
       - name: Install Bun
         uses: oven-sh/setup-bun@v1

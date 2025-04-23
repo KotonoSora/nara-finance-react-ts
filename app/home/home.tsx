@@ -32,6 +32,9 @@ export default function HomePage() {
             <Button variant="outline" asChild className="w-full">
               <Link to="/finance">Finance</Link>
             </Button>
+            <Button variant="outline" asChild className="w-full">
+              <Link to="/income-tax">Income tax</Link>
+            </Button>
           </div>
         </CardContent>
       </Card>

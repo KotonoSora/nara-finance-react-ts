@@ -11,6 +11,7 @@ interface DynamicInputListProps {
   label: string;
   typeLabel?: string;
   amountLabel?: string;
+  currencyUnit?: string;
 }
 
 export function DynamicInputList({
@@ -21,6 +22,7 @@ export function DynamicInputList({
   label,
   typeLabel = "Type",
   amountLabel = "Amount",
+  currencyUnit = "$",
 }: DynamicInputListProps) {
   return (
     <div className="space-y-4">
@@ -40,11 +42,22 @@ export function DynamicInputList({
             />
           </div>
           <div className="flex-1">
-            <Input
-              placeholder={amountLabel}
-              value={item.amount}
-              onChange={(e) => onChange(index, "amount", e.target.value)}
-            />
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                {currencyUnit}
+              </span>
+              <Input
+                placeholder={amountLabel}
+                className="pl-12"
+                type="text"
+                inputMode="numeric"
+                value={item.amount.replace(/[^0-9.-]/g, "") || ""}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^0-9.-]/g, "");
+                  onChange(index, "amount", value);
+                }}
+              />
+            </div>
           </div>
           <Button
             type="button"

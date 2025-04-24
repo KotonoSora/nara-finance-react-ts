@@ -319,17 +319,26 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                   <FormItem>
                     <FormLabel>Annual Income</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        type="text"
-                        placeholder={formatCurrency(0, form.watch("country"))}
-                        onChange={(e) => {
-                          const parsed = parseCurrencyInput(e.target.value);
-                          field.onChange(
-                            formatCurrency(parsed, form.watch("country")),
-                          );
-                        }}
-                      />
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                          {CURRENCY_CONFIG[form.watch("country")]?.unit || "$"}
+                        </span>
+                        <Input
+                          {...field}
+                          type="text"
+                          inputMode="numeric"
+                          className="pl-12"
+                          placeholder="0"
+                          value={field.value.replace(/[^0-9.-]/g, "") || ""}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(
+                              /[^0-9.-]/g,
+                              "",
+                            );
+                            field.onChange(value);
+                          }}
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -386,17 +395,27 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                     <FormItem>
                       <FormLabel>Additional Income</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          type="text"
-                          placeholder={formatCurrency(0, form.watch("country"))}
-                          onChange={(e) => {
-                            const parsed = parseCurrencyInput(e.target.value);
-                            field.onChange(
-                              formatCurrency(parsed, form.watch("country")),
-                            );
-                          }}
-                        />
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                            {CURRENCY_CONFIG[form.watch("country")]?.unit ||
+                              "$"}
+                          </span>
+                          <Input
+                            {...field}
+                            type="text"
+                            inputMode="numeric"
+                            className="pl-12"
+                            placeholder="0"
+                            value={field.value.replace(/[^0-9.-]/g, "") || ""}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(
+                                /[^0-9.-]/g,
+                                "",
+                              );
+                              field.onChange(value);
+                            }}
+                          />
+                        </div>
                       </FormControl>
                       <FormDescription>
                         Include other income sources like dividends, rental
@@ -435,6 +454,10 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                             label="Itemized Deduction"
                             typeLabel="Description"
                             amountLabel={`Amount (${CURRENCY_CONFIG[form.watch("country")]?.code || "USD"})`}
+                            currencyUnit={
+                              CURRENCY_CONFIG[form.watch("country")]?.unit ||
+                              "$"
+                            }
                             onAdd={() => {
                               const currentDeductions =
                                 form.getValues("itemizedDeductions");
@@ -493,6 +516,10 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                             label="Tax Credit"
                             typeLabel="Description"
                             amountLabel={`Amount (${CURRENCY_CONFIG[form.watch("country")]?.code || "USD"})`}
+                            currencyUnit={
+                              CURRENCY_CONFIG[form.watch("country")]?.unit ||
+                              "$"
+                            }
                             onAdd={() => {
                               const currentCredits = form.getValues("credits");
                               form.setValue("credits", [

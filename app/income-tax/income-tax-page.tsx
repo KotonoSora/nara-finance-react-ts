@@ -56,6 +56,12 @@ export default function IncomeTaxPage({}: Route.ComponentProps) {
     setIsCalculating(false);
   };
 
+  // Reset result when form is reset
+  const handleFormReset = () => {
+    setResult(null);
+    setIsCalculating(false);
+  };
+
   return (
     <main className="container mx-auto py-6 space-y-8">
       <article itemScope itemType="https://schema.org/WebApplication">
@@ -71,7 +77,7 @@ export default function IncomeTaxPage({}: Route.ComponentProps) {
         </header>
 
         <section aria-label="Tax Calculator Form">
-          <TaxForm onCalculate={handleCalculate} />
+          <TaxForm onCalculate={handleCalculate} onReset={handleFormReset} />
         </section>
 
         {isCalculating ? (

@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -76,9 +76,10 @@ interface TaxFormProps {
     country: string,
     residencyStatus: ResidencyStatus,
   ) => void;
+  onReset: () => void;
 }
 
-export function TaxForm({ onCalculate }: TaxFormProps) {
+export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -96,58 +97,25 @@ export function TaxForm({ onCalculate }: TaxFormProps) {
     },
   });
 
-  // Reset monetary values when country changes
-  useEffect(() => {
-    const country = form.watch("country");
-
+  const onCountryChange = (newCountry: Country) => {
     // Reset all monetary values to 0 in the new currency format
-    form.setValue("annualIncome", formatCurrency(0, country));
-    form.setValue("additionalIncome", formatCurrency(0, country));
+    form.setValue("annualIncome", formatCurrency(0, newCountry));
+    form.setValue("additionalIncome", formatCurrency(0, newCountry));
 
-    // Reset itemized deductions to empty array
+    // Reset all form arrays and flags
     form.setValue("itemizedDeductions", []);
-
-    // Reset credits to empty array
     form.setValue("credits", []);
-
-    // Reset use itemized deductions to false
     form.setValue("useItemizedDeductions", false);
+    form.setValue("dependentCount", 0);
 
-    // Reset state to null
+    // Reset residency and state-specific fields
+    form.setValue("residencyStatus", "resident");
     form.setValue("state", null);
-  }, [form.watch("country")]);
+    form.setValue("filingStatus", "single");
 
-  useEffect(() => {
-    const country = form.watch("country");
-    const currentIncome = parseCurrencyInput(form.getValues("annualIncome"));
-    const currentAdditionalIncome = parseCurrencyInput(
-      form.getValues("additionalIncome") || "0",
-    );
-
-    form.setValue("annualIncome", formatCurrency(currentIncome, country));
-    form.setValue(
-      "additionalIncome",
-      formatCurrency(currentAdditionalIncome, country),
-    );
-
-    const deductions = form.getValues("itemizedDeductions");
-    if (deductions.length > 0) {
-      const reformattedDeductions = deductions.map((d) => ({
-        type: d.type,
-        amount: formatCurrency(parseCurrencyInput(d.amount), country),
-      }));
-      form.setValue("itemizedDeductions", reformattedDeductions);
-    }
-
-    const credits = form.getValues("credits");
-    if (credits.length > 0) {
-      const reformattedCredits = credits.map((c) => ({
-        type: c.type,
-        amount: formatCurrency(parseCurrencyInput(c.amount), country),
-      }));
-      form.setValue("credits", reformattedCredits);
-    }
-  }, [form.watch("country")]);
+    // Reset calculation results
+    onReset();
+  };
 
   function getFilingStatusOptions(country: Country) {
     const commonOptions = [
@@ -226,7 +194,10 @@ export function TaxForm({ onCalculate }: TaxFormProps) {
                   <FormItem>
                     <FormLabel>Country</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(value) => {
+                        onCountryChange(value as Country);
+                        field.onChange(value);
+                      }}
                       defaultValue={field.value}
                     >
                       <FormControl>

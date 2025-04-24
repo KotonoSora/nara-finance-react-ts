@@ -104,18 +104,28 @@ export function TaxResults({
   }, [result]);
 
   return (
-    <div className="space-y-6">
+    <div
+      className="space-y-6"
+      itemScope
+      itemType="https://schema.org/FinancialProduct"
+    >
       <Card>
         <CardHeader>
-          <CardTitle>Tax Calculation Summary</CardTitle>
+          <CardTitle itemProp="name">Tax Calculation Summary</CardTitle>
           <CardDescription>
-            Estimated tax breakdown for tax year 2025
-            {residencyStatus === "non_resident" &&
-              " (Non-Resident Rate Applied)"}
+            <span itemProp="description">
+              Estimated tax breakdown for tax year 2025
+              {residencyStatus === "non_resident" &&
+                " (Non-Resident Rate Applied)"}
+            </span>
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="h-[300px]">
+          <div
+            className="h-[300px]"
+            role="img"
+            aria-label="Tax breakdown pie chart"
+          >
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -165,7 +175,10 @@ export function TaxResults({
                     <TooltipProvider>
                       <UITooltip>
                         <TooltipTrigger>
-                          <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                          <HelpCircle
+                            className="h-4 w-4 text-muted-foreground"
+                            aria-label={`Help about ${item.label.toLowerCase()}`}
+                          />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>{item.tooltip}</p>
@@ -174,7 +187,12 @@ export function TaxResults({
                     </TooltipProvider>
                   )}
                 </div>
-                <p className="text-2xl font-bold">{item.value}</p>
+                <p
+                  className="text-2xl font-bold"
+                  itemProp={item.label.toLowerCase().replace(/\s+/g, "")}
+                >
+                  {item.value}
+                </p>
               </div>
             ))}
           </div>
@@ -183,7 +201,7 @@ export function TaxResults({
 
       {residencyStatus === "resident" ? (
         <>
-          <Card>
+          <Card aria-label="Tax brackets breakdown">
             <CardHeader>
               <CardTitle>Tax Brackets Breakdown</CardTitle>
               <CardDescription>
@@ -218,7 +236,7 @@ export function TaxResults({
           </Card>
 
           {(result.deductions.length > 0 || result.credits.length > 0) && (
-            <Card>
+            <Card aria-label="Deductions and credits">
               <CardHeader>
                 <CardTitle>Deductions and Credits</CardTitle>
                 <CardDescription>
@@ -282,7 +300,7 @@ export function TaxResults({
           )}
 
           {result.insuranceDeductions && (
-            <Card>
+            <Card aria-label="Insurance contributions">
               <CardHeader>
                 <CardTitle>Insurance Contributions</CardTitle>
                 <CardDescription>
@@ -319,7 +337,7 @@ export function TaxResults({
 
           {result.familyDeductions &&
             result.familyDeductions.dependentCount > 0 && (
-              <Card>
+              <Card aria-label="Family deductions">
                 <CardHeader>
                   <CardTitle>Family Deductions</CardTitle>
                   <CardDescription>
@@ -373,7 +391,7 @@ export function TaxResults({
             )}
 
           {result.stateTax && (
-            <Card>
+            <Card aria-label="State tax breakdown">
               <CardHeader>
                 <CardTitle>
                   {result.stateTax.state} State Tax Breakdown
@@ -413,7 +431,7 @@ export function TaxResults({
           )}
         </>
       ) : (
-        <Card>
+        <Card aria-label="Non-resident tax information">
           <CardHeader>
             <CardTitle>Non-Resident Tax Information</CardTitle>
             <CardDescription>

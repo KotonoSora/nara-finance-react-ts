@@ -196,17 +196,28 @@ export function TaxForm({ onCalculate }: TaxFormProps) {
   const showStateSelection = currentCountry === "US" && !isNonResident;
 
   return (
-    <Card>
+    <Card role="form" aria-labelledby="tax-form-title">
       <CardHeader>
-        <CardTitle>Personal Income Tax Calculator (2025)</CardTitle>
-        <CardDescription>
-          Calculate your estimated income tax for the US, UK, Canada, Japan,
-          South Korea, Vietnam, and Singapore
+        <CardTitle id="tax-form-title" itemProp="serviceType">
+          Personal Income Tax Calculator (2025)
+        </CardTitle>
+        <CardDescription itemProp="provider">
+          <p itemProp="description">
+            Calculate your estimated income tax for the US, UK, Canada, Japan,
+            South Korea, Vietnam, and Singapore
+          </p>
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent itemProp="areaServed">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6"
+            aria-label="Tax calculation form"
+            itemScope
+            itemType="https://schema.org/Service"
+            itemProp="calculation"
+          >
             <div className="grid gap-4 md:grid-cols-2">
               <FormField
                 control={form.control}
@@ -383,10 +394,15 @@ export function TaxForm({ onCalculate }: TaxFormProps) {
                 checked={showAdvanced}
                 onCheckedChange={setShowAdvanced}
                 disabled={isNonResident}
+                aria-label="Toggle advanced options"
               />
-              <label htmlFor="advanced">
+              <label htmlFor="advanced" className="text-sm">
                 Show Advanced Options{" "}
-                {isNonResident && "(Not available for non-residents)"}
+                {isNonResident && (
+                  <span className="text-muted-foreground">
+                    (Not available for non-residents)
+                  </span>
+                )}
               </label>
             </div>
 
@@ -552,9 +568,17 @@ export function TaxForm({ onCalculate }: TaxFormProps) {
               </div>
             )}
 
-            <Button type="submit" className="w-full">
+            <Button
+              type="submit"
+              className="w-full"
+              aria-label="Calculate tax based on provided information"
+            >
               Calculate Tax
             </Button>
+
+            <p className="text-sm text-muted-foreground mt-4">
+              * All calculations are estimates based on projected 2025 tax rates
+            </p>
           </form>
         </Form>
       </CardContent>

@@ -43,6 +43,13 @@ import {
   parseCurrencyInput,
 } from "../utils/currency-formatter";
 import { TaxCalculator } from "../utils/tax-calculator";
+import {
+  countryToLanguage,
+  defaultCreditTypes,
+  defaultDeductionTypes,
+  getTranslation,
+} from "../utils/translations";
+import { DependentInfo } from "./dependent-info";
 import { DynamicInputList } from "./dynamic-input-list";
 
 const formSchema = z.object({
@@ -81,6 +88,10 @@ interface TaxFormProps {
 
 export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState<"en" | "vi" | "ja">(
+    "en",
+  );
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -107,11 +118,12 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
     form.setValue("credits", []);
     form.setValue("useItemizedDeductions", false);
     form.setValue("dependentCount", 0);
-
-    // Reset residency and state-specific fields
     form.setValue("residencyStatus", "resident");
     form.setValue("state", null);
     form.setValue("filingStatus", "single");
+
+    // Update language based on country
+    setCurrentLanguage(countryToLanguage[newCountry]);
 
     // Reset calculation results
     onReset();
@@ -192,7 +204,9 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                 name="country"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Country</FormLabel>
+                    <FormLabel>
+                      {getTranslation("Tax.Country", currentLanguage)}
+                    </FormLabel>
                     <Select
                       onValueChange={(value) => {
                         onCountryChange(value as Country);
@@ -225,7 +239,9 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                 name="residencyStatus"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Residency Status</FormLabel>
+                    <FormLabel>
+                      {getTranslation("Tax.ResidencyStatus", currentLanguage)}
+                    </FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
@@ -243,8 +259,7 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                       </SelectContent>
                     </Select>
                     <FormDescription>
-                      Non-residents may be subject to different tax rates and
-                      limitations
+                      {getTranslation("Help.ResidencyStatus", currentLanguage)}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -257,7 +272,9 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                   name="state"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>State</FormLabel>
+                      <FormLabel>
+                        {getTranslation("Tax.State", currentLanguage)}
+                      </FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value || undefined}
@@ -273,7 +290,7 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                         </SelectContent>
                       </Select>
                       <FormDescription>
-                        Select your state for state tax calculation
+                        {getTranslation("Help.StateSelection", currentLanguage)}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -286,7 +303,9 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                 name="filingStatus"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Filing Status</FormLabel>
+                    <FormLabel>
+                      {getTranslation("Tax.FilingStatus", currentLanguage)}
+                    </FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
@@ -317,7 +336,9 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                 name="annualIncome"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Annual Income</FormLabel>
+                    <FormLabel>
+                      {getTranslation("Tax.Income", currentLanguage)}
+                    </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -350,7 +371,15 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                 name="dependentCount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Number of Dependents</FormLabel>
+                    <div className="flex items-center gap-2">
+                      <FormLabel>
+                        {getTranslation("Tax.Dependents", currentLanguage)}
+                      </FormLabel>
+                      <DependentInfo
+                        country={currentCountry}
+                        language={currentLanguage}
+                      />
+                    </div>
                     <FormControl>
                       <Input
                         type="number"
@@ -360,8 +389,17 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                           field.onChange(parseInt(e.target.value) || 0)
                         }
                         value={field.value}
+                        disabled={isNonResident}
                       />
                     </FormControl>
+                    {isNonResident && (
+                      <FormDescription>
+                        {getTranslation(
+                          "Tax.NotAvailableNonResident",
+                          currentLanguage,
+                        )}
+                      </FormDescription>
+                    )}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -393,7 +431,12 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                   name="additionalIncome"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Additional Income</FormLabel>
+                      <FormLabel>
+                        {getTranslation(
+                          "Tax.AdditionalIncome",
+                          currentLanguage,
+                        )}
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -418,8 +461,10 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                         </div>
                       </FormControl>
                       <FormDescription>
-                        Include other income sources like dividends, rental
-                        income, etc.
+                        {getTranslation(
+                          "Help.AdditionalIncome",
+                          currentLanguage,
+                        )}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -437,7 +482,12 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <FormLabel>Use Itemized Deductions</FormLabel>
+                      <FormLabel>
+                        {getTranslation(
+                          "Tax.UseItemizedDeductions",
+                          currentLanguage,
+                        )}
+                      </FormLabel>
                     </FormItem>
                   )}
                 />
@@ -451,20 +501,32 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                         <FormItem>
                           <DynamicInputList
                             items={field.value}
-                            label="Itemized Deduction"
-                            typeLabel="Description"
-                            amountLabel={`Amount (${CURRENCY_CONFIG[form.watch("country")]?.code || "USD"})`}
+                            label={getTranslation(
+                              "Tax.Deductions",
+                              currentLanguage,
+                            )}
+                            typeLabel={getTranslation(
+                              "Tax.DeductionType",
+                              currentLanguage,
+                            )}
+                            amountLabel={`${getTranslation("Tax.Amount", currentLanguage)} (${CURRENCY_CONFIG[form.watch("country")]?.code || "USD"})`}
                             currencyUnit={
                               CURRENCY_CONFIG[form.watch("country")]?.unit ||
                               "$"
                             }
+                            suggestedTypes={defaultDeductionTypes.map(
+                              (type) => ({
+                                value: type,
+                                label: getTranslation(type, currentLanguage),
+                              }),
+                            )}
                             onAdd={() => {
                               const currentDeductions =
                                 form.getValues("itemizedDeductions");
                               form.setValue("itemizedDeductions", [
                                 ...currentDeductions,
                                 {
-                                  type: "",
+                                  type: defaultDeductionTypes[0],
                                   amount: formatCurrency(
                                     0,
                                     form.watch("country"),
@@ -513,19 +575,31 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
                         <FormItem>
                           <DynamicInputList
                             items={field.value}
-                            label="Tax Credit"
-                            typeLabel="Description"
-                            amountLabel={`Amount (${CURRENCY_CONFIG[form.watch("country")]?.code || "USD"})`}
+                            label={getTranslation(
+                              "Tax.Credits",
+                              currentLanguage,
+                            )}
+                            typeLabel={getTranslation(
+                              "Tax.CreditType",
+                              currentLanguage,
+                            )}
+                            amountLabel={`${getTranslation("Tax.Amount", currentLanguage)} (${CURRENCY_CONFIG[form.watch("country")]?.code || "USD"})`}
                             currencyUnit={
                               CURRENCY_CONFIG[form.watch("country")]?.unit ||
                               "$"
                             }
+                            suggestedTypes={defaultCreditTypes.map((type) => ({
+                              value: type,
+                              label: getTranslation(type, currentLanguage),
+                            }))}
+                            showCreditHelp={true}
+                            language={currentLanguage}
                             onAdd={() => {
                               const currentCredits = form.getValues("credits");
                               form.setValue("credits", [
                                 ...currentCredits,
                                 {
-                                  type: "",
+                                  type: defaultCreditTypes[0],
                                   amount: formatCurrency(
                                     0,
                                     form.watch("country"),
@@ -571,11 +645,11 @@ export function TaxForm({ onCalculate, onReset }: TaxFormProps) {
               className="w-full"
               aria-label="Calculate tax based on provided information"
             >
-              Calculate Tax
+              {getTranslation("Button.CalculateTax", currentLanguage)}
             </Button>
 
             <p className="text-sm text-muted-foreground mt-4">
-              * All calculations are estimates based on projected 2025 tax rates
+              {getTranslation("Help.DisclaimerNote", currentLanguage)}
             </p>
           </form>
         </Form>

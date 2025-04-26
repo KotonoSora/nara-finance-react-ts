@@ -20,4 +20,6 @@ export default [
     ]),
     route("about", "address-book/about.tsx"),
   ]),
+
+  route("income-tax", "income-tax/income-tax-page.tsx"),
 ] satisfies RouteConfig;

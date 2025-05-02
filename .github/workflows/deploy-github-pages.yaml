@@ -5,6 +5,9 @@ on:
     branches:
       - gh-pages  # Runs only on gh-pages
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest

@@ -13,6 +13,7 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       D1_DATABASE_ID: ${{ secrets.D1_DATABASE_ID }}
       D1_DATABASE_NAME: ${{ secrets.D1_DATABASE_NAME }}
+      NODE_ENV: production
 
     steps:
       - name: Checkout repository
@@ -28,8 +29,8 @@ jobs:
 
       - name: Replace Database ID in Wrangler Config
         run: |
-          sed -i 's|your-database-name|'"$D1_DATABASE_NAME"'|g' wrangler.toml
-          sed -i 's|your-database-id|'"$D1_DATABASE_ID"'|g' wrangler.toml
+          sed -i 's|your-database-name|'"$D1_DATABASE_NAME"'|g' wrangler.jsonc
+          sed -i 's|your-database-id|'"$D1_DATABASE_ID"'|g' wrangler.jsonc
         shell: bash
 
       - name: Replace Database ID in Drizzle Config

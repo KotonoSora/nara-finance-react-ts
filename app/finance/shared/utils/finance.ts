@@ -1,3 +1,6 @@
+import AuditTrail from "./audit";
+import { FinancialAmount } from "./financial-precision";
+
 /**
  * Evaluates the significance of change between two numerical values
  * @param current - Current value being compared
@@ -37,7 +40,15 @@ export function calculatePercentageChange(
   current: number,
   previous: number,
 ): number {
-  return ((current - previous) / previous) * 100;
+  const currentAmount = new FinancialAmount(current);
+  const previousAmount = new FinancialAmount(previous);
+
+  if (previousAmount.toNumber() === 0) return 0;
+
+  return currentAmount
+    .subtract(previousAmount)
+    .multiply(new FinancialAmount(100))
+    .toNumber();
 }
 
 /**
@@ -101,10 +112,12 @@ export function analyzeTrend(historicalData: number[]): {
  * formatCurrency(0)        // "$0.00"
  * ```
  */
+const currencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
+
 export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format(amount);
+  const financialAmount = new FinancialAmount(amount);
+  return currencyFormatter.format(financialAmount.toNumber());
 }

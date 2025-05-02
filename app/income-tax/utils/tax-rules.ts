@@ -203,8 +203,8 @@ export const COUNTRY_SPECIFIC_RULES: Record<string, CountrySpecificRules> = {
     healthInsuranceRate: 1.5,
     unemploymentInsuranceRate: 1,
     maxSocialInsuranceSalary: 46800000,
-    personalDeduction: 11000000,
-    dependentDeduction: 4400000,
+    personalDeduction: 11000000, // Updated 2025 personal deduction
+    dependentDeduction: 4400000, // Updated 2025 dependent deduction
   },
   SG: {
     // CPF contributions

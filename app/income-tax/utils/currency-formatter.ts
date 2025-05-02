@@ -1,13 +1,15 @@
-export const CURRENCY_CONFIG: Record<string, { code: string; locale: string }> =
-  {
-    US: { code: "USD", locale: "en-US" },
-    UK: { code: "GBP", locale: "en-GB" },
-    CA: { code: "CAD", locale: "en-CA" },
-    JP: { code: "JPY", locale: "ja-JP" },
-    KR: { code: "KRW", locale: "ko-KR" },
-    VN: { code: "VND", locale: "vi-VN" },
-    SG: { code: "SGD", locale: "en-SG" },
-  };
+export const CURRENCY_CONFIG: Record<
+  string,
+  { code: string; locale: string; unit: string }
+> = {
+  US: { code: "USD", locale: "en-US", unit: "$" },
+  UK: { code: "GBP", locale: "en-GB", unit: "£" },
+  CA: { code: "CAD", locale: "en-CA", unit: "$" },
+  JP: { code: "JPY", locale: "ja-JP", unit: "¥" },
+  KR: { code: "KRW", locale: "ko-KR", unit: "₩" },
+  VN: { code: "VND", locale: "vi-VN", unit: "₫" },
+  SG: { code: "SGD", locale: "en-SG", unit: "$" },
+};
 
 export function formatCurrency(amount: number, country: string): string {
   const config = CURRENCY_CONFIG[country];

@@ -1,7 +1,17 @@
 import { X } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
+import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+
+import { CreditInfo } from "./credit-info";
 
 interface DynamicInputListProps {
   items: Array<{ type: string; amount: string }>;
@@ -11,6 +21,10 @@ interface DynamicInputListProps {
   label: string;
   typeLabel?: string;
   amountLabel?: string;
+  currencyUnit?: string;
+  suggestedTypes?: Array<{ value: string; label: string }>;
+  showCreditHelp?: boolean;
+  language?: "en" | "vi" | "ja";
 }
 
 export function DynamicInputList({
@@ -21,41 +35,99 @@ export function DynamicInputList({
   label,
   typeLabel = "Type",
   amountLabel = "Amount",
+  currencyUnit = "$",
+  suggestedTypes = [],
+  showCreditHelp = false,
+  language = "en",
 }: DynamicInputListProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h4 className="text-sm font-medium">{label}</h4>
-        <Button type="button" variant="outline" size="sm" onClick={onAdd}>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={onAdd}
+          className="text-sm"
+        >
           Add {label}
         </Button>
       </div>
-      {items.map((item, index) => (
-        <div key={index} className="flex gap-4">
-          <div className="flex-1">
-            <Input
-              placeholder={typeLabel}
-              value={item.type}
-              onChange={(e) => onChange(index, "type", e.target.value)}
-            />
-          </div>
-          <div className="flex-1">
-            <Input
-              placeholder={amountLabel}
-              value={item.amount}
-              onChange={(e) => onChange(index, "amount", e.target.value)}
-            />
-          </div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={() => onRemove(index)}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      ))}
+      <div className="space-y-4">
+        {items.map((item, index) => (
+          <Card key={index} className="relative">
+            <CardContent className="pt-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm text-muted-foreground">
+                      {typeLabel}
+                    </label>
+                    {showCreditHelp && (
+                      <CreditInfo creditType={item.type} language={language} />
+                    )}
+                  </div>
+                  {suggestedTypes.length > 0 ? (
+                    <Select
+                      value={item.type}
+                      onValueChange={(value) => onChange(index, "type", value)}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {suggestedTypes.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Input
+                      placeholder={typeLabel}
+                      value={item.type}
+                      onChange={(e) => onChange(index, "type", e.target.value)}
+                    />
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm text-muted-foreground">
+                    {amountLabel}
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                      {currencyUnit}
+                    </span>
+                    <Input
+                      placeholder={amountLabel}
+                      className="pl-12"
+                      type="text"
+                      inputMode="numeric"
+                      value={item.amount.replace(/[^0-9.-]/g, "") || ""}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/[^0-9.-]/g, "");
+                        onChange(index, "amount", value);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-4 top-4"
+                onClick={() => onRemove(index)}
+              >
+                <X className="h-4 w-4" />
+                <span className="sr-only">Remove {label}</span>
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }

@@ -12,3 +12,5 @@
 !src/**
 !packages/
 !packages/**
+!.vscode/
+!.vscode/**

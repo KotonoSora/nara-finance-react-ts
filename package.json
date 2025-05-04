@@ -55,6 +55,7 @@
     "decimal.js": "10.5.0",
     "drizzle-orm": "~0.40.1",
     "embla-carousel-react": "8.6.0",
+    "framer-motion": "12.9.4",
     "input-otp": "1.4.2",
     "isbot": "5.1.27",
     "jspdf": "3.0.1",

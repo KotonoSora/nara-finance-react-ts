@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 
-import type { Route } from "./+types/app._index";
+import type { Route } from "./+types/app";
 
 import { ModeSwitcher } from "~/components/mode-switcher";
 import { Button } from "~/components/ui/button";

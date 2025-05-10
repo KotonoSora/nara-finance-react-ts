@@ -1,11 +1,11 @@
 const faqs = [
   {
-    question: "MoneyFlow có miễn phí không?",
+    question: "{{APP_NAME}} có miễn phí không?",
     answer: "Có bản dùng thử miễn phí, không cần thẻ tín dụng!",
   },
   {
     question: "Tôi có cần biết tài chính không?",
-    answer: "Không, MoneyFlow được thiết kế đơn giản cho mọi người.",
+    answer: "Không, {{APP_NAME}} được thiết kế đơn giản cho mọi người.",
   },
   {
     question: "Dữ liệu của tôi có an toàn không?",

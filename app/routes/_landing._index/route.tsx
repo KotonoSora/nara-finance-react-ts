@@ -10,62 +10,60 @@ import Header from "./components/header";
 import HeroSection from "./components/hero";
 import SocialProofSection from "./components/social-proof";
 import TrustSection from "./components/trust";
-import faqs from "./data/faqs";
+import { LandingContextProvider } from "./context/landing-context";
 
-export function meta({}: Route.MetaArgs) {
-  const title = "MoneyFlow - Quản lý tài chính cá nhân thông minh với AI";
-  const description =
-    "Quản lý dòng tiền dễ dàng với công cụ AI: theo dõi giao dịch tự động, lập ngân sách thông minh, tối ưu tiết kiệm 20%, và quyết toán thuế chính xác. Dùng thử miễn phí ngay hôm nay!";
+export function loader({ context }: Route.LoaderArgs) {
+  const {
+    APP_NAME: name,
+    APP_DESCRIPTION: description,
+    APP_SLOGAN: slogan,
+    APP_DOMAIN: domain,
+    APP_TITLE: title,
+    APP_VERSION: version,
+    APP_KEYWORDS: keywords,
+  } = context.cloudflare.env;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map((faq) => ({
-      "@type": "Question",
-      name: faq.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: faq.answer,
-      },
-    })),
+  return {
+    name,
+    description,
+    slogan,
+    domain,
+    title,
+    version,
+    keywords,
   };
+}
+
+export function meta({ data }: Route.MetaArgs) {
+  const { name, description, slogan, domain, title, version, keywords } = data;
+  const customTitle = `${name} | ${title} | ${slogan} | ${version}`;
+  const baseUrl = `https://${domain}`;
 
   return [
-    { title },
-    { name: "viewport", content: "width=device-width, initial-scale=1.0" },
+    { title: customTitle },
     { name: "description", content: description },
-    {
-      name: "keywords",
-      content:
-        "tài chính cá nhân, quản lý dòng tiền, lập ngân sách, tiết kiệm, AI tài chính, quản lý chi tiêu",
-    },
+    { name: "keywords", content: keywords },
     // Open Graph tags
-    { property: "og:title", content: title },
+    { property: "og:title", content: customTitle },
     { property: "og:description", content: description },
     { property: "og:type", content: "website" },
     {
       property: "og:image",
-      content: "https://moneyflow.app/assets/og-image.jpg",
+      content: `${baseUrl}/assets/og-image.jpg`,
     },
-    { property: "og:url", content: "https://moneyflow.app" },
+    { property: "og:url", content: baseUrl },
     // Twitter Card tags
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:title", content: title },
+    { name: "twitter:title", content: customTitle },
     { name: "twitter:description", content: description },
     {
       name: "twitter:image",
-      content: "https://moneyflow.app/assets/twitter-card.jpg",
-    },
-    // Schema.org JSON-LD
-    {
-      tagName: "script",
-      type: "application/ld+json",
-      children: JSON.stringify(jsonLd),
+      content: `${baseUrl}/assets/twitter-card.jpg`,
     },
   ];
 }
 
-export default function LandingPage({}: Route.ComponentProps) {
+export default function LandingPage({ loaderData }: Route.ComponentProps) {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <Suspense
@@ -75,14 +73,16 @@ export default function LandingPage({}: Route.ComponentProps) {
           </div>
         }
       >
-        <Header />
-        <HeroSection />
-        <BenefitsSection />
-        <SocialProofSection />
-        <TrustSection />
-        <CTASection />
-        <FAQSection />
-        <FooterSection />
+        <LandingContextProvider value={loaderData}>
+          <Header />
+          <HeroSection />
+          <BenefitsSection />
+          <SocialProofSection />
+          <TrustSection />
+          <CTASection />
+          <FAQSection />
+          <FooterSection />
+        </LandingContextProvider>
       </Suspense>
     </main>
   );

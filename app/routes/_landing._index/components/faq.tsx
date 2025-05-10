@@ -7,9 +7,11 @@ import {
   AccordionTrigger,
 } from "~/components/ui/accordion";
 
+import { useLandingContext } from "../context/landing-context";
 import faqs from "../data/faqs";
 
 export default function FAQSection() {
+  const { name } = useLandingContext();
   return (
     <section className="bg-muted py-12 sm:py-16 lg:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -43,7 +45,7 @@ export default function FAQSection() {
                 <AccordionItem value={`item-${index}`}>
                   <AccordionTrigger className="text-foreground text-left px-4 hover:bg-muted transition-colors">
                     <span className="flex items-center gap-2">
-                      {faq.question}
+                      {faq.question.replace("{{APP_NAME}}", name)}
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="text-muted-foreground px-4 leading-relaxed">

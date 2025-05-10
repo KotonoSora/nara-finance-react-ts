@@ -2,7 +2,10 @@ import { motion } from "framer-motion";
 
 import { Button } from "~/components/ui/button";
 
+import { useLandingContext } from "../context/landing-context";
+
 export default function CTASection() {
+  const { name } = useLandingContext();
   return (
     <section className="bg-primary py-12 sm:py-16 lg:py-24 text-primary-foreground text-center">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -20,7 +23,7 @@ export default function CTASection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          Tham gia MoneyFlow để dùng thử miễn phí và kiểm soát dòng tiền của bạn
+          Tham gia {name} để dùng thử miễn phí và kiểm soát dòng tiền của bạn
           ngay hôm nay!
         </motion.p>
         <motion.div

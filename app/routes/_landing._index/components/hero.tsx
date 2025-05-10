@@ -8,6 +8,8 @@ import { Button } from "~/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 
+import { useLandingContext } from "../context/landing-context";
+
 import screenshotApp from "/assets/screenshot-app.svg";
 
 const formSchema = z.object({
@@ -15,6 +17,8 @@ const formSchema = z.object({
 });
 
 export default function HeroSection() {
+  const { name } = useLandingContext();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { email: "" },
@@ -119,7 +123,7 @@ export default function HeroSection() {
               <div className="rounded-2xl bg-background shadow-2xl ring-1 ring-gray-900/10">
                 <img
                   src={screenshotApp}
-                  alt="MoneyFlow Dashboard"
+                  alt={`${name} Dashboard`}
                   width={480}
                   height={300}
                   className="rounded-lg shadow-lg w-full h-auto"

@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
 
+import { useLandingContext } from "../context/landing-context";
 import socialLinks from "../data/social-links";
 
 export default function FooterSection() {
+  const { name: appName, domain } = useLandingContext();
   return (
     <footer
       role="contentinfo"
@@ -16,7 +18,7 @@ export default function FooterSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h3 className="text-2xl font-bold">MoneyFlow</h3>
+            <h3 className="text-2xl font-bold">{appName}</h3>
             <p className="text-muted-foreground">
               Kiểm soát tài chính cá nhân, đơn giản hơn bao giờ hết.
             </p>
@@ -24,13 +26,13 @@ export default function FooterSection() {
               {socialLinks.map(({ name, href }) => (
                 <motion.a
                   key={name}
-                  href={href}
+                  href={href.replace("socialLinks", appName)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-full p-1"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  aria-label={`Theo dõi MoneyFlow trên ${name}`}
+                  aria-label={`Theo dõi ${appName} trên ${name}`}
                   title={name}
                 >
                   {name}
@@ -146,7 +148,7 @@ export default function FooterSection() {
               </li>
               <li>
                 <a
-                  href="mailto:support@moneyflow.app"
+                  href={`mailto:support@${domain}`}
                   className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:text-foreground"
                 >
                   Liên hệ hỗ trợ
@@ -163,10 +165,10 @@ export default function FooterSection() {
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <p>
-            &copy; {new Date().getFullYear()} MoneyFlow. Mọi quyền được bảo lưu.
+            &copy; {new Date().getFullYear()} {appName}. Mọi quyền được bảo lưu.
           </p>
           <p className="mt-2">
-            Công ty TNHH MoneyFlow Việt Nam | MST: 0123456789
+            Công ty TNHH {appName} Việt Nam | MST: 0123456789
           </p>
         </motion.div>
       </div>

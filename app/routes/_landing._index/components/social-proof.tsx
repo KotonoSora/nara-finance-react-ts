@@ -9,9 +9,11 @@ import {
   CarouselPrevious,
 } from "~/components/ui/carousel";
 
+import { useLandingContext } from "../context/landing-context";
 import testimonials from "../data/testimonials";
 
 export default function SocialProofSection() {
+  const { name } = useLandingContext();
   return (
     <section className="bg-muted py-12 sm:py-16 lg:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -21,7 +23,7 @@ export default function SocialProofSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          Người dùng nói gì về MoneyFlow
+          Người dùng nói gì về {name}
         </motion.h2>
 
         <div className="max-w-5xl mx-auto">
@@ -74,7 +76,7 @@ export default function SocialProofSection() {
                           ))}
                         </div>
                         <p className="text-muted-foreground italic leading-relaxed">
-                          "{testimonial.quote}"
+                          "{testimonial.quote.replace("{{APP_NAME}}", name)}"
                         </p>
                       </CardContent>
                     </Card>

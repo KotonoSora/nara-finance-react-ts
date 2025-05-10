@@ -1,7 +1,7 @@
 const testimonials = [
   {
     quote:
-      "MoneyFlow giúp tôi tiết kiệm được 20% thu nhập mỗi tháng. AI phân tích chi tiêu giúp tôi nhận ra nhiều khoản phí không cần thiết!",
+      "{{APP_NAME}} giúp tôi tiết kiệm được 20% thu nhập mỗi tháng. AI phân tích chi tiêu giúp tôi nhận ra nhiều khoản phí không cần thiết!",
     author: "Minh Trần",
     position: "Digital Marketing Freelancer",
     location: "TP. Hồ Chí Minh",
@@ -9,7 +9,7 @@ const testimonials = [
   },
   {
     quote:
-      "Tôi đã thử nhiều app quản lý chi tiêu nhưng MoneyFlow là app đầu tiên tôi dùng được liên tục 6 tháng. Giao diện đơn giản, dễ dùng!",
+      "Tôi đã thử nhiều app quản lý chi tiêu nhưng {{APP_NAME}} là app đầu tiên tôi dùng được liên tục 6 tháng. Giao diện đơn giản, dễ dùng!",
     author: "Lan Nguyễn",
     position: "Kế toán trưởng",
     location: "Hà Nội",

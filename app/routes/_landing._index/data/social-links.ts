@@ -1,15 +1,15 @@
 const socialLinks = [
   {
     name: "Facebook",
-    href: "https://facebook.com/moneyflowapp",
+    href: "https://facebook.com/{{APP_NAME}}",
   },
   {
     name: "LinkedIn",
-    href: "https://linkedin.com/company/moneyflowapp",
+    href: "https://linkedin.com/company/{{APP_NAME}}",
   },
   {
-    name: "Twitter",
-    href: "https://x.com/moneyflowapp",
+    name: "X",
+    href: "https://x.com/{{APP_NAME}}",
   },
 ];
 

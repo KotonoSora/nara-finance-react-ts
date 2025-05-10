@@ -3,10 +3,12 @@ import { Fragment } from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
+import { useLandingContext } from "../context/landing-context";
 import benefits from "../data/benefits";
 import TooltipTerm from "./tooltip-term";
 
 export default function BenefitsSection() {
+  const { name } = useLandingContext();
   return (
     <section className="bg-muted py-12 sm:py-16 lg:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -16,7 +18,7 @@ export default function BenefitsSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          Tại sao chọn MoneyFlow?
+          Tại sao chọn {name}?
         </motion.h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {benefits.map((benefit, index) => (

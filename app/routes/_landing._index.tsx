@@ -1,11 +1,25 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  BarChart3,
+  Calendar,
+  FacebookIcon,
+  Linkedin,
+  LockIcon,
+  Moon,
+  PieChart,
+  SaveIcon,
+  Sun,
+  TwitterIcon,
+} from "lucide-react";
 import { lazy, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import type { Route } from "./+types/_landing._index";
 
+import { ModeSwitcher } from "~/components/mode-switcher";
 import {
   Accordion,
   AccordionContent,
@@ -18,17 +32,6 @@ import { Form, FormControl, FormField, FormItem } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 
 import screenshotApp from "/assets/screenshot-app.svg";
-
-// Lazy-load components để cải thiện hiệu suất
-// const Header = lazy(() => import("./components/Header"));
-// const HeroSection = lazy(() => import("./components/HeroSection"));
-// const BenefitsSection = lazy(() => import("./components/BenefitsSection"));
-// const SocialProofSection = lazy(
-//   () => import("./components/SocialProofSection"),
-// );
-// const CTASection = lazy(() => import("./components/CTASection"));
-// const FAQSection = lazy(() => import("./components/FAQSection"));
-// const FooterSection = lazy(() => import("./components/FooterSection"));
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -47,10 +50,10 @@ export function meta({}: Route.MetaArgs) {
 
 export default function LandingPage({ loaderData }: Route.ComponentProps) {
   return (
-    <main className="min-h-screen bg-zinc-50">
+    <main className="min-h-screen bg-background text-foreground">
       <Suspense
         fallback={
-          <div className="flex justify-center py-16 text-zinc-600">
+          <div className="flex justify-center py-16 text-muted-foreground">
             Đang tải...
           </div>
         }
@@ -59,6 +62,7 @@ export default function LandingPage({ loaderData }: Route.ComponentProps) {
         <HeroSection />
         <BenefitsSection />
         <SocialProofSection />
+        <TrustSection />
         <CTASection />
         <FAQSection />
         <FooterSection />
@@ -69,19 +73,23 @@ export default function LandingPage({ loaderData }: Route.ComponentProps) {
 
 export function Header() {
   return (
-    <header className="bg-zinc-50 border-b border-zinc-200 py-4 px-4 md:px-8 flex justify-between items-center sticky top-0 z-10">
-      <div>
-        <h1 className="text-2xl font-bold text-zinc-900">MoneyFlow</h1>
-        <p className="text-sm text-zinc-600 hidden md:block">
-          Kiểm soát tài chính, đơn giản hơn
-        </p>
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto flex h-14 items-center">
+        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+          <div className="flex-1">
+            <h1 className="text-xl font-bold text-foreground">MoneyFlow</h1>
+            <p className="hidden text-sm text-muted-foreground sm:block">
+              Kiểm soát tài chính, đơn giản hơn
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <ModeSwitcher />
+            <Button asChild size="sm" className="h-8">
+              <a href="#email-form">Dùng thử miễn phí</a>
+            </Button>
+          </div>
+        </div>
       </div>
-      <Button
-        asChild
-        className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2"
-      >
-        <a href="#email-form">Dùng thử miễn phí</a>
-      </Button>
     </header>
   );
 }
@@ -103,7 +111,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="bg-zinc-50 py-16 md:py-24">
+    <section className="bg-muted py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center gap-8">
         <motion.div
           className="md:w-1/2 space-y-6"
@@ -111,10 +119,10 @@ export function HeroSection() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl md:text-5xl font-bold text-zinc-900 leading-tight">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-[1.1] tracking-tight">
             Quản lý dòng tiền dễ dàng trong 5 phút
           </h1>
-          <p className="text-lg md:text-xl text-zinc-600">
+          <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-[700px]">
             Công cụ AI giúp bạn theo dõi giao dịch, lập ngân sách, tiết kiệm, và
             quyết toán thuế.
           </p>
@@ -122,17 +130,17 @@ export function HeroSection() {
             <form
               id="email-form"
               onSubmit={form.handleSubmit(onSubmit)}
-              className="flex gap-4 max-w-md"
+              className="flex flex-col sm:flex-row gap-4 w-full max-w-md"
             >
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex-grow">
                     <FormControl>
                       <Input
-                        placeholder="Nhập email của bạn"
-                        className="border-zinc-300 bg-zinc-100 focus:ring-blue-500"
+                        placeholder="Nhập email để bắt đầu dùng thử"
+                        className="w-full bg-background border-input h-11"
                         {...field}
                       />
                     </FormControl>
@@ -141,13 +149,19 @@ export function HeroSection() {
               />
               <Button
                 type="submit"
-                className="bg-blue-500 hover:bg-blue-600 text-white"
+                variant="default"
+                className="h-11 px-8 whitespace-nowrap"
               >
-                Dùng thử miễn phí
+                Bắt đầu ngay <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </form>
           </Form>
-          <p className="text-sm text-zinc-600">Không cần thẻ tín dụng.</p>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <LockIcon className="w-4 h-4" />
+            <p>
+              Chúng tôi không gửi spam. Email của bạn được bảo mật tuyệt đối.
+            </p>
+          </div>
         </motion.div>
         <motion.div
           className="md:w-1/2"
@@ -169,40 +183,44 @@ export function HeroSection() {
 
 const benefits = [
   {
-    icon: "📊",
+    Icon: BarChart3,
     title: "Lưu trữ giao dịch tự động",
-    description: "Ghi lại mọi giao dịch trong thời gian thực, không bỏ sót.",
+    description:
+      "AI tự động phân loại và ghi lại mọi giao dịch trong thời gian thực, giúp bạn không bỏ sót bất kỳ khoản chi nào.",
   },
   {
-    icon: "💰",
+    Icon: Calendar,
     title: "Lập ngân sách cá nhân hóa",
-    description: "Lập kế hoạch chi tiêu chỉ trong 3 bước đơn giản.",
+    description:
+      "Tạo kế hoạch chi tiêu linh hoạt chỉ với 3 bước đơn giản, tự động điều chỉnh theo thói quen của bạn.",
   },
   {
-    icon: "💸",
+    Icon: SaveIcon,
     title: "Tối ưu tiết kiệm",
-    description: "Đề xuất tiết kiệm thông minh dựa trên thu nhập của bạn.",
+    description:
+      "Tiết kiệm đến 20% mỗi tháng nhờ AI phân tích chi tiêu và đề xuất cắt giảm hợp lý.",
   },
   {
-    icon: "📑",
+    Icon: PieChart,
     title: "Quyết toán thuế dễ dàng",
-    description: "Xuất báo cáo thuế nhanh chóng với 1 cú nhấp.",
+    description:
+      "Tự động phân loại thu nhập và chi phí, xuất báo cáo thuế chính xác chỉ với 1 cú nhấp.",
   },
 ];
 
 export function BenefitsSection() {
   return (
-    <section className="bg-zinc-100 py-16 md:py-24">
-      <div className="container mx-auto px-4 md:px-8">
+    <section className="bg-muted py-12 sm:py-16 lg:py-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.h2
-          className="text-3xl md:text-4xl font-bold text-zinc-900 text-center mb-12"
+          className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground text-center mb-8 sm:mb-12"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           Tại sao chọn MoneyFlow?
         </motion.h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {benefits.map((benefit, index) => (
             <motion.div
               key={benefit.title}
@@ -210,15 +228,19 @@ export function BenefitsSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="bg-white border-zinc-200 hover:shadow-lg transition-shadow duration-300">
+              <Card className="bg-background border-border hover:shadow-lg transition-shadow duration-300">
                 <CardHeader>
-                  <div className="text-4xl mb-4">{benefit.icon}</div>
-                  <CardTitle className="text-xl font-semibold text-zinc-900">
+                  <div className="mb-4">
+                    <benefit.Icon className="w-12 h-12 text-primary" />
+                  </div>
+                  <CardTitle className="text-xl font-semibold text-foreground">
                     {benefit.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-zinc-600">{benefit.description}</p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {benefit.description}
+                  </p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -231,32 +253,44 @@ export function BenefitsSection() {
 
 const testimonials = [
   {
-    quote: "MoneyFlow giúp tôi tiết kiệm 20% mỗi tháng!",
-    author: "Minh, Freelancer",
+    quote:
+      "MoneyFlow giúp tôi tiết kiệm được 20% thu nhập mỗi tháng. AI phân tích chi tiêu giúp tôi nhận ra nhiều khoản phí không cần thiết!",
+    author: "Minh Trần",
+    position: "Digital Marketing Freelancer",
+    location: "TP. Hồ Chí Minh",
+    avatar: "/assets/avatars/avatar-1.jpg",
   },
   {
-    quote: "Theo dõi giao dịch dễ dàng, tiết kiệm thời gian!",
-    author: "Lan, Nhân viên văn phòng",
+    quote:
+      "Tôi đã thử nhiều app quản lý chi tiêu nhưng MoneyFlow là app đầu tiên tôi dùng được liên tục 6 tháng. Giao diện đơn giản, dễ dùng!",
+    author: "Lan Nguyễn",
+    position: "Kế toán trưởng",
+    location: "Hà Nội",
+    avatar: "/assets/avatars/avatar-2.jpg",
   },
   {
-    quote: "Lập ngân sách chưa bao giờ đơn giản đến thế!",
-    author: "Hùng, Doanh nhân",
+    quote:
+      "Tính năng phân tích và dự báo dòng tiền giúp tôi lên kế hoạch tài chính chính xác hơn. Đặc biệt hữu ích cho việc lập kế hoạch kinh doanh.",
+    author: "Hùng Phạm",
+    position: "Chủ doanh nghiệp SME",
+    location: "Đà Nẵng",
+    avatar: "/assets/avatars/avatar-3.jpg",
   },
 ];
 
 export function SocialProofSection() {
   return (
-    <section className="bg-zinc-50 py-16 md:py-24">
-      <div className="container mx-auto px-4 md:px-8">
+    <section className="bg-muted py-12 sm:py-16 lg:py-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.h2
-          className="text-3xl md:text-4xl font-bold text-zinc-900 text-center mb-12"
+          className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground text-center mb-8 sm:mb-12"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           Người dùng nói gì về MoneyFlow
         </motion.h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={testimonial.author}
@@ -264,13 +298,28 @@ export function SocialProofSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="bg-white border-zinc-200">
+              <Card className="bg-background border-border">
                 <CardContent className="pt-6">
-                  <p className="text-zinc-600 italic mb-4">
+                  <div className="flex items-center gap-4 mb-4">
+                    <img
+                      src={testimonial.avatar}
+                      alt={testimonial.author}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <p className="font-semibold text-foreground">
+                        {testimonial.author}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {testimonial.position}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {testimonial.location}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground italic leading-relaxed mb-4">
                     "{testimonial.quote}"
-                  </p>
-                  <p className="text-zinc-900 font-semibold">
-                    {testimonial.author}
                   </p>
                 </CardContent>
               </Card>
@@ -278,7 +327,7 @@ export function SocialProofSection() {
           ))}
         </div>
         <motion.p
-          className="text-center text-zinc-600 mt-8 text-lg"
+          className="text-center text-muted-foreground mt-8 text-lg"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -290,12 +339,71 @@ export function SocialProofSection() {
   );
 }
 
+export function TrustSection() {
+  const trustedBy = [
+    { name: "TechInAsia", logo: "/assets/logos/techinasia.svg" },
+    { name: "ProductHunt", logo: "/assets/logos/producthunt.svg" },
+    { name: "App Store", logo: "/assets/logos/appstore.svg" },
+    { name: "Google Play", logo: "/assets/logos/googleplay.svg" },
+  ];
+
+  return (
+    <section className="bg-background py-8 sm:py-12 lg:py-16 border-y border-border">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          className="text-center mb-6 sm:mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h3 className="text-base sm:text-lg text-muted-foreground mb-4">
+            Được tin tưởng bởi
+          </h3>
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap justify-center items-center gap-6 sm:gap-8 lg:gap-12">
+            {trustedBy.map((brand) => (
+              <img
+                key={brand.name}
+                src={brand.logo}
+                alt={brand.name}
+                className="h-6 sm:h-8 lg:h-10 w-auto opacity-60 hover:opacity-100 transition-opacity"
+              />
+            ))}
+          </div>
+        </motion.div>
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8">
+          <div className="flex items-center gap-2">
+            <LockIcon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            <span className="text-sm text-muted-foreground">Bảo mật SSL</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex items-center"
+            >
+              {"★★★★★".split("").map((star, i) => (
+                <span key={i} className="text-primary text-sm sm:text-base">
+                  {star}
+                </span>
+              ))}
+            </motion.div>
+            <span className="text-sm text-muted-foreground">
+              4.9/5 từ 5000+ người dùng
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function CTASection() {
   return (
-    <section className="bg-blue-500 py-16 md:py-24 text-white text-center">
-      <div className="container mx-auto px-4 md:px-8">
+    <section className="bg-primary py-12 sm:py-16 lg:py-24 text-primary-foreground text-center">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.h2
-          className="text-3xl md:text-4xl font-bold mb-6"
+          className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -303,7 +411,7 @@ export function CTASection() {
           Sẵn sàng quản lý tài chính hiệu quả hơn?
         </motion.h2>
         <motion.p
-          className="text-lg mb-8 max-w-2xl mx-auto"
+          className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 max-w-2xl mx-auto"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -318,7 +426,8 @@ export function CTASection() {
         >
           <Button
             asChild
-            className="bg-white text-blue-500 hover:bg-zinc-100 text-lg px-8 py-3 rounded-md"
+            size="lg"
+            className="bg-background text-primary hover:bg-accent/90"
           >
             <a href="#email-form">Dùng thử miễn phí</a>
           </Button>
@@ -349,10 +458,10 @@ const faqs = [
 
 export function FAQSection() {
   return (
-    <section className="bg-zinc-100 py-16 md:py-24">
-      <div className="container mx-auto px-4 md:px-8">
+    <section className="bg-muted py-12 sm:py-16 lg:py-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.h2
-          className="text-3xl md:text-4xl font-bold text-zinc-900 text-center mb-12"
+          className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground text-center mb-8 sm:mb-12"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -363,21 +472,32 @@ export function FAQSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
+          className="max-w-3xl mx-auto"
         >
           <Accordion
             type="single"
             collapsible
-            className="max-w-2xl mx-auto bg-white rounded-lg"
+            defaultValue="item-0"
+            className="w-full bg-background rounded-lg shadow-sm"
           >
             {faqs.map((faq, index) => (
-              <AccordionItem key={faq.question} value={`item-${index}`}>
-                <AccordionTrigger className="text-zinc-900 text-left px-4">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-zinc-600 px-4">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
+              <motion.div
+                key={faq.question}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+              >
+                <AccordionItem value={`item-${index}`}>
+                  <AccordionTrigger className="text-foreground text-left px-4 hover:bg-muted transition-colors">
+                    <span className="flex items-center gap-2">
+                      {faq.question}
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground px-4 leading-relaxed">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              </motion.div>
             ))}
           </Accordion>
         </motion.div>
@@ -388,59 +508,173 @@ export function FAQSection() {
 
 export function FooterSection() {
   return (
-    <footer className="bg-zinc-900 text-zinc-100 py-12">
-      <div className="container mx-auto px-4 md:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+    <footer className="bg-muted text-foreground py-8 sm:py-12 lg:py-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-8">
+          <motion.div
+            className="space-y-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h3 className="text-2xl font-bold">MoneyFlow</h3>
+            <p className="text-muted-foreground">
+              Kiểm soát tài chính cá nhân, đơn giản hơn bao giờ hết.
+            </p>
+            <div className="flex gap-4">
+              <a
+                href="https://facebook.com/moneyflowapp"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <FacebookIcon className="w-5 h-5" />
+              </a>
+              <a
+                href="https://linkedin.com/company/moneyflowapp"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <a
+                href="https://x.com/moneyflowapp"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <TwitterIcon className="w-5 h-5" />
+              </a>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="space-y-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <h4 className="font-semibold">Sản phẩm</h4>
+            <ul className="space-y-2">
+              <li>
+                <a
+                  href="/features"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Tính năng
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/pricing"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Bảng giá
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/guides"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Hướng dẫn sử dụng
+                </a>
+              </li>
+            </ul>
+          </motion.div>
+
+          <motion.div
+            className="space-y-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <h4 className="font-semibold">Công ty</h4>
+            <ul className="space-y-2">
+              <li>
+                <a
+                  href="/about"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Về chúng tôi
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/blog"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Blog
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/careers"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Tuyển dụng
+                </a>
+              </li>
+            </ul>
+          </motion.div>
+
+          <motion.div
+            className="space-y-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <h4 className="font-semibold">Hỗ trợ</h4>
+            <ul className="space-y-2">
+              <li>
+                <a
+                  href="/privacy"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Chính sách bảo mật
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/terms"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Điều khoản sử dụng
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/cookie-policy"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Chính sách cookie
+                </a>
+              </li>
+              <li>
+                <a
+                  href="mailto:support@moneyflow.app"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Liên hệ hỗ trợ
+                </a>
+              </li>
+            </ul>
+          </motion.div>
+        </div>
+
         <motion.div
-          className="text-center md:text-left"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          className="pt-8 mt-8 border-t border-border text-center text-muted-foreground text-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <h3 className="text-2xl font-bold mb-2">MoneyFlow</h3>
-          <p className="text-zinc-400">
-            Kiểm soát tài chính cá nhân, đơn giản hơn bao giờ hết.
+          <p>
+            &copy; {new Date().getFullYear()} MoneyFlow. Mọi quyền được bảo lưu.
           </p>
-        </motion.div>
-        <motion.div
-          className="flex flex-wrap gap-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <Button
-            variant="link"
-            asChild
-            className="text-zinc-100 hover:text-zinc-300"
-          >
-            <a href="/privacy">Chính sách bảo mật</a>
-          </Button>
-          <Button
-            variant="link"
-            asChild
-            className="text-zinc-100 hover:text-zinc-300"
-          >
-            <a href="/terms">Điều khoản sử dụng</a>
-          </Button>
-          <Button
-            variant="link"
-            asChild
-            className="text-zinc-100 hover:text-zinc-300"
-          >
-            <a href="mailto:support@moneyflow.app">Liên hệ</a>
-          </Button>
-          <Button
-            variant="link"
-            asChild
-            className="text-zinc-100 hover:text-zinc-300"
-          >
-            <a
-              href="https://x.com/moneyflowapp"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Theo dõi trên X
-            </a>
-          </Button>
+          <p className="mt-2">
+            Công ty TNHH MoneyFlow Việt Nam | MST: 0123456789
+          </p>
         </motion.div>
       </div>
     </footer>

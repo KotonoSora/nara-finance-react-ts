@@ -4,7 +4,12 @@ import { useLandingContext } from "../context/landing-context";
 import socialLinks from "../data/social-links";
 
 export default function FooterSection() {
-  const { name: appName, domain } = useLandingContext();
+  const {
+    name: appName,
+    domain,
+    copyrightTime,
+    companyInformation,
+  } = useLandingContext();
   return (
     <footer
       role="contentinfo"
@@ -26,7 +31,7 @@ export default function FooterSection() {
               {socialLinks.map(({ name, href }) => (
                 <motion.a
                   key={name}
-                  href={href.replace("socialLinks", appName)}
+                  href={href.replace("{{APP_NAME}}", appName)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-full p-1"
@@ -165,11 +170,9 @@ export default function FooterSection() {
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <p>
-            &copy; {new Date().getFullYear()} {appName}. Mọi quyền được bảo lưu.
+            &copy; {copyrightTime} {appName}. Mọi quyền được bảo lưu.
           </p>
-          <p className="mt-2">
-            Công ty TNHH {appName} Việt Nam | MST: 0123456789
-          </p>
+          <p className="mt-2">{companyInformation}</p>
         </motion.div>
       </div>
     </footer>

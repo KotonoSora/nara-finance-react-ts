@@ -13,6 +13,8 @@
     "APP_TITLE": "Quản lý tài chính cá nhân thông minh với AI",
     "APP_VERSION": "0.1.0",
     "APP_KEYWORDS": "tài chính cá nhân, quản lý dòng tiền, lập ngân sách, tiết kiệm, AI tài chính, quản lý chi tiêu",
+    "APP_COPYRIGHT_TIME": "2017 - 2025",
+    "APP_COMPANY_INFORMATION": "Công ty TNHH nara Việt Nam | MST: 0123456789",
   },
   "d1_databases": [
     {

@@ -21,6 +21,8 @@ export function loader({ context }: Route.LoaderArgs) {
     APP_TITLE: title,
     APP_VERSION: version,
     APP_KEYWORDS: keywords,
+    APP_COPYRIGHT_TIME: copyrightTime,
+    APP_COMPANY_INFORMATION: companyInformation,
   } = context.cloudflare.env;
 
   return {
@@ -31,6 +33,8 @@ export function loader({ context }: Route.LoaderArgs) {
     title,
     version,
     keywords,
+    copyrightTime,
+    companyInformation,
   };
 }
 

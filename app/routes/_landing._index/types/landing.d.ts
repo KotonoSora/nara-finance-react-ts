@@ -5,4 +5,6 @@ interface LandingPageContextType {
   domain: string;
   title: string;
   version: string;
+  copyrightTime: string;
+  companyInformation: string;
 }

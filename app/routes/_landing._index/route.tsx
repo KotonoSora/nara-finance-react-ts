@@ -4,7 +4,7 @@ import type { Route } from "./+types/route";
 
 import BenefitsSection from "./components/benefits";
 import CTASection from "./components/cta";
-import { FAQSection } from "./components/faq";
+import FAQSection from "./components/faq";
 import FooterSection from "./components/footer";
 import Header from "./components/header";
 import HeroSection from "./components/hero";

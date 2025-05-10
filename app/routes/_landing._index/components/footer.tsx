@@ -21,7 +21,7 @@ export default function FooterSection() {
               Kiểm soát tài chính cá nhân, đơn giản hơn bao giờ hết.
             </p>
             <div className="flex gap-4">
-              {socialLinks.map(({ name, href, Icon }) => (
+              {socialLinks.map(({ name, href }) => (
                 <motion.a
                   key={name}
                   href={href}
@@ -33,7 +33,7 @@ export default function FooterSection() {
                   aria-label={`Theo dõi MoneyFlow trên ${name}`}
                   title={name}
                 >
-                  <Icon className="w-5 h-5" aria-hidden="true" />
+                  {name}
                 </motion.a>
               ))}
             </div>

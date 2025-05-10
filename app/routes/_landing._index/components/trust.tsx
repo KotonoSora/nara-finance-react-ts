@@ -41,7 +41,7 @@ export default function TrustSection() {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <img
+                {/* <img
                   src={brand.logo}
                   alt={`Logo của ${brand.name}`}
                   className="h-6 sm:h-8 lg:h-10 w-auto opacity-60 hover:opacity-100 transition-opacity"
@@ -49,7 +49,7 @@ export default function TrustSection() {
                   height={40}
                   loading="lazy"
                   sizes="(min-width: 1024px) 120px, (min-width: 640px) 96px, 72px"
-                />
+                /> */}
               </motion.div>
             ))}
           </div>

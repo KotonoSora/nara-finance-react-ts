@@ -5,7 +5,7 @@ const testimonials = [
     author: "Minh Trần",
     position: "Digital Marketing Freelancer",
     location: "TP. Hồ Chí Minh",
-    avatar: "/assets/avatars/avatar-1.jpg",
+    avatar: "#",
   },
   {
     quote:
@@ -13,7 +13,7 @@ const testimonials = [
     author: "Lan Nguyễn",
     position: "Kế toán trưởng",
     location: "Hà Nội",
-    avatar: "/assets/avatars/avatar-2.jpg",
+    avatar: "#",
   },
   {
     quote:
@@ -21,7 +21,7 @@ const testimonials = [
     author: "Hùng Phạm",
     position: "Chủ doanh nghiệp SME",
     location: "Đà Nẵng",
-    avatar: "/assets/avatars/avatar-3.jpg",
+    avatar: "#",
   },
 ];
 

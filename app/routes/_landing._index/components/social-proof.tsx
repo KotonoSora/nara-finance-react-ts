@@ -46,14 +46,14 @@ export default function SocialProofSection() {
                     <Card className="h-full bg-background border-border">
                       <CardContent className="p-6">
                         <div className="flex items-center gap-4 mb-4">
-                          <img
+                          {/* <img
                             src={testimonial.avatar}
                             alt={testimonial.author}
                             width={48}
                             height={48}
                             className="rounded-full object-cover"
                             sizes="48px"
-                          />
+                          /> */}
                           <div>
                             <p className="font-semibold text-foreground">
                               {testimonial.author}

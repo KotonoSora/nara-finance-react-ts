@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { LockIcon } from "lucide-react";
 
 import trustedBy from "../data/trusted-by";
-import useCounter from "../hooks/useCounter";
+import useCounter from "../hooks/use-counter";
 
 export default function TrustSection() {
   const userCount = useCounter({ end: 5000, suffix: "+" });

@@ -1,0 +1,63 @@
+import { Hono } from "hono";
+import { cors } from "hono/cors";
+import { HTTPException } from "hono/http-exception";
+import { logger } from "hono/logger";
+import { prettyJSON } from "hono/pretty-json";
+
+const app = new Hono<{ Bindings: CloudflareEnvironment }>();
+
+// Middleware
+app.use("*", logger()); // Request logging
+app.use("*", cors({ origin: "*" })); // CORS for all origins (restrict in production)
+app.use("*", prettyJSON()); // Pretty-print JSON responses
+
+// Add security headers to all responses
+app.use("*", async (c, next) => {
+  await next();
+  c.res.headers.set("X-Content-Type-Options", "nosniff");
+  c.res.headers.set("X-Frame-Options", "DENY");
+  c.res.headers.set("Content-Security-Policy", "default-src 'self'");
+});
+
+// Block direct access
+app.use("*", async (c, next) => {
+  const site = c.req.header("sec-fetch-site");
+  const mode = c.req.header("sec-fetch-mode");
+  const userAgent = (c.req.header("user-agent") || "").toLowerCase().trim();
+
+  const allowedClients = ["curl", "postman", "insomnia"];
+
+  if (
+    (site === "same-origin" && mode === "cors") ||
+    allowedClients.some((client) => userAgent.includes(client)) ||
+    import.meta.env.NODE_ENV === "vitest"
+  ) {
+    return await next();
+  }
+
+  return c.text("Forbidden", 403);
+});
+
+// Error handling
+app.onError((err, c) => {
+  if (err instanceof HTTPException) {
+    return c.json({ error: err.message }, err.status);
+  }
+  console.error("Unexpected error:", err);
+  return c.json({ error: "Internal Server Error" }, 500);
+});
+
+// Not found handler
+app.notFound((c) => c.json({ error: "Not Found" }, 404));
+
+// Routes
+app.get("/", (c) => {
+  const env = c.env.VALUE_FROM_CLOUDFLARE;
+  return c.json({ message: `Hello from Hono! Running in API`, env });
+});
+
+app.get("/hello-world", (c) => c.json({ message: "Hello, World!" }));
+
+app.get("/health", (c) => c.json({ status: "ok" }));
+
+export default app;

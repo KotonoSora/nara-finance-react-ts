@@ -10,7 +10,7 @@ import { Input } from "~/components/ui/input";
 
 import { useLandingContext } from "../context/landing-context";
 
-import screenshotApp from "/assets/screenshot-app.svg";
+import screenshotApp from "/assets/landing-page/svg/screenshot-app.svg";
 
 const formSchema = z.object({
   email: z.string().email("Vui lòng nhập email hợp lệ"),
@@ -31,9 +31,8 @@ export default function HeroSection() {
 
   return (
     <section className="relative overflow-hidden bg-muted py-8 sm:py-16 md:py-24">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 pointer-events-none opacity-30">
-        <div className="absolute inset-y-0 -left-[50%] w-[200%] bg-[radial-gradient(circle_400px_at_50%_300px,#22c55e15,transparent)]" />
+      <div className="absolute inset-0 pointer-events-none opacity-40">
+        <div className="absolute inset-y-0 -left-[50%] w-[200%] bg-[radial-gradient(circle_400px_at_50%_300px,var(--primary)/15,transparent)]" />
       </div>
 
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
@@ -109,6 +108,38 @@ export default function HeroSection() {
                   <span>Miễn phí 14 ngày</span>
                 </div>
               </div>
+
+              <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-2">
+                <motion.a
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:opacity-80 transition-opacity"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <img
+                    src="/assets/landing-page/svg/Download_on_the_App_Store_Badge_VN_RGB_blk_100217.svg"
+                    alt="Tải xuống trên App Store"
+                    className="h-10 block object-contain"
+                  />
+                </motion.a>
+
+                <motion.a
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:opacity-80 transition-opacity"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <img
+                    src="/assets/landing-page/png/GetItOnGooglePlay_Badge_Web_color_Vietnamese.png"
+                    alt="Tải xuống trên Google Play"
+                    className="h-10 block object-contain rounded-[5px]"
+                  />
+                </motion.a>
+              </div>
             </div>
           </motion.div>
 
@@ -119,20 +150,16 @@ export default function HeroSection() {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <div className="relative mx-auto max-w-[480px]">
-              {/* Mock Device Frame */}
-              <div className="rounded-2xl bg-background shadow-2xl ring-1 ring-gray-900/10">
+              <div className="rounded-2xl bg-background shadow-2xl ring-1 ring-gray-900/10 overflow-hidden">
                 <img
                   src={screenshotApp}
                   alt={`${name} Dashboard`}
-                  width={480}
-                  height={300}
-                  className="rounded-lg shadow-lg w-full h-auto"
+                  className="block object-contain shadow-lg w-full h-auto"
                   fetchPriority="high"
                   sizes="(min-width: 768px) 480px, 100vw"
                 />
               </div>
 
-              {/* Floating Elements */}
               <motion.div
                 className="absolute -right-6 -top-6 p-4 bg-background rounded-lg shadow-lg border border-border hidden sm:block"
                 initial={{ y: 20, opacity: 0 }}

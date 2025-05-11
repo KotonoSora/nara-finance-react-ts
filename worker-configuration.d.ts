@@ -11,7 +11,11 @@ declare namespace Cloudflare {
     APP_VERSION: string;
     APP_KEYWORDS: string;
     APP_COPYRIGHT_TIME: string;
-    APP_COMPANY_INFORMATION: string;
+    APP_COMPANY_NAME: string;
+    APP_COMPANY_ADDRESS: string;
+    APP_COMPANY_PHONE: string;
+    APP_COMPANY_EMAIL: string;
+    APP_COMPANY_TAX_ID: string;
     DB: D1Database;
   }
 }

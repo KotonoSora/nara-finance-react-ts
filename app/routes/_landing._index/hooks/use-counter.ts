@@ -33,7 +33,7 @@ export default function useCounter({
   easing = "easeOutCubic",
   formatter = (value: number) => {
     const fixed = Number(value).toFixed(decimals);
-    return Intl.NumberFormat("vi-VN").format(Number(fixed));
+    return new Intl.NumberFormat("vi-VN").format(Number(fixed));
   },
   autoStart = true,
 }: UseCounterProps) {
@@ -42,10 +42,15 @@ export default function useCounter({
   const countRef = useRef(start);
   const [isInView, setIsInView] = useState(false);
   const animationFrameRef = useRef<number | null>(null);
+  const elementRef = useRef<HTMLElement | null>(null);
 
   const easingFn = typeof easing === "function" ? easing : easings[easing];
 
   useEffect(() => {
+    elementRef.current = document.getElementById(
+      "stats-section",
+    ) as HTMLElement;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -55,14 +60,13 @@ export default function useCounter({
       { threshold: 0.1 },
     );
 
-    const element = document.getElementById("stats-section");
-    if (element) {
-      observer.observe(element);
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
     }
 
     return () => {
-      if (element) {
-        observer.unobserve(element);
+      if (elementRef.current) {
+        observer.unobserve(elementRef.current);
       }
     };
   }, []);
@@ -70,11 +74,40 @@ export default function useCounter({
   useEffect(() => {
     if (!isInView || !isPlaying) return;
 
-    const startTime = Date.now();
-    const timer = setTimeout(() => {
-      const animate = () => {
-        const now = Date.now();
-        const elapsedTime = now - startTime;
+    const startTime = performance.now();
+    let timer: NodeJS.Timeout;
+
+    if (delay > 0) {
+      timer = setTimeout(() => {
+        const animate = (currentTime: number) => {
+          const elapsedTime = currentTime - startTime;
+          const rawProgress = Math.min(elapsedTime / duration, 1);
+          const progress = easingFn(rawProgress);
+
+          const diff = end - start;
+          const currentValue = start + diff * progress;
+          const currentCount =
+            decimals > 0
+              ? Number(currentValue.toFixed(decimals))
+              : Math.floor(currentValue);
+
+          if (countRef.current !== currentCount) {
+            countRef.current = currentCount;
+            setCount(currentCount);
+          }
+
+          if (rawProgress < 1) {
+            animationFrameRef.current = requestAnimationFrame(animate);
+          } else {
+            setCount(end); // Ensure final value is exact
+          }
+        };
+
+        animationFrameRef.current = requestAnimationFrame(animate);
+      }, delay);
+    } else {
+      const animate = (currentTime: number) => {
+        const elapsedTime = currentTime - startTime;
         const rawProgress = Math.min(elapsedTime / duration, 1);
         const progress = easingFn(rawProgress);
 
@@ -92,14 +125,16 @@ export default function useCounter({
 
         if (rawProgress < 1) {
           animationFrameRef.current = requestAnimationFrame(animate);
+        } else {
+          setCount(end); // Ensure final value is exact
         }
       };
 
       animationFrameRef.current = requestAnimationFrame(animate);
-    }, delay);
+    }
 
     return () => {
-      clearTimeout(timer);
+      if (timer) clearTimeout(timer);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
@@ -114,7 +149,9 @@ export default function useCounter({
   };
 
   const resume = () => {
-    setIsPlaying(true);
+    if (!isPlaying) {
+      setIsPlaying(true);
+    }
   };
 
   const reset = () => {
@@ -130,7 +167,7 @@ export default function useCounter({
   return {
     value: `${prefix}${formatter(count)}${suffix}`,
     rawValue: count,
-    progress: (count - start) / (end - start),
+    progress: Math.min((count - start) / (end - start), 1),
     isFinished: count === end,
     isPlaying,
     controls: {

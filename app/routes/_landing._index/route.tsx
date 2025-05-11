@@ -22,7 +22,11 @@ export function loader({ context }: Route.LoaderArgs) {
     APP_VERSION: version,
     APP_KEYWORDS: keywords,
     APP_COPYRIGHT_TIME: copyrightTime,
-    APP_COMPANY_INFORMATION: companyInformation,
+    APP_COMPANY_NAME: companyName,
+    APP_COMPANY_ADDRESS: companyAddress,
+    APP_COMPANY_PHONE: companyPhone,
+    APP_COMPANY_EMAIL: companyEmail,
+    APP_COMPANY_TAX_ID: companyTaxId,
   } = context.cloudflare.env;
 
   return {
@@ -34,7 +38,13 @@ export function loader({ context }: Route.LoaderArgs) {
     version,
     keywords,
     copyrightTime,
-    companyInformation,
+    companyInformation: {
+      name: companyName,
+      address: companyAddress,
+      phone: companyPhone,
+      email: companyEmail,
+      taxId: companyTaxId,
+    },
   };
 }
 
@@ -47,23 +57,38 @@ export function meta({ data }: Route.MetaArgs) {
     { title: customTitle },
     { name: "description", content: description },
     { name: "keywords", content: keywords },
+    // Basic SEO
+    { name: "robots", content: "index, follow" },
+    { name: "author", content: name },
+    { name: "viewport", content: "width=device-width, initial-scale=1" },
     // Open Graph tags
     { property: "og:title", content: customTitle },
     { property: "og:description", content: description },
     { property: "og:type", content: "website" },
-    {
-      property: "og:image",
-      content: `${baseUrl}/assets/og-image.jpg`,
-    },
     { property: "og:url", content: baseUrl },
-    // Twitter Card tags
+    { property: "og:image", content: `${baseUrl}/assets/og-image.jpg` },
+    { property: "og:site_name", content: name },
+    { property: "og:locale", content: "vi_VN" },
+    // Twitter Card
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: customTitle },
     { name: "twitter:description", content: description },
+    { name: "twitter:image", content: `${baseUrl}/assets/og-image.jpg` },
+    // Theme colors
     {
-      name: "twitter:image",
-      content: `${baseUrl}/assets/twitter-card.jpg`,
+      name: "theme-color",
+      content: "hsl(0 0% 100%)",
+      media: "(prefers-color-scheme: light)",
     },
+    {
+      name: "theme-color",
+      content: "hsl(240 10% 3.9%)",
+      media: "(prefers-color-scheme: dark)",
+    },
+    { name: "mobile-web-app-capable", content: "yes" },
+    { name: "apple-mobile-web-app-capable", content: "yes" },
+    { name: "apple-mobile-web-app-status-bar-style", content: "default" },
+    { name: "apple-mobile-web-app-title", content: name },
   ];
 }
 
@@ -72,7 +97,7 @@ export default function LandingPage({ loaderData }: Route.ComponentProps) {
     <main className="min-h-screen bg-background text-foreground">
       <Suspense
         fallback={
-          <div className="flex justify-center py-16 text-muted-foreground">
+          <div className="flex justify-center items-center min-h-screen text-muted-foreground">
             Đang tải...
           </div>
         }

@@ -6,5 +6,11 @@ interface LandingPageContextType {
   title: string;
   version: string;
   copyrightTime: string;
-  companyInformation: string;
+  companyInformation: {
+    name: string;
+    address: string;
+    phone: string;
+    email: string;
+    taxId?: string;
+  };
 }

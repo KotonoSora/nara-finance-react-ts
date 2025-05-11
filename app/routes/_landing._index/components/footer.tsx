@@ -1,179 +1,150 @@
-import { motion } from "framer-motion";
+import {
+  Lock as LockIcon,
+  Mail as MailIcon,
+  MapPin as MapPinIcon,
+  Phone as PhoneIcon,
+  ShieldCheck,
+  BadgeCheck as VerifiedIcon,
+} from "lucide-react";
+
+import { Separator } from "~/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 import { useLandingContext } from "../context/landing-context";
+import footerLinks from "../data/footer-links";
 import socialLinks from "../data/social-links";
 
 export default function FooterSection() {
-  const {
-    name: appName,
-    domain,
-    copyrightTime,
-    companyInformation,
-  } = useLandingContext();
+  const { name, companyInformation, copyrightTime } = useLandingContext();
+
   return (
-    <footer
-      role="contentinfo"
-      className="bg-muted text-foreground py-8 sm:py-12 lg:py-16"
-    >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-8">
-          <motion.div
-            className="space-y-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h3 className="text-2xl font-bold">{appName}</h3>
-            <p className="text-muted-foreground">
-              Kiểm soát tài chính cá nhân, đơn giản hơn bao giờ hết.
-            </p>
-            <div className="flex gap-4">
-              {socialLinks.map(({ name, href }) => (
-                <motion.a
-                  key={name}
-                  href={href.replace("{{APP_NAME}}", appName)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-full p-1"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  aria-label={`Theo dõi ${appName} trên ${name}`}
-                  title={name}
+    <footer className="bg-background border-t border-border/40">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+          {/* Company Info */}
+          <div className="space-y-4">
+            <img
+              src="/assets/logo-light.svg"
+              alt={`${name} logo`}
+              className="h-8 w-auto dark:hidden"
+            />
+            <img
+              src="/assets/logo-dark.svg"
+              alt={`${name} logo`}
+              className="h-8 w-auto hidden dark:block"
+            />
+            <div className="text-sm text-muted-foreground space-y-2">
+              <p className="flex items-center gap-2">
+                <MapPinIcon className="h-4 w-4" />
+                <span>{companyInformation.address}</span>
+              </p>
+              <p className="flex items-center gap-2">
+                <PhoneIcon className="h-4 w-4" />
+                <a
+                  href={`tel:${companyInformation.phone}`}
+                  className="hover:text-foreground transition-colors"
                 >
-                  {name}
-                </motion.a>
-              ))}
+                  {companyInformation.phone}
+                </a>
+              </p>
+              <p className="flex items-center gap-2">
+                <MailIcon className="h-4 w-4" />
+                <a
+                  href={`mailto:${companyInformation.email}`}
+                  className="hover:text-foreground transition-colors"
+                >
+                  {companyInformation.email}
+                </a>
+              </p>
+              {companyInformation.taxId && (
+                <p className="flex items-center gap-2">
+                  <VerifiedIcon className="h-4 w-4" />
+                  <span>MST: {companyInformation.taxId}</span>
+                </p>
+              )}
             </div>
-          </motion.div>
+          </div>
 
-          <motion.nav
-            className="space-y-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            aria-label="Sản phẩm"
-          >
-            <h4 className="font-semibold">Sản phẩm</h4>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="/features"
-                  className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:text-foreground"
-                >
-                  Tính năng
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/pricing"
-                  className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:text-foreground"
-                >
-                  Bảng giá
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/guides"
-                  className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:text-foreground"
-                >
-                  Hướng dẫn sử dụng
-                </a>
-              </li>
-            </ul>
-          </motion.nav>
-
-          <motion.nav
-            className="space-y-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            aria-label="Công ty"
-          >
-            <h4 className="font-semibold">Công ty</h4>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="/about"
-                  className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:text-foreground"
-                >
-                  Về chúng tôi
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/blog"
-                  className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:text-foreground"
-                >
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/careers"
-                  className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:text-foreground"
-                >
-                  Tuyển dụng
-                </a>
-              </li>
-            </ul>
-          </motion.nav>
-
-          <motion.nav
-            className="space-y-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            aria-label="Hỗ trợ"
-          >
-            <h4 className="font-semibold">Hỗ trợ</h4>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="/privacy"
-                  className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:text-foreground"
-                >
-                  Chính sách bảo mật
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/terms"
-                  className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:text-foreground"
-                >
-                  Điều khoản sử dụng
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/cookie-policy"
-                  className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:text-foreground"
-                >
-                  Chính sách cookie
-                </a>
-              </li>
-              <li>
-                <a
-                  href={`mailto:support@${domain}`}
-                  className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:text-foreground"
-                >
-                  Liên hệ hỗ trợ
-                </a>
-              </li>
-            </ul>
-          </motion.nav>
+          {/* Quick Links */}
+          {(Object.keys(footerLinks) as Array<keyof typeof footerLinks>).map(
+            (category) => (
+              <div key={category}>
+                <h3 className="font-semibold mb-4 text-foreground capitalize">
+                  {category}
+                </h3>
+                <ul className="space-y-2">
+                  {footerLinks[category].map((link) => (
+                    <li key={link.name}>
+                      <a
+                        href={link.href}
+                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {link.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ),
+          )}
         </div>
 
-        <motion.div
-          className="pt-8 mt-8 border-t border-border text-center text-muted-foreground text-sm"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <p>
-            &copy; {copyrightTime} {appName}. Mọi quyền được bảo lưu.
-          </p>
-          <p className="mt-2">{companyInformation}</p>
-        </motion.div>
+        <Separator className="my-8" />
+
+        {/* Bottom Section */}
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-4">
+            {/* Social Links */}
+            <div className="flex items-center gap-2">
+              {socialLinks.map(
+                (link) =>
+                  link.icon && (
+                    <Tooltip key={link.name}>
+                      <TooltipTrigger asChild>
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+                          aria-label={`Theo dõi chúng tôi trên ${link.name}`}
+                        >
+                          <img
+                            src={link.icon}
+                            alt={`${link.name} icon`}
+                            className="h-5 w-5"
+                          />
+                        </a>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Theo dõi chúng tôi trên {link.name}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ),
+              )}
+            </div>
+          </div>
+
+          {/* Copyright & Security */}
+          <div className="flex flex-wrap justify-center sm:justify-end items-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <LockIcon className="h-4 w-4" />
+              <span>Mã hóa SSL 256-bit</span>
+            </div>
+            <Separator orientation="vertical" className="h-4 hidden sm:block" />
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4" />
+              <span>DMCA Protected</span>
+            </div>
+            <Separator orientation="vertical" className="h-4 hidden sm:block" />
+            <p>
+              &copy; {copyrightTime} {name}. Mọi quyền được bảo lưu.
+            </p>
+          </div>
+        </div>
       </div>
     </footer>
   );

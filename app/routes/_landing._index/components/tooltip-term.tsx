@@ -1,8 +1,9 @@
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "~/components/ui/hover-card";
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 interface TooltipTermProps {
   term: string;
@@ -16,18 +17,26 @@ export default function TooltipTerm({
   children,
 }: TooltipTermProps) {
   return (
-    <HoverCard>
-      <HoverCardTrigger asChild>
-        <span className="border-b border-dotted border-muted-foreground/50 cursor-help">
-          {children}
-        </span>
-      </HoverCardTrigger>
-      <HoverCardContent className="w-80 text-sm" align="start">
-        <div className="space-y-2">
-          <h4 className="font-semibold">{term}</h4>
-          <p className="text-muted-foreground">{definition}</p>
-        </div>
-      </HoverCardContent>
-    </HoverCard>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="border-b border-dotted border-primary/30 hover:border-primary cursor-help">
+            {children}
+          </span>
+        </TooltipTrigger>
+        <TooltipContent
+          side="top"
+          sideOffset={4}
+          className="max-w-sm bg-popover/95 backdrop-blur supports-[backdrop-filter]:bg-popover/85 shadow-xl"
+        >
+          <div className="space-y-2 p-1">
+            <p className="font-medium text-sm text-foreground">{term}</p>
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              {definition}
+            </p>
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }

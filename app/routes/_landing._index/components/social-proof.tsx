@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
+import { BadgeCheck } from "lucide-react";
 
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Card, CardContent } from "~/components/ui/card";
 import {
   Carousel,
@@ -14,19 +16,20 @@ import testimonials from "../data/testimonials";
 
 export default function SocialProofSection() {
   const { name } = useLandingContext();
-  return (
-    <section className="bg-muted py-12 sm:py-16 lg:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h2
-          className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground text-center mb-8 sm:mb-12"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          Người dùng nói gì về {name}
-        </motion.h2>
 
-        <div className="max-w-5xl mx-auto">
+  return (
+    <section className="py-12 sm:py-16 lg:py-24 bg-background">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-foreground">
+            Khách hàng nói gì về chúng tôi
+          </h2>
+          <p className="text-muted-foreground/90 text-lg max-w-2xl mx-auto">
+            Những đánh giá chân thực từ người dùng
+          </p>
+        </div>
+
+        <div className="relative">
           <Carousel
             opts={{
               align: "start",
@@ -38,32 +41,42 @@ export default function SocialProofSection() {
               {testimonials.map((testimonial, index) => (
                 <CarouselItem
                   key={testimonial.author}
-                  className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3"
+                  className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3"
                 >
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="h-full p-1"
                   >
-                    <Card className="h-full bg-background border-border">
+                    <Card className="h-full bg-card border-border/40 hover:border-primary/30 transition-colors">
                       <CardContent className="p-6">
                         <div className="flex items-center gap-4 mb-4">
-                          {/* <img
-                            src={testimonial.avatar}
-                            alt={testimonial.author}
-                            width={48}
-                            height={48}
-                            className="rounded-full object-cover"
-                            sizes="48px"
-                          /> */}
+                          <Avatar>
+                            {testimonial.avatar && (
+                              <AvatarImage
+                                src={testimonial.avatar}
+                                alt={testimonial.author}
+                              />
+                            )}
+                            <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                              {testimonial.author
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
+                            </AvatarFallback>
+                          </Avatar>
                           <div>
-                            <p className="font-semibold text-foreground">
-                              {testimonial.author}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
+                            <div className="flex items-center gap-2">
+                              <p className="font-semibold text-foreground">
+                                {testimonial.author}
+                              </p>
+                              <BadgeCheck className="h-4 w-4 text-primary" />
+                            </div>
+                            <p className="text-sm text-muted-foreground/90">
                               {testimonial.position}
                             </p>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-muted-foreground/90">
                               {testimonial.location}
                             </p>
                           </div>
@@ -75,7 +88,7 @@ export default function SocialProofSection() {
                             </span>
                           ))}
                         </div>
-                        <p className="text-muted-foreground italic leading-relaxed">
+                        <p className="text-foreground/90 italic leading-relaxed">
                           "{testimonial.quote.replace("{{APP_NAME}}", name)}"
                         </p>
                       </CardContent>
@@ -85,8 +98,8 @@ export default function SocialProofSection() {
               ))}
             </CarouselContent>
             <div className="hidden sm:block">
-              <CarouselPrevious className="top-[45%] -left-12" />
-              <CarouselNext className="top-[45%] -right-12" />
+              <CarouselPrevious className="absolute top-[45%] -left-12" />
+              <CarouselNext className="absolute top-[45%] -right-12" />
             </div>
           </Carousel>
         </div>

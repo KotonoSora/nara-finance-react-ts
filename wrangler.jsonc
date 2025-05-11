@@ -6,6 +6,8 @@
   "main": "./workers/app.ts",
   "vars": {
     "VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare",
+    "BASIC_AUTH_USERNAME": "nara",
+    "BASIC_AUTH_PASSWORD": "nara",
     "APP_NAME": "nara",
     "APP_DESCRIPTION": "tài chính cá nhân, quản lý dòng tiền, lập ngân sách, tiết kiệm, AI tài chính, quản lý chi tiêu",
     "APP_SLOGAN": "Kiểm soát tài chính, đơn giản hơn",

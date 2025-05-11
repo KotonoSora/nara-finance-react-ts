@@ -3,6 +3,8 @@
 declare namespace Cloudflare {
   interface Env {
     VALUE_FROM_CLOUDFLARE: string;
+    BASIC_AUTH_USERNAME: string;
+    BASIC_AUTH_PASSWORD: string;
     APP_NAME: string;
     APP_DESCRIPTION: string;
     APP_SLOGAN: string;

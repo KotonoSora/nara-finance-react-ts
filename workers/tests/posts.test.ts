@@ -1,8 +1,16 @@
-import { describe, expect, test } from "vitest";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 
 import { default as app } from "../app";
 
 describe("post", () => {
+  beforeAll(() => {
+    vi.stubEnv("NODE_ENV", "vitest");
+  });
+
+  afterAll(() => {
+    vi.unstubAllEnvs();
+  });
+
   test("GET /api/posts", async () => {
     const res = await app.request("/api/posts");
     expect(res.status).toBe(200);

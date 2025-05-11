@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 
 import { default as app } from "../app";
 
@@ -7,6 +7,14 @@ const MOCK_ENV = {
 };
 
 describe("common", () => {
+  beforeAll(() => {
+    vi.stubEnv("NODE_ENV", "vitest");
+  });
+
+  afterAll(() => {
+    vi.unstubAllEnvs();
+  });
+
   test("GET /api", async () => {
     const res = await app.request("/api", {}, MOCK_ENV);
     expect(res.status).toBe(200);

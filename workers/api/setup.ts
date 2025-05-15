@@ -6,7 +6,7 @@ const app = new Hono<{ Bindings: CloudflareEnvironment }>();
 // Middleware: Basic Auth
 app.use("*", async (c, next) => {
   const path = c.req.path;
-  const allowedPaths = ["/"];
+  const allowedPaths = ["/", "/action/set-theme"];
 
   if (allowedPaths.includes(path) || import.meta.env.NODE_ENV === "vitest") {
     return await next();

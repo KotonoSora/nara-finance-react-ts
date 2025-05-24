@@ -18,20 +18,24 @@ app.get("/", async (c) => {
       .orderBy(categories.name);
 
     // Build tree structure
-    const categoryMap = new Map();
+    // Map category ID to node with children
+    const categoryMap = new Map<number, any>();
     const rootCategories: any[] = [];
 
-    // First pass: create map and identify roots
+    // First pass: create map entries
     allCategories.forEach((cat) => {
       categoryMap.set(cat.id, { ...cat, children: [] });
-      if (!cat.parent_id) {
+    });
+    // Identify root categories (no parent)
+    allCategories.forEach((cat) => {
+      if (cat.parent_id == null) {
         rootCategories.push(categoryMap.get(cat.id));
       }
     });
 
-    // Second pass: build parent-child relationships
+    // Second pass: attach children to parents
     allCategories.forEach((cat) => {
-      if (cat.parent_id) {
+      if (cat.parent_id != null) {
         const parent = categoryMap.get(cat.parent_id);
         if (parent) {
           parent.children.push(categoryMap.get(cat.id));

@@ -84,16 +84,16 @@ export default function BudgetProgress({
   if (compact) {
     return (
       <div
-        className={`p-4 rounded-lg border border-border bg-card hover:bg-accent/50 cursor-pointer transition-all duration-200 ${
+        className={`p-2 sm:p-3 md:p-4 rounded-lg border border-border bg-card hover:bg-accent/50 cursor-pointer transition-all duration-200 ${
           onClick ? "hover:border-primary/50 hover:shadow-sm" : ""
         }`}
         onClick={onClick}
       >
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between mb-2 sm:mb-3">
+          <div className="flex items-center gap-1 sm:gap-2 min-w-0">
             {category.icon && (
               <span
-                className="text-lg"
+                className="text-sm sm:text-base md:text-lg"
                 style={{
                   color: category.color || "hsl(var(--muted-foreground))",
                 }}
@@ -101,22 +101,27 @@ export default function BudgetProgress({
                 {category.icon}
               </span>
             )}
-            <span className="font-medium text-sm text-card-foreground">
+            <span className="font-medium text-xs sm:text-sm md:text-base text-card-foreground truncate">
               {category.name}
             </span>
             {getTrendIcon()}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
             {isOverBudget && (
-              <AlertTriangle className="h-4 w-4 text-destructive" />
+              <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-destructive" />
             )}
-            <span className={clsx("text-sm font-medium", getStatusColor())}>
+            <span
+              className={clsx(
+                "text-xs sm:text-sm font-medium",
+                getStatusColor(),
+              )}
+            >
               {percentage.toFixed(0)}%
             </span>
           </div>
         </div>
-        <Progress value={percentage} className="h-2" />
-        <div className="flex justify-between text-xs text-muted-foreground mt-2">
+        <Progress value={percentage} className="h-1.5 sm:h-2" />
+        <div className="flex justify-between text-[10px] sm:text-xs text-muted-foreground mt-1.5 sm:mt-2">
           <span>{formatCurrency(spent)}</span>
           <span>{formatCurrency(budgetLimit)}</span>
         </div>

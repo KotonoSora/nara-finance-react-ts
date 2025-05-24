@@ -33,8 +33,8 @@ export default function DayCell(props: DayCellProps) {
   };
 
   const baseClassName = clsx(
-    "relative p-2 text-sm flex justify-center items-center transition-all duration-200",
-    "min-h-[72px]", // Ensure minimum height for 3 lines
+    "relative p-1 sm:p-2 text-xs sm:text-sm flex justify-center items-center transition-all duration-200",
+    "min-h-[60px] sm:min-h-[72px]", // Responsive minimum height for mobile/desktop
     // Base styles
     "hover:bg-accent/50 hover:backdrop-blur-sm",
     "before:absolute before:inset-0 before:z-0",
@@ -75,7 +75,7 @@ export default function DayCell(props: DayCellProps) {
       summaryText.push(`Expenses: $${transactionSummary.expense.toFixed(2)}`);
     }
     return (
-      <div className="p-2 text-sm">
+      <div className="p-2 text-xs sm:text-sm">
         <div className="font-semibold mb-1">{`${transactionCount} Transaction${
           transactionCount > 1 ? "s" : ""
         }`}</div>
@@ -109,12 +109,12 @@ export default function DayCell(props: DayCellProps) {
               transactionCount ? `, ${transactionCount} transactions` : ""
             }`}
           >
-            <div className="relative flex flex-col items-center gap-1">
-              <span className="relative z-10 h-8 w-8 flex items-center justify-center rounded-full">
+            <div className="relative flex flex-col items-center gap-0.5 sm:gap-1">
+              <span className="relative z-10 h-6 w-6 sm:h-8 sm:w-8 flex items-center justify-center rounded-full text-xs sm:text-sm">
                 {day === 1 ? `${day}/${month + 1}` : day}
               </span>
               {transactionCount > 0 && (
-                <div className="flex flex-col items-center text-[10px] leading-tight">
+                <div className="flex flex-col items-center text-[8px] sm:text-[10px] leading-tight">
                   {transactionSummary && (
                     <>
                       {transactionSummary.income > 0 && (

@@ -49,33 +49,40 @@ export default function FinancialInsights({
     const changeType = getChangeType(current, previous);
 
     return (
-      <div className="flex items-center gap-1 text-xs ml-2">
+      <div className="flex items-center gap-1 text-[10px] sm:text-xs ml-1 sm:ml-2">
         <div
-          className={clsx("px-2 py-0.5 rounded-full text-xs font-medium", {
-            "bg-chart-2/10 text-chart-2 border border-chart-2/20":
-              changeType === "positive",
-            "bg-destructive/10 text-destructive border border-destructive/20":
-              changeType === "negative",
-            "bg-chart-4/10 text-chart-4 border border-chart-4/20":
-              changeType === "neutral",
-          })}
+          className={clsx(
+            "px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium",
+            {
+              "bg-chart-2/10 text-chart-2 border border-chart-2/20":
+                changeType === "positive",
+              "bg-destructive/10 text-destructive border border-destructive/20":
+                changeType === "negative",
+              "bg-chart-4/10 text-chart-4 border border-chart-4/20":
+                changeType === "neutral",
+            },
+          )}
         >
           {isPositive ? "↑" : "↓"} {Math.abs(change).toFixed(1)}%
         </div>
-        <span className="text-muted-foreground">vs last period</span>
+        <span className="text-muted-foreground hidden sm:inline">
+          vs last period
+        </span>
       </div>
     );
   };
 
   return (
-    <div className="space-y-6 px-1">
-      <h3 className="text-lg font-semibold px-1">{getDateRangeText()}</h3>
-      <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-3">
+    <div className="space-y-4 sm:space-y-6 px-1">
+      <h3 className="text-base sm:text-lg font-semibold px-1">
+        {getDateRangeText()}
+      </h3>
+      <div className="grid gap-3 sm:gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         <Card className="hover:shadow-md transition-all duration-200 border-border/50">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium flex items-center">
-              Total Income
-              <span className="text-xs text-muted-foreground ml-2">
+          <CardHeader className="pb-1.5 sm:pb-2 p-3 sm:p-4 md:p-6">
+            <CardTitle className="text-xs sm:text-sm font-medium flex flex-col sm:flex-row sm:items-center">
+              <span>Total Income</span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground sm:ml-2">
                 This period
               </span>
               {previousPeriod &&
@@ -85,20 +92,20 @@ export default function FinancialInsights({
                 )}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-chart-2">
+          <CardContent className="p-3 sm:p-4 md:p-6 pt-0">
+            <div className="text-xl sm:text-2xl font-bold text-chart-2">
               ${summary.totalIncome.toFixed(2)}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
               {getDateRangeText()}
             </p>
           </CardContent>
         </Card>
         <Card className="hover:shadow-md transition-all duration-200 border-border/50">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium flex items-center">
-              Total Expenses
-              <span className="text-xs text-muted-foreground ml-2">
+          <CardHeader className="pb-1.5 sm:pb-2 p-3 sm:p-4 md:p-6">
+            <CardTitle className="text-xs sm:text-sm font-medium flex flex-col sm:flex-row sm:items-center">
+              <span>Total Expenses</span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground sm:ml-2">
                 This period
               </span>
               {previousPeriod &&
@@ -108,57 +115,63 @@ export default function FinancialInsights({
                 )}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-destructive">
+          <CardContent className="p-3 sm:p-4 md:p-6 pt-0">
+            <div className="text-xl sm:text-2xl font-bold text-destructive">
               ${summary.totalExpenses.toFixed(2)}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
               {getDateRangeText()}
             </p>
           </CardContent>
         </Card>
-        <Card className="hover:shadow-md transition-all duration-200 border-border/50">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium flex items-center">
-              Savings
-              <span className="text-xs text-muted-foreground ml-2">
+        <Card className="hover:shadow-md transition-all duration-200 border-border/50 sm:col-span-2 md:col-span-1">
+          <CardHeader className="pb-1.5 sm:pb-2 p-3 sm:p-4 md:p-6">
+            <CardTitle className="text-xs sm:text-sm font-medium flex flex-col sm:flex-row sm:items-center">
+              <span>Savings</span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground sm:ml-2">
                 This period
               </span>
               {previousPeriod &&
                 getPercentageChange(summary.savings, previousPeriod.savings)}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-chart-1">
+          <CardContent className="p-3 sm:p-4 md:p-6 pt-0">
+            <div className="text-xl sm:text-2xl font-bold text-chart-1">
               ${summary.savings.toFixed(2)}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
               {getDateRangeText()}
             </p>
           </CardContent>
         </Card>
       </div>
       <Card className="col-span-full border-border/50 shadow-sm hover:shadow-md transition-all duration-200">
-        <CardHeader className="pb-4 px-4 md:px-6 border-b border-border/50">
-          <CardTitle className="flex items-center justify-between text-foreground">
-            Spending by Category
+        <CardHeader className="pb-3 sm:pb-4 px-3 sm:px-4 md:px-6 border-b border-border/50">
+          <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-foreground gap-2 sm:gap-0">
+            <span className="text-sm sm:text-base">Spending by Category</span>
             <Select
               defaultValue="month"
               onValueChange={(val) => console.log(val)}
             >
-              <SelectTrigger className="h-8 w-[120px] border-border/50">
+              <SelectTrigger className="h-8 w-full sm:w-[120px] border-border/50 text-xs sm:text-sm">
                 <SelectValue placeholder="Select view" />
               </SelectTrigger>
               <SelectContent className="border-border/50">
-                <SelectItem value="week">This Week</SelectItem>
-                <SelectItem value="month">This Month</SelectItem>
-                <SelectItem value="year">This Year</SelectItem>
+                <SelectItem value="week" className="text-xs sm:text-sm">
+                  This Week
+                </SelectItem>
+                <SelectItem value="month" className="text-xs sm:text-sm">
+                  This Month
+                </SelectItem>
+                <SelectItem value="year" className="text-xs sm:text-sm">
+                  This Year
+                </SelectItem>
               </SelectContent>
             </Select>
           </CardTitle>
         </CardHeader>
-        <CardContent className="px-4 md:px-6">
-          <div className="h-[300px]">
+        <CardContent className="px-3 sm:px-4 md:px-6 p-3 sm:p-4 md:p-6 pt-3 sm:pt-4">
+          <div className="h-[240px] sm:h-[280px] md:h-[300px]">
             <SpendingChart
               data={chartData}
               onCategorySelect={

@@ -448,48 +448,48 @@ export default function FinanceDemo({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container max-w-[1440px] mx-auto px-4 py-4 md:py-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 md:mb-8">
-          <div className="space-y-1">
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+      <div className="container max-w-[1440px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 md:py-6 lg:py-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6 md:mb-8 lg:mb-10">
+          <div className="space-y-1 sm:space-y-2">
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground">
               Finance Dashboard
             </h1>
-            <p className="text-sm md:text-base text-muted-foreground">
+            <p className="text-xs sm:text-sm md:text-base lg:text-lg text-muted-foreground">
               Manage your transactions and track your spending with detailed
               insights
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
             <Button
               variant={currentView === "transactions" ? "default" : "secondary"}
               onClick={() => setCurrentView("transactions")}
-              className="transition-all duration-200"
+              className="transition-all duration-200 text-xs sm:text-sm px-3 sm:px-4 py-2"
             >
               Transactions
             </Button>
             <Button
               variant={currentView === "categories" ? "default" : "secondary"}
               onClick={() => setCurrentView("categories")}
-              className="transition-all duration-200"
+              className="transition-all duration-200 text-xs sm:text-sm px-3 sm:px-4 py-2"
             >
               Categories
             </Button>
             <Button
               variant="default"
-              className="ml-2 shadow-sm hover:shadow-md transition-all duration-200"
+              className="shadow-sm hover:shadow-md transition-all duration-200 text-xs sm:text-sm px-3 sm:px-4 py-2"
               onClick={() => setIsAddingTransaction(true)}
             >
-              <Plus className="h-4 w-4 mr-2" />
+              <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
               Add Transaction
             </Button>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-[320px_1fr] gap-6 md:gap-8">
-          <aside className="space-y-6">
+        <div className="grid lg:grid-cols-[280px_1fr] xl:grid-cols-[320px_1fr] gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+          <aside className="space-y-3 sm:space-y-4 md:space-y-6">
             <Suspense
               fallback={
-                <div className="h-[240px] animate-pulse bg-muted/50 rounded-lg border" />
+                <div className="h-[180px] sm:h-[200px] md:h-[240px] animate-pulse bg-muted/50 rounded-lg border" />
               }
             >
               {currentView === "categories" ? (

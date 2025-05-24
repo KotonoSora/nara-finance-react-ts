@@ -131,27 +131,27 @@ export default function Calendar({
   };
 
   return (
-    <div className="rounded-xl border border-border/50 bg-card shadow-sm hover:shadow-md transition-all duration-200 p-4">
-      <div className="space-y-6">
+    <div className="rounded-xl border border-border/50 bg-card shadow-sm hover:shadow-md transition-all duration-200 p-2 sm:p-3 md:p-4">
+      <div className="space-y-3 sm:space-y-4 md:space-y-6">
         <div className="flex items-center justify-between">
           <Button
             onClick={() => changeMonth(-1)}
             variant="ghost"
             size="icon"
-            className="h-9 w-9 hover:bg-accent/50 border border-border/30"
+            className="h-8 w-8 sm:h-9 sm:w-9 hover:bg-accent/50 border border-border/30"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
           </Button>
-          <div className="font-semibold text-lg text-foreground">
+          <div className="font-semibold text-base sm:text-lg text-foreground">
             {titleCurrentMonth}
           </div>
           <Button
             onClick={() => changeMonth(1)}
             variant="ghost"
             size="icon"
-            className="h-9 w-9 hover:bg-accent/50 border border-border/30"
+            className="h-8 w-8 sm:h-9 sm:w-9 hover:bg-accent/50 border border-border/30"
           >
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
           </Button>
         </div>
 
@@ -159,7 +159,7 @@ export default function Calendar({
           {daysOfWeek.map((day, i) => (
             <div
               key={day}
-              className="text-center text-sm font-medium text-muted-foreground py-3 bg-muted/30"
+              className="text-center text-xs sm:text-sm font-medium text-muted-foreground py-2 sm:py-3 bg-muted/30"
             >
               {day}
             </div>

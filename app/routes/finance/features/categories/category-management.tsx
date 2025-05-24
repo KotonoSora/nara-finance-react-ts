@@ -108,43 +108,52 @@ export default function CategoryManagement({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
             Category Management
           </h2>
-          <p className="text-muted-foreground">
+          <p className="text-sm sm:text-base text-muted-foreground">
             Manage your transaction categories and budgets
           </p>
         </div>
-        <Button onClick={() => handleCreateCategory()}>
-          <Plus className="h-4 w-4 mr-2" />
+        <Button
+          onClick={() => handleCreateCategory()}
+          className="text-xs sm:text-sm px-3 sm:px-4 py-2"
+        >
+          <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
           Add Category
         </Button>
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex gap-3 sm:gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-2 top-2.5 h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           <Input
             placeholder="Search categories..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-8"
+            className="pl-7 sm:pl-8 text-xs sm:text-sm"
           />
         </div>
       </div>
 
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="tree">Tree View</TabsTrigger>
-          <TabsTrigger value="budgets">Budget Tracking</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="overview" className="text-xs sm:text-sm">
+            Overview
+          </TabsTrigger>
+          <TabsTrigger value="tree" className="text-xs sm:text-sm">
+            Tree View
+          </TabsTrigger>
+          <TabsTrigger value="budgets" className="text-xs sm:text-sm">
+            Budget Tracking
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <TabsContent value="overview" className="space-y-4 sm:space-y-6">
+          <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {filteredCategories.map((category) => (
               <CategorySummaryCard
                 key={category.id}
@@ -158,22 +167,25 @@ export default function CategoryManagement({
             ))}
           </div>
           {filteredCategories.length === 0 && (
-            <div className="text-center py-12">
-              <div className="text-muted-foreground mb-4">
+            <div className="text-center py-8 sm:py-12">
+              <div className="text-muted-foreground mb-3 sm:mb-4 text-sm sm:text-base">
                 {searchTerm
                   ? "No categories match your search"
                   : "No categories found"}
               </div>
-              <Button onClick={() => handleCreateCategory()}>
-                <Plus className="h-4 w-4 mr-2" />
+              <Button
+                onClick={() => handleCreateCategory()}
+                className="text-xs sm:text-sm px-3 sm:px-4 py-2"
+              >
+                <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                 Create First Category
               </Button>
             </div>
           )}
         </TabsContent>
 
-        <TabsContent value="tree" className="space-y-6">
-          <div className="grid lg:grid-cols-2 gap-6">
+        <TabsContent value="tree" className="space-y-4 sm:space-y-6">
+          <div className="grid lg:grid-cols-2 gap-4 sm:gap-6">
             <CategoryTreeView
               categories={categoryTree}
               selectedCategory={selectedCategory}
@@ -184,20 +196,21 @@ export default function CategoryManagement({
 
             {selectedCategory && (
               <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
+                <CardHeader className="p-3 sm:p-4 md:p-6">
+                  <CardTitle className="flex items-center justify-between text-sm sm:text-base">
                     Category Details
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleEditCategory(selectedCategory)}
+                      className="text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2"
                     >
-                      <Settings className="h-4 w-4 mr-2" />
+                      <Settings className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                       Edit
                     </Button>
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-3 sm:p-4 md:p-6 pt-0">
                   {(() => {
                     const category = categoriesWithAnalytics.find(
                       (c) => c.id === selectedCategory,
@@ -208,7 +221,7 @@ export default function CategoryManagement({
                         showActions={false}
                       />
                     ) : (
-                      <p className="text-muted-foreground">
+                      <p className="text-muted-foreground text-sm sm:text-base">
                         Category not found
                       </p>
                     );
@@ -219,14 +232,16 @@ export default function CategoryManagement({
           </div>
         </TabsContent>
 
-        <TabsContent value="budgets" className="space-y-6">
-          <div className="grid gap-6">
+        <TabsContent value="budgets" className="space-y-4 sm:space-y-6">
+          <div className="grid gap-4 sm:gap-6">
             {categoriesWithBudget.length > 0 && (
               <Card>
-                <CardHeader>
-                  <CardTitle>Categories with Budget Tracking</CardTitle>
+                <CardHeader className="p-3 sm:p-4 md:p-6">
+                  <CardTitle className="text-sm sm:text-base">
+                    Categories with Budget Tracking
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-3 sm:space-y-4 p-3 sm:p-4 md:p-6 pt-0">
                   {categoriesWithBudget.map((category) => (
                     <BudgetProgress
                       key={category.id}
@@ -241,10 +256,12 @@ export default function CategoryManagement({
 
             {categoriesWithoutBudget.length > 0 && (
               <Card>
-                <CardHeader>
-                  <CardTitle>Categories without Budget Tracking</CardTitle>
+                <CardHeader className="p-3 sm:p-4 md:p-6">
+                  <CardTitle className="text-sm sm:text-base">
+                    Categories without Budget Tracking
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-3 sm:space-y-4 p-3 sm:p-4 md:p-6 pt-0">
                   {categoriesWithoutBudget.map((category) => (
                     <CategorySummaryCard
                       key={category.id}
@@ -258,12 +275,15 @@ export default function CategoryManagement({
             )}
 
             {filteredCategories.length === 0 && (
-              <div className="text-center py-12">
-                <div className="text-muted-foreground mb-4">
+              <div className="text-center py-8 sm:py-12">
+                <div className="text-muted-foreground mb-3 sm:mb-4 text-sm sm:text-base">
                   No categories found for budget tracking
                 </div>
-                <Button onClick={() => handleCreateCategory()}>
-                  <Plus className="h-4 w-4 mr-2" />
+                <Button
+                  onClick={() => handleCreateCategory()}
+                  className="text-xs sm:text-sm px-3 sm:px-4 py-2"
+                >
+                  <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                   Create Category with Budget
                 </Button>
               </div>

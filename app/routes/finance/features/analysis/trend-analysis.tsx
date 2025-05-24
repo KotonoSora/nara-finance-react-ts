@@ -65,11 +65,15 @@ export default function TrendAnalysis({
   const getTrendIcon = (trend: "increasing" | "decreasing" | "stable") => {
     switch (trend) {
       case "increasing":
-        return <ArrowUpIcon className="h-4 w-4 text-destructive" />;
+        return (
+          <ArrowUpIcon className="h-3 w-3 sm:h-4 sm:w-4 text-destructive" />
+        );
       case "decreasing":
-        return <ArrowDownIcon className="h-4 w-4 text-chart-2" />;
+        return <ArrowDownIcon className="h-3 w-3 sm:h-4 sm:w-4 text-chart-2" />;
       case "stable":
-        return <ArrowRightIcon className="h-4 w-4 text-chart-4" />;
+        return (
+          <ArrowRightIcon className="h-3 w-3 sm:h-4 sm:w-4 text-chart-4" />
+        );
     }
   };
 
@@ -85,17 +89,19 @@ export default function TrendAnalysis({
 
   return (
     <Card className="border-border/50 shadow-sm hover:shadow-md transition-all duration-200">
-      <CardHeader className="pb-3 border-b border-border/50">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-foreground">
+      <CardHeader className="pb-2 sm:pb-3 border-b border-border/50 p-3 sm:p-4 md:p-6">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
+          <CardTitle className="flex items-center gap-1.5 sm:gap-2 text-foreground text-sm sm:text-base md:text-lg">
             Spending Trends
             <TooltipProvider>
               <UITooltip>
                 <TooltipTrigger>
-                  <BadgeInfo className="h-4 w-4 text-muted-foreground" />
+                  <BadgeInfo className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Analysis of your spending patterns over time</p>
+                  <p className="text-xs sm:text-sm">
+                    Analysis of your spending patterns over time
+                  </p>
                 </TooltipContent>
               </UITooltip>
             </TooltipProvider>
@@ -106,13 +112,19 @@ export default function TrendAnalysis({
               handleCategorySelect(value)
             }
           >
-            <SelectTrigger className="w-[140px] border-border/50">
+            <SelectTrigger className="w-[120px] sm:w-[140px] border-border/50 text-xs sm:text-sm">
               <SelectValue placeholder="Select period" />
             </SelectTrigger>
             <SelectContent className="border-border/50">
-              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="all" className="text-xs sm:text-sm">
+                All Categories
+              </SelectItem>
               {trends.map((t) => (
-                <SelectItem key={t.category} value={t.category}>
+                <SelectItem
+                  key={t.category}
+                  value={t.category}
+                  className="text-xs sm:text-sm"
+                >
                   {t.category.charAt(0).toUpperCase() + t.category.slice(1)}
                 </SelectItem>
               ))}
@@ -120,28 +132,28 @@ export default function TrendAnalysis({
           </Select>
         </div>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4 sm:space-y-6 p-3 sm:p-4 md:p-6 pt-3 sm:pt-4">
         {visibleTrends.map((trend) => (
           <div
             key={trend.category}
-            className="space-y-3 cursor-pointer hover:bg-muted/30 p-3 rounded-lg transition-all duration-200 border border-transparent hover:border-border/50"
+            className="space-y-2 sm:space-y-3 cursor-pointer hover:bg-muted/30 p-2 sm:p-3 rounded-lg transition-all duration-200 border border-transparent hover:border-border/50"
             onClick={() => handleCategorySelect(trend.category)}
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="capitalize font-medium text-foreground">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="capitalize font-medium text-foreground text-sm sm:text-base">
                   {trend.category}
                 </span>
                 {getTrendIcon(trend.trend)}
               </div>
-              <span className="text-sm text-muted-foreground font-medium">
+              <span className="text-xs sm:text-sm text-muted-foreground font-medium">
                 Forecast: ${trend.forecast.toFixed(2)}
               </span>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               {getTrendSummary(trend)}
             </p>
-            <div className="h-[100px]">
+            <div className="h-[80px] sm:h-[100px]">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={getChartData(trend)}>
                   <defs>
@@ -165,11 +177,17 @@ export default function TrendAnalysis({
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" fontSize={12} tickLine={false} />
+                  <XAxis
+                    dataKey="month"
+                    fontSize={10}
+                    tickLine={false}
+                    className="sm:text-xs"
+                  />
                   <YAxis
-                    fontSize={12}
+                    fontSize={10}
                     tickLine={false}
                     tickFormatter={(value) => `$${value}`}
+                    className="sm:text-xs"
                   />
                   <Tooltip
                     content={({ active, payload }) => {
@@ -177,10 +195,10 @@ export default function TrendAnalysis({
                       const data = payload[0].payload as ChartDataPoint;
                       return (
                         <div className="rounded-lg border border-border/50 bg-background p-2 shadow-sm">
-                          <div className="font-medium text-foreground">
+                          <div className="font-medium text-foreground text-xs sm:text-sm">
                             {data.month}
                           </div>
-                          <div className="text-muted-foreground">
+                          <div className="text-muted-foreground text-xs sm:text-sm">
                             ${data.amount.toFixed(2)}
                           </div>
                         </div>

@@ -78,31 +78,36 @@ export default function CategorySummaryCard({
     return (
       <div
         className={clsx(
-          "p-3 rounded-lg border transition-colors",
+          "p-2 sm:p-3 md:p-4 rounded-lg border transition-colors",
           onClick && "cursor-pointer hover:border-primary/50 hover:bg-muted/50",
           category.is_archived && "opacity-60",
         )}
         onClick={onClick}
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 min-w-0">
             {category.icon && (
-              <span style={{ color: category.color || undefined }}>
+              <span
+                className="text-sm sm:text-base"
+                style={{ color: category.color || undefined }}
+              >
                 {category.icon}
               </span>
             )}
-            <span className="font-medium text-sm">{category.name}</span>
+            <span className="font-medium text-xs sm:text-sm md:text-base truncate">
+              {category.name}
+            </span>
             {category.is_archived && (
-              <Archive className="h-3 w-3 text-muted-foreground" />
+              <Archive className="h-3 w-3 text-muted-foreground flex-shrink-0" />
             )}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
             {budgetStatus && (
               <div
                 className={clsx("w-2 h-2 rounded-full", budgetStatus.color)}
               />
             )}
-            <span className="text-sm font-medium">
+            <span className="text-xs sm:text-sm md:text-base font-medium">
               {formatCurrency(category.spent)}
             </span>
           </div>
@@ -120,18 +125,20 @@ export default function CategorySummaryCard({
       )}
       onClick={onClick}
     >
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+      <CardHeader className="pb-2 sm:pb-3 md:pb-4 p-3 sm:p-4 md:p-6">
+        <CardTitle className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 min-w-0">
             {category.icon && (
               <span
-                className="text-lg"
+                className="text-base sm:text-lg md:text-xl"
                 style={{ color: category.color || undefined }}
               >
                 {category.icon}
               </span>
             )}
-            <span>{category.name}</span>
+            <span className="text-sm sm:text-base md:text-lg truncate">
+              {category.name}
+            </span>
             {category.is_archived && (
               <TooltipProvider>
                 <Tooltip>
@@ -145,8 +152,11 @@ export default function CategorySummaryCard({
               </TooltipProvider>
             )}
           </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-xs capitalize">
+          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+            <Badge
+              variant="outline"
+              className="text-[10px] sm:text-xs capitalize px-1 sm:px-2 py-0.5"
+            >
               {category.type}
             </Badge>
             {budgetStatus && (

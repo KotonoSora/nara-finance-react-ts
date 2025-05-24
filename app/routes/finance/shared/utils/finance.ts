@@ -1,8 +1,4 @@
-// Finance utility functions
-import type { TransactionType } from "../../domain/types";
-
-import { FinancialAmount } from "./financial-precision";
-import { formatCurrency } from "./format";
+import { FinancialAmount } from "~/routes/finance/shared/utils/financial-precision";
 
 /**
  * Evaluates the significance of change between two numerical values

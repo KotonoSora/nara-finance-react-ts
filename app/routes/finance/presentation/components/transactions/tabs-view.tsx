@@ -13,9 +13,20 @@ import type {
 import { Card } from "~/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
-const TransactionList = lazy(() => import("./transaction-list"));
-const Calendar = lazy(() => import("../calendar/calendar-view"));
-const TrendAnalysis = lazy(() => import("../analysis/trend-analysis"));
+const TransactionList = lazy(
+  () =>
+    import(
+      "~/routes/finance/presentation/components/transactions/transaction-list"
+    ),
+);
+const Calendar = lazy(
+  () =>
+    import("~/routes/finance/presentation/components/calendar/calendar-view"),
+);
+const TrendAnalysis = lazy(
+  () =>
+    import("~/routes/finance/presentation/components/analysis/trend-analysis"),
+);
 
 interface TabsViewProps {
   selectedDate: Date | null;

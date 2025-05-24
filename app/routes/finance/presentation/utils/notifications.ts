@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 
-import { Money } from "../../domain/value-objects/money.value";
+import { Money } from "~/routes/finance/domain/value-objects/money.value";
 
 export const showTransactionAddedToast = (
   amount: number,

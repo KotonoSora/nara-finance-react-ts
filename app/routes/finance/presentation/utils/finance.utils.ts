@@ -1,10 +1,10 @@
-import type { Budget } from "../../domain/entities/budget.entity";
-import type { Category } from "../../domain/entities/category.entity";
-import type { Transaction } from "../../domain/entities/transaction.entity";
+import type { Budget } from "~/routes/finance/domain/entities/budget.entity";
+import type { Category } from "~/routes/finance/domain/entities/category.entity";
+import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
 
-import { analyzeTrends } from "../../application/services/analytics.service";
-import { BudgetEntity } from "../../domain/entities/budget.entity";
-import { Money as FinancialAmount } from "../../domain/value-objects/money.value";
+import { analyzeTrends } from "~/routes/finance/application/services/analytics.service";
+import { BudgetEntity } from "~/routes/finance/domain/entities/budget.entity";
+import { Money as FinancialAmount } from "~/routes/finance/domain/value-objects/money.value";
 
 // Re-export for convenience
 export { analyzeTrends, FinancialAmount };

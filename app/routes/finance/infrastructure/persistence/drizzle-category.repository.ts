@@ -1,10 +1,7 @@
-import { and, desc, eq, isNull, sql } from "drizzle-orm";
+import { eq, isNull, sql } from "drizzle-orm";
 
-import type {
-  Category,
-  CategoryProps,
-} from "../../domain/entities/category.entity";
-import type { ICategoryRepository } from "../../domain/repositories/category.repository";
+import type { Category } from "~/routes/finance/domain/entities/category.entity";
+import type { ICategoryRepository } from "~/routes/finance/domain/repositories/category.repository";
 
 import {
   categories as categoriesTable,

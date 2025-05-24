@@ -1,11 +1,11 @@
 import type {
   Transaction,
   TransactionProps,
-} from "../../domain/entities/transaction.entity";
-import type { ITransactionRepository } from "../../domain/repositories/transaction.repository";
+} from "~/routes/finance/domain/entities/transaction.entity";
+import type { ITransactionRepository } from "~/routes/finance/domain/repositories/transaction.repository";
 
-import { TransactionEntity } from "../../domain/entities/transaction.entity";
-import { Money } from "../../domain/value-objects/money.value";
+import { TransactionEntity } from "~/routes/finance/domain/entities/transaction.entity";
+import { Money } from "~/routes/finance/domain/value-objects/money.value";
 
 export class TransactionService {
   constructor(private transactionRepository: ITransactionRepository) {}

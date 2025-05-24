@@ -1,21 +1,24 @@
 import { useCallback, useState } from "react";
 
-import type { Category } from "../../domain/entities/category.entity";
-import type { Transaction } from "../../domain/entities/transaction.entity";
-import type { DatabaseContext } from "../../infrastructure/database-context";
+import type { Category } from "~/routes/finance/domain/entities/category.entity";
+import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
+import type { DatabaseContext } from "~/routes/finance/infrastructure/database-context";
 
 import {
   ArchiveCategoryUseCase,
   CreateCategoryUseCase,
   MergeCategoriesUseCase,
   UpdateCategoryUseCase,
-} from "../../application/use-cases/category-use-cases";
+} from "~/routes/finance/application/use-cases/category-use-cases";
 import {
   CreateTransactionUseCase,
   DeleteTransactionUseCase,
   UpdateTransactionUseCase,
-} from "../../application/use-cases/transaction-use-cases";
-import { showErrorToast, showSuccessToast } from "../utils/ui-helpers";
+} from "~/routes/finance/application/use-cases/transaction-use-cases";
+import {
+  showErrorToast,
+  showSuccessToast,
+} from "~/routes/finance/presentation/utils/ui-helpers";
 
 export function useFinanceActions(dbContext: DatabaseContext) {
   const [isLoading, setIsLoading] = useState(false);

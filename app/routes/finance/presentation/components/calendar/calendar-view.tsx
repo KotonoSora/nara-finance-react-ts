@@ -2,12 +2,11 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "~/components/ui/button";
-
+import DayCell from "~/routes/finance/presentation/components/calendar/day-cell";
 import {
   getTransactionSummaryForDate,
   isDateInRange,
-} from "../../utils/calendar";
-import DayCell from "./day-cell";
+} from "~/routes/finance/presentation/utils/calendar";
 
 export default function Calendar({
   calendarDetail,

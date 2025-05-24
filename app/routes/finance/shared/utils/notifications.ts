@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 
-import { formatCurrency } from "./format";
+import { formatCurrency } from "~/routes/finance/shared/utils/format";
 
 export function showTransactionAddedToast(
   amount: number,

@@ -1,4 +1,4 @@
-import type { BudgetPeriod } from "../types";
+import type { BudgetPeriod } from "~/routes/finance/domain/types";
 
 export interface Budget {
   limit: number;

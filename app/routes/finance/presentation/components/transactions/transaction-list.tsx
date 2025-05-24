@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-import type { DateRange } from "react-day-picker";
 import type {
   Category,
   FinancialSummary,
@@ -21,7 +20,8 @@ import type {
   Transaction,
   TransactionCategory,
   TransactionFilters,
-} from "../../types";
+} from "~/routes/finance/presentation/types";
+import type { DateRange } from "react-day-picker";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -55,11 +55,10 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { showExportToastFromPromise } from "~/routes/finance/presentation/utils/notifications";
 import { useFinanceShortcuts } from "~/routes/finance/shared/utils/shortcuts";
 
-import { showExportToastFromPromise } from "../../utils/notifications";
 import DeleteTransactionDialog from "./delete-transaction-dialog";
-import EnhancedTransactionDialog from "./enhanced-transaction-dialog";
 import FinancialInsights from "./financial-insights";
 import ImportDialog from "./import-dialog";
 

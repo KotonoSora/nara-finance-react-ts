@@ -1,4 +1,4 @@
-import type { Category } from "../entities/category.entity";
+import type { Category } from "~/routes/finance/domain/entities/category.entity";
 
 export interface ICategoryRepository {
   findAll(): Promise<Category[]>;

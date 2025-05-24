@@ -1,7 +1,7 @@
-import type { Budget } from "../../domain/entities/budget.entity";
-import type { Transaction } from "../../domain/entities/transaction.entity";
+import type { Budget } from "~/routes/finance/domain/entities/budget.entity";
+import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
 
-import { Money } from "../../domain/value-objects/money.value";
+import { Money } from "~/routes/finance/domain/value-objects/money.value";
 
 export function analyzeBudgetWarningLevel(
   budget: Budget,

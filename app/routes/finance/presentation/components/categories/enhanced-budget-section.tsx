@@ -9,9 +9,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-
-import BudgetProgress from "../categories/budget-progress";
-import CategoryFormDialog from "../categories/category-form-dialog";
+import BudgetProgress from "~/routes/finance/presentation/components/categories/budget-progress";
+import CategoryFormDialog from "~/routes/finance/presentation/components/categories/category-form-dialog";
 
 interface EnhancedBudgetSectionProps {
   categoriesWithAnalytics: CategoryWithAnalytics[];

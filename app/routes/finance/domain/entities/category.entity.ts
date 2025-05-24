@@ -1,4 +1,4 @@
-import type { BudgetPeriod, CategoryType } from "../types";
+import type { BudgetPeriod, CategoryType } from "~/routes/finance/domain/types";
 
 export interface Category {
   id: string;

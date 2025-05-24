@@ -13,6 +13,12 @@ export type TransactionCategory =
 export type {
   Transaction,
   TransactionProps,
-} from "../entities/transaction.entity";
-export type { Category, CategoryProps } from "../entities/category.entity";
-export type { Budget, BudgetProps } from "../entities/budget.entity";
+} from "~/routes/finance/domain/entities/transaction.entity";
+export type {
+  Category,
+  CategoryProps,
+} from "~/routes/finance/domain/entities/category.entity";
+export type {
+  Budget,
+  BudgetProps,
+} from "~/routes/finance/domain/entities/budget.entity";

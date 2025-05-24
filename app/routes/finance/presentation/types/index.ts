@@ -1,10 +1,10 @@
 // Presentation Layer Types - UI specific types
-import type { CategoryTrend as DomainCategoryTrend } from "../../application/types";
+import type { CategoryTrend as DomainCategoryTrend } from "~/routes/finance/application/types";
 import type {
   Budget as DomainBudget,
   Category as DomainCategory,
   Transaction as DomainTransaction,
-} from "../../domain/types";
+} from "~/routes/finance/domain/types";
 
 // UI State Types
 export interface DateRange {

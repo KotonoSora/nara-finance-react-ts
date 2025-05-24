@@ -1,17 +1,17 @@
 import clsx from "clsx";
 import { format } from "date-fns";
 import { CalendarIcon, FileDown, FileUp, Search } from "lucide-react";
-import { lazy, useState } from "react";
+import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
-import type { DateRange } from "react-day-picker";
 import type {
   FinancialSummary,
   TableSort,
   Transaction,
   TransactionCategory,
   TransactionFilters,
-} from "../../types";
+} from "~/routes/finance/presentation/types";
+import type { DateRange } from "react-day-picker";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -38,8 +38,8 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { showExportToastFromPromise } from "~/routes/finance/presentation/utils/notifications";
 
-import { showExportToastFromPromise } from "../../utils/notifications";
 import FinancialInsights from "./financial-insights";
 import ImportDialog from "./import-dialog";
 

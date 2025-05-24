@@ -1,17 +1,14 @@
-// Domain to Presentation mapping utilities
-import type { CategoryTrend as DomainCategoryTrend } from "../../application/types";
+import type { CategoryTrend as DomainCategoryTrend } from "~/routes/finance/application/types";
 import type {
   Budget as DomainBudget,
-  Category as DomainCategory,
   Transaction as DomainTransaction,
-} from "../../domain/types";
+} from "~/routes/finance/domain/types";
 import type {
   Budget,
-  Category,
   CategoryTrend,
   Transaction,
   TransactionCategory,
-} from "../types";
+} from "~/routes/finance/presentation/types";
 
 // Legacy category mapping
 const CATEGORY_ID_TO_LEGACY: Record<string, TransactionCategory> = {

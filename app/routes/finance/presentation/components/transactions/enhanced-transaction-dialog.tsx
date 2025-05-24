@@ -37,8 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-
-import HierarchicalCategorySelector from "../categories/hierarchical-category-selector";
+import HierarchicalCategorySelector from "~/routes/finance/presentation/components/categories/hierarchical-category-selector";
 
 // Enhanced schema to support both legacy and new category system
 const transactionSchema = z

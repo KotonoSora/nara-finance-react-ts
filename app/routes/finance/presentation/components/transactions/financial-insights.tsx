@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { format, startOfMonth } from "date-fns";
 
-import type { FinancialInsightsProps } from "../../types";
+import type { FinancialInsightsProps } from "~/routes/finance/presentation/types";
 
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
@@ -11,10 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-
-import { getChangeType } from "../../../shared/utils/finance";
-import { getCategoryColor } from "../../utils/ui-helpers";
-import SpendingChart from "./spending-chart";
+import SpendingChart from "~/routes/finance/presentation/components/transactions/spending-chart";
+import { getCategoryColor } from "~/routes/finance/presentation/utils/ui-helpers";
+import { getChangeType } from "~/routes/finance/shared/utils/finance";
 
 export default function FinancialInsights({
   summary,

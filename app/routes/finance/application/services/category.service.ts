@@ -1,7 +1,7 @@
-import type { CategoryProps } from "../../domain/entities/category.entity";
-import type { ICategoryRepository } from "../../domain/repositories/category.repository";
+import type { CategoryProps } from "~/routes/finance/domain/entities/category.entity";
+import type { ICategoryRepository } from "~/routes/finance/domain/repositories/category.repository";
 
-import { CategoryEntity } from "../../domain/entities/category.entity";
+import { CategoryEntity } from "~/routes/finance/domain/entities/category.entity";
 
 export class CategoryService {
   constructor(private categoryRepository: ICategoryRepository) {}

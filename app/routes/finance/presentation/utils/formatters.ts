@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 
-import { Money } from "../../domain/value-objects/money.value";
+import { Money } from "~/routes/finance/domain/value-objects/money.value";
 
 export function showSuccessToast(message: string) {
   toast.success(message);

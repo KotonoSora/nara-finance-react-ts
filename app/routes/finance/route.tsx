@@ -1,19 +1,7 @@
 import { Plus } from "lucide-react";
 import { lazy, Suspense, useEffect, useState } from "react";
-import * as React from "react";
 
-import type { Route } from "./+types/route";
-import type { Budget as DomainBudget } from "./domain/entities/budget.entity";
-import type {
-  Category,
-  CategoryProps,
-} from "./domain/entities/category.entity";
-import type {
-  TransactionEntity,
-  TransactionProps,
-} from "./domain/entities/transaction.entity";
-import type { TransactionType } from "./domain/types";
-// Utils and Hooks
+import type { Category } from "~/routes/finance/domain/entities/category.entity";
 import type {
   Budget,
   CategoryTrend,
@@ -21,34 +9,20 @@ import type {
   FinancialSummary,
   Transaction,
   TransactionCategory,
-} from "./presentation/types";
+} from "~/routes/finance/presentation/types";
+import type { Route } from "./+types/route";
 
-// UI Components
 import { Button } from "~/components/ui/button";
 import { Toaster } from "~/components/ui/sonner";
-
-// Services and Infrastructure
-import { CategoryService } from "./application/services/category.service";
-import { TransactionService } from "./application/services/transaction.service";
-import { DrizzleCategoryRepository } from "./infrastructure/persistence/drizzle-category.repository";
-import { DrizzleTransactionRepository } from "./infrastructure/persistence/drizzle-transaction.repository";
-// Presentation Components
-import CategoryManagement from "./presentation/components/categories/category-management";
-import EnhancedTransactionDialog from "./presentation/components/transactions/enhanced-transaction-dialog";
-import TabsView from "./presentation/components/transactions/tabs-view";
+import CategoryManagement from "~/routes/finance/presentation/components/categories/category-management";
+import EnhancedTransactionDialog from "~/routes/finance/presentation/components/transactions/enhanced-transaction-dialog";
+import TabsView from "~/routes/finance/presentation/components/transactions/tabs-view";
 import {
   analyzeTrends,
   AuditTrail,
   FinancialAmount,
   getDefaultBudget,
-  updateBudgets,
-} from "./presentation/utils/finance.utils";
-import {
-  mapDomainBudgetToPresentation,
-  mapDomainCategoryTrendToPresentation,
-  mapDomainTransactionToPresentation,
-  mapPresentationTransactionToDomain,
-} from "./presentation/utils/mappers";
+} from "~/routes/finance/presentation/utils/finance.utils";
 
 // Type mapping functions to bridge domain and UI types
 function mapDomainTrendToLocal(domainTrend: {
@@ -61,17 +35,6 @@ function mapDomainTrendToLocal(domainTrend: {
   return {
     ...domainTrend,
     category: "other" as TransactionCategory, // Default fallback
-  };
-}
-
-function mapDomainBudgetToLocal(domainBudget: DomainBudget): Budget {
-  return {
-    category: "other" as TransactionCategory, // Default fallback
-    category_id: (domainBudget as any).id || undefined,
-    limit: (domainBudget as any).limit || 0,
-    spent: (domainBudget as any).spent || 0,
-    period: (domainBudget as any).period || "monthly",
-    carry_over: undefined,
   };
 }
 
@@ -104,7 +67,7 @@ function useFinanceShortcuts({
   cancel: () => void;
 }) {
   // Simplified keyboard shortcuts implementation
-  React.useEffect(() => {
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "n") {
         e.preventDefault();

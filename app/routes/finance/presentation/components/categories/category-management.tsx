@@ -5,11 +5,10 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-
-import BudgetProgress from "./budget-progress";
-import CategoryFormDialog from "./category-form-dialog";
-import CategorySummaryCard from "./category-summary-card";
-import CategoryTreeView from "./category-tree-view";
+import BudgetProgress from "~/routes/finance/presentation/components/categories/budget-progress";
+import CategoryFormDialog from "~/routes/finance/presentation/components/categories/category-form-dialog";
+import CategorySummaryCard from "~/routes/finance/presentation/components/categories/category-summary-card";
+import CategoryTreeView from "~/routes/finance/presentation/components/categories/category-tree-view";
 
 interface CategoryManagementProps {
   categories: Category[];

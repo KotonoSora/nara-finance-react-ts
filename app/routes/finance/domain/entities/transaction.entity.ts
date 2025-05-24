@@ -1,4 +1,4 @@
-import type { TransactionType } from "../types";
+import type { TransactionType } from "~/routes/finance/domain/types";
 
 export interface Transaction {
   id: string;

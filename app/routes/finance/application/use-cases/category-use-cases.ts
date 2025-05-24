@@ -1,9 +1,9 @@
+import type { IUseCase } from "~/routes/finance/application/interfaces/use-case";
 import type {
   Category,
   CategoryProps,
-} from "../../domain/entities/category.entity";
-import type { DatabaseContext } from "../../infrastructure/database-context";
-import type { IUseCase } from "../interfaces/use-case";
+} from "~/routes/finance/domain/entities/category.entity";
+import type { DatabaseContext } from "~/routes/finance/infrastructure/database-context";
 
 export class CreateCategoryUseCase
   implements IUseCase<CategoryProps, Category>

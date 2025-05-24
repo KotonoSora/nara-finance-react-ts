@@ -1,14 +1,10 @@
-import { and, desc, eq, isNull, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 
-import type { Transaction } from "../../domain/entities/transaction.entity";
-import type { ITransactionRepository } from "../../domain/repositories/transaction.repository";
+import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
+import type { ITransactionRepository } from "~/routes/finance/domain/repositories/transaction.repository";
 
-import {
-  categories as categoriesTable,
-  transactions as transactionsTable,
-} from "~/database/schema";
-
-import { TransactionEntity } from "../../domain/entities/transaction.entity";
+import { transactions as transactionsTable } from "~/database/schema";
+import { TransactionEntity } from "~/routes/finance/domain/entities/transaction.entity";
 
 export class DrizzleTransactionRepository implements ITransactionRepository {
   constructor(private db: any) {}

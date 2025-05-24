@@ -1,9 +1,12 @@
-import type { Transaction } from "../../domain/entities/transaction.entity";
-import type { DatabaseContext } from "../../infrastructure/database-context";
-import type { IUseCase } from "../interfaces/use-case";
-import type { CreateTransactionInput, UpdateTransactionInput } from "../types";
+import type { IUseCase } from "~/routes/finance/application/interfaces/use-case";
+import type {
+  CreateTransactionInput,
+  UpdateTransactionInput,
+} from "~/routes/finance/application/types";
+import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
+import type { DatabaseContext } from "~/routes/finance/infrastructure/database-context";
 
-import { Money } from "../../domain/value-objects/money.value";
+import { Money } from "~/routes/finance/domain/value-objects/money.value";
 
 export class CreateTransactionUseCase
   implements IUseCase<CreateTransactionInput, Transaction>

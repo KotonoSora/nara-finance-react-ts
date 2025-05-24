@@ -1,5 +1,4 @@
-// Validation utilities for finance module
-import type { TransactionType } from "../../domain/types";
+import type { TransactionType } from "~/routes/finance/domain/types";
 
 export function validateAmount(amount: string | number): number {
   const parsedAmount = typeof amount === "string" ? parseFloat(amount) : amount;

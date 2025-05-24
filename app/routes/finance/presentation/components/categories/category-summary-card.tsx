@@ -18,8 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-
-import { formatCurrency } from "../../utils/formatters";
+import { formatCurrency } from "~/routes/finance/presentation/utils/formatters";
 
 interface CategorySummaryCardProps {
   category: CategoryWithAnalytics;

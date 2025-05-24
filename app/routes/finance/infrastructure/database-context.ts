@@ -1,5 +1,5 @@
-import type { Category } from "../domain/entities/category.entity";
-import type { Transaction } from "../domain/entities/transaction.entity";
+import type { Category } from "~/routes/finance/domain/entities/category.entity";
+import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
 
 export interface DatabaseContext {
   db: any; // Replace with your actual DB type

@@ -1,4 +1,6 @@
-import AuditTrail from "./audit";
+// Finance utility functions
+import type { TransactionType } from "../../domain/types";
+
 import { FinancialAmount } from "./financial-precision";
 import { formatCurrency } from "./format";
 

@@ -11,7 +11,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { formatCurrency } from "~/routes/finance/shared/utils/format";
+import { formatCurrency } from "../../utils/formatters";
 
 export default function SpendingChart({
   data,

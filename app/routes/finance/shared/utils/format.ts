@@ -29,7 +29,7 @@ export function formatCompactCurrency(amount: number): string {
 
 export function getTransactionAmountLabel(
   amount: number,
-  type: TransactionType,
+  type: "income" | "expense" | "investment",
 ): string {
   const prefix = type === "expense" ? "-" : "+";
   return `${prefix}${formatCurrency(amount)}`;

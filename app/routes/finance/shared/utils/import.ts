@@ -26,24 +26,31 @@ export function validateTransactionType(type: string): TransactionType {
   return normalizedType as TransactionType;
 }
 
-export function validateTransactionCategory(
-  category: string,
-): TransactionCategory {
-  const validCategories: TransactionCategory[] = [
-    "food",
-    "transport",
-    "shopping",
-    "salary",
-    "other",
-  ];
+export function validateTransactionCategory(category: string): {
+  categoryId: string;
+  legacyCategory: TransactionCategory;
+} {
+  // Map category names to category IDs and legacy categories
+  const categoryMapping: Record<
+    string,
+    { categoryId: string; legacyCategory: TransactionCategory }
+  > = {
+    food: { categoryId: "1", legacyCategory: "food" },
+    transport: { categoryId: "2", legacyCategory: "transport" },
+    shopping: { categoryId: "3", legacyCategory: "shopping" },
+    salary: { categoryId: "4", legacyCategory: "salary" },
+    other: { categoryId: "5", legacyCategory: "other" },
+  };
 
   const normalizedCategory = category.toLowerCase();
+  const mapping = categoryMapping[normalizedCategory];
 
-  if (!validCategories.includes(normalizedCategory as TransactionCategory)) {
-    throw new Error(`Invalid transaction category: ${category}`);
+  if (!mapping) {
+    // Return default "other" category if not found
+    return { categoryId: "5", legacyCategory: "other" };
   }
 
-  return normalizedCategory as TransactionCategory;
+  return mapping;
 }
 
 export function validateAmount(amount: string): number {
@@ -80,9 +87,17 @@ export const parseCSVTransactions = (
               description: record.description,
             });
 
+            const categoryMapping = validateTransactionCategory(
+              parsed.category,
+            );
+
             return {
-              ...parsed,
               date: new Date(parsed.date),
+              type: parsed.type,
+              amount: parsed.amount,
+              description: parsed.description,
+              category: categoryMapping.legacyCategory,
+              category_id: categoryMapping.categoryId,
             };
           });
           resolve(transactions);
@@ -106,14 +121,18 @@ export async function importFromCSV(file: File): Promise<ImportResult> {
       skipEmptyLines: true,
       complete: (results) => {
         try {
-          const transactions = results.data.map((row: any) => ({
-            id: crypto.randomUUID(),
-            date: new Date(row.date),
-            description: row.description,
-            amount: parseFloat(row.amount),
-            type: validateTransactionType(row.type),
-            category: validateTransactionCategory(row.category),
-          }));
+          const transactions = results.data.map((row: any) => {
+            const categoryMapping = validateTransactionCategory(row.category);
+            return {
+              id: crypto.randomUUID(),
+              date: new Date(row.date),
+              description: row.description,
+              amount: parseFloat(row.amount),
+              type: validateTransactionType(row.type),
+              category: categoryMapping.legacyCategory,
+              category_id: categoryMapping.categoryId,
+            };
+          });
 
           resolve({
             success: true,
@@ -159,14 +178,20 @@ export async function parseCSV(file: File): Promise<Transaction[]> {
           return;
         }
 
-        const transactions = results.data.map((row: any) => ({
-          id: crypto.randomUUID(),
-          date: new Date(row.date),
-          description: row.description,
-          amount: parseFloat(row.amount),
-          category: validateTransactionCategory(row.category || "other"),
-          type: validateTransactionType(row.type || "expense"),
-        }));
+        const transactions = results.data.map((row: any) => {
+          const categoryMapping = validateTransactionCategory(
+            row.category || "other",
+          );
+          return {
+            id: crypto.randomUUID(),
+            date: new Date(row.date),
+            description: row.description,
+            amount: parseFloat(row.amount),
+            category: categoryMapping.legacyCategory,
+            category_id: categoryMapping.categoryId,
+            type: validateTransactionType(row.type || "expense"),
+          };
+        });
 
         resolve(transactions);
       },

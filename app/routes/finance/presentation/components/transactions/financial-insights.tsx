@@ -1,6 +1,8 @@
 import clsx from "clsx";
 import { format, startOfMonth } from "date-fns";
 
+import type { FinancialInsightsProps } from "../../types";
+
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
   Select,
@@ -9,9 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import SpendingChart from "~/routes/finance/features/transactions/spending-chart";
-import { getCategoryColor } from "~/routes/finance/shared/utils/categories";
-import { getChangeType } from "~/routes/finance/shared/utils/finance";
+
+import { getChangeType } from "../../../shared/utils/finance";
+import { getCategoryColor } from "../../utils/ui-helpers";
+import SpendingChart from "./spending-chart";
 
 export default function FinancialInsights({
   summary,

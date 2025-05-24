@@ -143,7 +143,7 @@ export default function EnhancedTransactionDialog({
       description: data.description,
       // Handle both legacy and new category systems
       category: data.category || "other", // Fallback for legacy support
-      category_id: data.category_id,
+      category_id: data.category_id || "1", // Default to first category if not set
     };
 
     onSubmit(transactionData);

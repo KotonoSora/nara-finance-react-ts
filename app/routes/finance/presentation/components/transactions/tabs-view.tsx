@@ -1,6 +1,15 @@
 import { CalendarDays, LineChart, ListIcon } from "lucide-react";
 import { lazy, Suspense } from "react";
 
+import type {
+  CalendarData,
+  Category,
+  DateRange,
+  FinancialSummary,
+  Transaction,
+  TransactionCategory,
+} from "~/routes/finance/presentation/types";
+
 import { Card } from "~/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
@@ -73,8 +82,6 @@ export default function TabsView({
             onAddTransaction={onAddTransaction}
             onEditTransaction={onEditTransaction}
             onDeleteTransaction={onDeleteTransaction}
-            selectedCategory={selectedCategory}
-            dateRange={dateRange}
             categories={categories}
             useLegacyCategories={useLegacyCategories}
           />

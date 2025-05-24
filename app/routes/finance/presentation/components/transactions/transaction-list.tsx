@@ -14,6 +14,14 @@ import {
 import { useState } from "react";
 
 import type { DateRange } from "react-day-picker";
+import type {
+  Category,
+  FinancialSummary,
+  TableSort,
+  Transaction,
+  TransactionCategory,
+  TransactionFilters,
+} from "../../types";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -47,12 +55,12 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import FinancialInsights from "~/routes/finance/features/transactions/financial-insights";
-import { showExportToast } from "~/routes/finance/shared/utils/notifications";
 import { useFinanceShortcuts } from "~/routes/finance/shared/utils/shortcuts";
 
+import { showExportToastFromPromise } from "../../utils/notifications";
 import DeleteTransactionDialog from "./delete-transaction-dialog";
 import EnhancedTransactionDialog from "./enhanced-transaction-dialog";
+import FinancialInsights from "./financial-insights";
 import ImportDialog from "./import-dialog";
 
 const exportToCSV = () =>
@@ -63,7 +71,10 @@ const exportToPDF = () =>
     (mod) => mod.exportToPDF,
   );
 
-interface ListProps extends IListProps {
+interface ListProps {
+  selectedDate: Date | null;
+  transactions?: Transaction[];
+  summary: FinancialSummary;
   onAddTransaction?: (data: Omit<Transaction, "id">) => void;
   onEditTransaction?: (transaction: Transaction) => void;
   onDeleteTransaction?: (transactionId: string) => void;
@@ -180,7 +191,7 @@ export default function List({
       }
     });
 
-    showExportToast(exportPromise);
+    showExportToastFromPromise(exportPromise);
   };
 
   const handleClearFilters = () => {
@@ -251,6 +262,7 @@ export default function List({
         date: selectedDate || new Date(),
         type: "expense",
         category: "other",
+        category_id: "1", // Default category
         amount: 0,
         description: "",
       }),
@@ -266,8 +278,8 @@ export default function List({
         <FinancialInsights
           summary={summary}
           dateRange={filters.dateRange}
-          onCategorySelect={(category) =>
-            setFilters((f) => ({ ...f, category }))
+          onCategorySelect={(categoryId: string) =>
+            setFilters((f) => ({ ...f, category: categoryId }))
           }
         />
       )}
@@ -545,6 +557,7 @@ export default function List({
                     date: selectedDate || new Date(),
                     type: "expense",
                     category: "other",
+                    category_id: "1", // Default category ID
                     amount: 0,
                     description: "",
                   })

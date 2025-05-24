@@ -77,7 +77,7 @@ interface Transaction {
   amount: number;
   type: TransactionType;
   category: TransactionCategory; // Legacy support
-  category_id?: string; // New category reference
+  category_id: string; // New category reference - now required
   description: string;
 }
 

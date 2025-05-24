@@ -15,7 +15,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-import { formatCurrency } from "~/routes/finance/shared/utils/format";
+
+import { formatCurrency } from "../../utils/formatters";
 
 interface BudgetProgressProps {
   category: CategoryWithAnalytics;

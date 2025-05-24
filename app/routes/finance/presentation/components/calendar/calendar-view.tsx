@@ -2,9 +2,12 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "~/components/ui/button";
-import DayCell from "~/routes/finance/features/calendar/day-cell";
-import { isDateInRange } from "~/routes/finance/shared/utils/date";
-import { getTransactionSummaryForDate } from "~/routes/finance/shared/utils/transaction";
+
+import {
+  getTransactionSummaryForDate,
+  isDateInRange,
+} from "../../utils/calendar";
+import DayCell from "./day-cell";
 
 export default function Calendar({
   calendarDetail,
@@ -87,7 +90,7 @@ export default function Calendar({
         : false,
       onDateClick: () => handleClick(date),
       transactionCount: summary?.count || 0,
-      transactionSummary: summary?.summary,
+      transactionSummary: summary,
       onMouseDown: () => handleDragStart(date),
       onMouseEnter: () => handleDragEnter(date),
       onMouseUp: handleDragEnd,

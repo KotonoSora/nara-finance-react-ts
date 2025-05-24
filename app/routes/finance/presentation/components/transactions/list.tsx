@@ -5,6 +5,13 @@ import { lazy, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import type { DateRange } from "react-day-picker";
+import type {
+  FinancialSummary,
+  TableSort,
+  Transaction,
+  TransactionCategory,
+  TransactionFilters,
+} from "../../types";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -31,9 +38,9 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import FinancialInsights from "~/routes/finance/features/transactions/financial-insights";
-import { showExportToast } from "~/routes/finance/shared/utils/notifications";
 
+import { showExportToastFromPromise } from "../../utils/notifications";
+import FinancialInsights from "./financial-insights";
 import ImportDialog from "./import-dialog";
 
 const exportToCSV = () =>
@@ -44,12 +51,19 @@ const exportToPDF = () =>
     (mod) => mod.exportToPDF,
   );
 
+interface ListProps {
+  selectedDate: Date | null;
+  transactions?: Transaction[];
+  summary?: FinancialSummary;
+  addTransactions: (transactions: Transaction[]) => void;
+}
+
 export default function List({
   selectedDate,
   transactions = [],
   summary,
   addTransactions,
-}: IListProps & { addTransactions: (transactions: Transaction[]) => void }) {
+}: ListProps) {
   const [filters, setFilters] = useState<TransactionFilters>({});
   const [sort, setSort] = useState<TableSort>({
     column: "date",
@@ -85,7 +99,7 @@ export default function List({
       }
     });
 
-    showExportToast(exportPromise);
+    showExportToastFromPromise(exportPromise);
   };
 
   const handleExportPDF = async () => {
@@ -104,7 +118,7 @@ export default function List({
       }
     });
 
-    showExportToast(exportPromise);
+    showExportToastFromPromise(exportPromise);
   };
 
   const handleImport = (importedTransactions: Transaction[]) => {

@@ -1,17 +1,10 @@
 import { and, desc, eq, isNull, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { Hono } from "hono";
-import { cors } from "hono/cors";
 
 import { categories, transactions } from "../../database/schema";
 
-interface Env {
-  DB: D1Database;
-}
-
-const app = new Hono<{ Bindings: Env }>();
-
-app.use("*", cors());
+const app = new Hono<{ Bindings: CloudflareEnvironment }>();
 
 // Get all categories with tree structure
 app.get("/", async (c) => {

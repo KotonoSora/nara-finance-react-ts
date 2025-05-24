@@ -281,8 +281,10 @@ export default function CategoryFormDialog({
                 <FormItem>
                   <FormLabel>Parent Category</FormLabel>
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value || ""}
+                    onValueChange={(val) =>
+                      field.onChange(val === "none" ? null : val)
+                    }
+                    defaultValue={field.value || "none"}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -290,7 +292,7 @@ export default function CategoryFormDialog({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="">
+                      <SelectItem value="none">
                         No parent (root category)
                       </SelectItem>
                       {availableParents.map((cat) => (

@@ -18,6 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { formatCurrency } from "~/routes/finance/shared/utils/format";
 
 interface CategorySummaryCardProps {
   category: CategoryWithAnalytics;
@@ -34,13 +35,6 @@ export default function CategorySummaryCard({
   showActions = true,
   compact = false,
 }: CategorySummaryCardProps) {
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-  };
-
   const getTrendIcon = () => {
     switch (category.spending_trend) {
       case "increasing":

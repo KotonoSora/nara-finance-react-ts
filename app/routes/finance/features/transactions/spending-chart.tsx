@@ -11,6 +11,8 @@ import {
   YAxis,
 } from "recharts";
 
+import { formatCurrency } from "~/routes/finance/shared/utils/format";
+
 export default function SpendingChart({
   data,
   onCategorySelect,
@@ -27,7 +29,7 @@ export default function SpendingChart({
             value.charAt(0).toUpperCase() + value.slice(1)
           }
         />
-        <YAxis tickFormatter={(value) => `$${value}`} />
+        <YAxis tickFormatter={(value) => formatCurrency(value)} />
         <Tooltip
           content={({ active, payload }) => {
             if (!active || !payload?.length) return null;
@@ -42,13 +44,13 @@ export default function SpendingChart({
                     data.category.slice(1)}
                 </div>
                 <div className="text-2xl font-bold text-foreground">
-                  ${data.amount.toFixed(2)}
+                  {formatCurrency(data.amount)}
                 </div>
                 {budget && (
                   <div className="text-sm mt-2">
                     <div className="flex justify-between mb-1">
                       <span>Budget</span>
-                      <span>${budget.limit.toFixed(2)}</span>
+                      <span>{formatCurrency(budget.limit)}</span>
                     </div>
                     <div className="w-full bg-muted rounded-full h-2">
                       <div

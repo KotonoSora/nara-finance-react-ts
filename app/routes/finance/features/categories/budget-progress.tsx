@@ -15,6 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { formatCurrency } from "~/routes/finance/shared/utils/format";
 
 interface BudgetProgressProps {
   category: CategoryWithAnalytics;
@@ -59,13 +60,6 @@ export default function BudgetProgress({
       default:
         return null;
     }
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
   };
 
   const formatBudgetPeriod = (period: string) => {

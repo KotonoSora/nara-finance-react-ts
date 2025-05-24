@@ -22,6 +22,8 @@ interface TabsViewProps {
   onDeleteTransaction: (transactionId: string) => void;
   onCategorySelect: (category: TransactionCategory) => void;
   calendarDetail: CalendarData;
+  categories?: Category[];
+  useLegacyCategories?: boolean;
 }
 
 export default function TabsView({
@@ -38,6 +40,8 @@ export default function TabsView({
   onDeleteTransaction,
   onCategorySelect,
   calendarDetail,
+  categories = [],
+  useLegacyCategories = true,
 }: TabsViewProps) {
   return (
     <Tabs defaultValue="list" className="w-full">
@@ -71,6 +75,8 @@ export default function TabsView({
             onDeleteTransaction={onDeleteTransaction}
             selectedCategory={selectedCategory}
             dateRange={dateRange}
+            categories={categories}
+            useLegacyCategories={useLegacyCategories}
           />
         </Suspense>
       </TabsContent>

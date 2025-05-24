@@ -52,6 +52,7 @@ import { showExportToast } from "~/routes/finance/shared/utils/notifications";
 import { useFinanceShortcuts } from "~/routes/finance/shared/utils/shortcuts";
 
 import DeleteTransactionDialog from "./delete-transaction-dialog";
+import EnhancedTransactionDialog from "./enhanced-transaction-dialog";
 import ImportDialog from "./import-dialog";
 
 const exportToCSV = () =>
@@ -66,6 +67,8 @@ interface ListProps extends IListProps {
   onAddTransaction?: (data: Omit<Transaction, "id">) => void;
   onEditTransaction?: (transaction: Transaction) => void;
   onDeleteTransaction?: (transactionId: string) => void;
+  categories?: Category[];
+  useLegacyCategories?: boolean;
 }
 
 export default function List({
@@ -75,6 +78,8 @@ export default function List({
   onAddTransaction,
   onEditTransaction,
   onDeleteTransaction,
+  categories = [],
+  useLegacyCategories = true,
 }: ListProps) {
   const [filters, setFilters] = useState<TransactionFilters>({});
   const [isAddingTransaction, setIsAddingTransaction] = useState(false);

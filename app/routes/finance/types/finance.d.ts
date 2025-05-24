@@ -48,23 +48,59 @@ type TransactionCategory =
   | "salary"
   | "other";
 
+interface Category {
+  id: string;
+  name: string;
+  type: TransactionType;
+  parent_id?: string | null;
+  budget_limit?: number | null;
+  budget_period: "monthly" | "weekly" | "yearly";
+  is_archived: boolean;
+  icon?: string | null;
+  color?: string | null;
+  created_at: string;
+  updated_at: string;
+  children?: Category[]; // For tree structure
+  parent?: Category | null; // For parent reference
+}
+
+interface CategoryWithAnalytics extends Category {
+  spent: number;
+  transaction_count: number;
+  last_transaction_date?: string;
+  spending_trend: "increasing" | "decreasing" | "stable";
+}
+
 interface Transaction {
   id: string;
   date: Date;
   amount: number;
   type: TransactionType;
-  category: TransactionCategory;
+  category: TransactionCategory; // Legacy support
+  category_id?: string; // New category reference
   description: string;
+}
+
+interface CategoryFormData {
+  name: string;
+  type: TransactionType;
+  parent_id?: string | null;
+  budget_limit?: number | null;
+  budget_period: "monthly" | "weekly" | "yearly";
+  icon?: string | null;
+  color?: string | null;
 }
 
 /**
  * Represents a budget limit and spending for a specific category
  */
 interface Budget {
-  category: TransactionCategory;
+  category: TransactionCategory; // Legacy support
+  category_id?: string; // New category reference
   limit: number;
   spent: number;
-  period: "monthly" | "yearly";
+  period: "monthly" | "weekly" | "yearly";
+  carry_over?: number; // Unused budget from previous period
 }
 
 /**

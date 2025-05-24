@@ -6,8 +6,9 @@ import type { Route } from "./+types/route";
 import { Button } from "~/components/ui/button";
 import { Toaster } from "~/components/ui/sonner";
 
+import CategoryManagement from "./features/categories/category-management";
+import EnhancedTransactionDialog from "./features/transactions/enhanced-transaction-dialog";
 import TabsView from "./features/transactions/tabs-view";
-import TransactionDialog from "./features/transactions/transaction-dialog";
 import AuditTrail from "./shared/utils/audit";
 import { getDefaultBudget, updateBudgets } from "./shared/utils/budget";
 import { prepareCalendarData } from "./shared/utils/calendar";
@@ -28,7 +29,58 @@ import {
 } from "./shared/utils/storage";
 import { analyzeTrends } from "./shared/utils/trends";
 
+// Define DateRange locally to avoid conflicts
+interface DateRange {
+  from: Date;
+  to: Date;
+}
+
+// Type definitions for the finance module
+type TransactionType = "income" | "expense" | "investment";
+type TransactionCategory =
+  | "food"
+  | "transport"
+  | "shopping"
+  | "salary"
+  | "other";
+
+interface Category {
+  id: string;
+  name: string;
+  type: TransactionType;
+  parent_id?: string | null;
+  budget_limit?: number | null;
+  budget_period: "monthly" | "weekly" | "yearly";
+  is_archived: boolean;
+  icon?: string | null;
+  color?: string | null;
+  created_at: string;
+  updated_at: string;
+  children?: Category[];
+  parent?: Category | null;
+}
+
+interface CategoryWithAnalytics extends Category {
+  spent: number;
+  transaction_count: number;
+  last_transaction_date?: string;
+  spending_trend: "increasing" | "decreasing" | "stable";
+}
+
+interface Transaction {
+  id: string;
+  date: Date;
+  amount: number;
+  type: TransactionType;
+  category: TransactionCategory;
+  category_id?: string;
+  description: string;
+}
+
 const BudgetSection = lazy(() => import("./features/analysis/budget-section"));
+const EnhancedBudgetSection = lazy(
+  () => import("./features/categories/enhanced-budget-section"),
+);
 const IncomeExpenseChart = lazy(
   () => import("./features/analysis/income-expense-chart"),
 );
@@ -74,6 +126,79 @@ export default function FinanceDemo({ loaderData }: Route.ComponentProps) {
   >(undefined);
   const [editingTransaction, setEditingTransaction] =
     useState<Transaction | null>(null);
+  const [currentView, setCurrentView] = useState<"transactions" | "categories">(
+    "transactions",
+  );
+
+  // Mock categories data for now - will be replaced with API calls
+  const [categories] = useState<Category[]>([
+    {
+      id: "1",
+      name: "Food & Dining",
+      icon: "🍽️",
+      color: "#22C55E",
+      type: "expense",
+      budget_limit: 800,
+      budget_period: "monthly",
+      parent_id: null,
+      is_archived: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: "2",
+      name: "Restaurants",
+      icon: "🍕",
+      color: "#16A34A",
+      type: "expense",
+      budget_limit: 500,
+      budget_period: "monthly",
+      parent_id: "1",
+      is_archived: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: "3",
+      name: "Transportation",
+      icon: "🚗",
+      color: "#3B82F6",
+      type: "expense",
+      budget_limit: 400,
+      budget_period: "monthly",
+      parent_id: null,
+      is_archived: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: "4",
+      name: "Salary",
+      icon: "💰",
+      color: "#10B981",
+      type: "income",
+      budget_limit: null,
+      budget_period: "monthly",
+      parent_id: null,
+      is_archived: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+  ]);
+
+  const [categoriesWithAnalytics] = useState<CategoryWithAnalytics[]>(
+    categories.map((cat) => ({
+      ...cat,
+      spent: Math.random() * (cat.budget_limit || 1000),
+      transaction_count: Math.floor(Math.random() * 50) + 1,
+      last_transaction_date: new Date(
+        Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
+      ).toISOString(),
+      spending_trend: (["increasing", "decreasing", "stable"] as const)[
+        Math.floor(Math.random() * 3)
+      ],
+    })),
+  );
 
   // Setup keyboard shortcuts
   useFinanceShortcuts({
@@ -333,14 +458,28 @@ export default function FinanceDemo({ loaderData }: Route.ComponentProps) {
               Manage your transactions and track your spending
             </p>
           </div>
-          <Button
-            variant="outline"
-            className="w-full sm:w-auto"
-            onClick={() => setIsAddingTransaction(true)}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Add Transaction
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant={currentView === "transactions" ? "default" : "outline"}
+              onClick={() => setCurrentView("transactions")}
+            >
+              Transactions
+            </Button>
+            <Button
+              variant={currentView === "categories" ? "default" : "outline"}
+              onClick={() => setCurrentView("categories")}
+            >
+              Categories
+            </Button>
+            <Button
+              variant="outline"
+              className="ml-4"
+              onClick={() => setIsAddingTransaction(true)}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Transaction
+            </Button>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-[300px_1fr] gap-4 md:gap-6">
@@ -350,11 +489,30 @@ export default function FinanceDemo({ loaderData }: Route.ComponentProps) {
                 <div className="h-[200px] animate-pulse bg-muted rounded-lg" />
               }
             >
-              <BudgetSection
-                budgets={summary.budgets}
-                trends={summary.trends}
-                onBudgetClick={handleBudgetClick}
-              />
+              {currentView === "categories" ? (
+                <EnhancedBudgetSection
+                  categoriesWithAnalytics={categoriesWithAnalytics}
+                  allCategories={categories}
+                  onCategoryClick={(categoryId) => {
+                    // TODO: Handle category selection in new system
+                    console.log("Category clicked:", categoryId);
+                  }}
+                  onCreateCategory={(data) => {
+                    // TODO: Implement category creation
+                    console.log("Create category:", data);
+                  }}
+                  onUpdateCategory={(id, data) => {
+                    // TODO: Implement category update
+                    console.log("Update category:", id, data);
+                  }}
+                />
+              ) : (
+                <BudgetSection
+                  budgets={summary.budgets}
+                  trends={summary.trends}
+                  onBudgetClick={handleBudgetClick}
+                />
+              )}
             </Suspense>
             <Suspense
               fallback={
@@ -366,28 +524,57 @@ export default function FinanceDemo({ loaderData }: Route.ComponentProps) {
           </aside>
 
           <main>
-            <TabsView
-              selectedDate={selectedDate}
-              transactions={transactions}
-              summary={summary}
-              dateRange={selectedDateRange}
-              selectedCategory={selectedCategory}
-              onDateSelect={handleDateSelect}
-              onMonthChange={handleMonthChange}
-              onDateRangeSelect={handleDateRangeSelect}
-              onAddTransaction={handleSubmitTransaction}
-              onEditTransaction={handleEditTransaction}
-              onDeleteTransaction={handleDeleteTransaction}
-              onCategorySelect={handleCategorySelect}
-              calendarDetail={loaderData}
-            />
+            {currentView === "transactions" ? (
+              <TabsView
+                selectedDate={selectedDate}
+                transactions={transactions}
+                summary={summary}
+                dateRange={selectedDateRange}
+                selectedCategory={selectedCategory}
+                onDateSelect={handleDateSelect}
+                onMonthChange={handleMonthChange}
+                onDateRangeSelect={handleDateRangeSelect}
+                onAddTransaction={handleSubmitTransaction}
+                onEditTransaction={handleEditTransaction}
+                onDeleteTransaction={handleDeleteTransaction}
+                onCategorySelect={handleCategorySelect}
+                calendarDetail={loaderData}
+                categories={categories}
+                useLegacyCategories={true}
+              />
+            ) : (
+              <CategoryManagement
+                categories={categories}
+                categoriesWithAnalytics={categoriesWithAnalytics}
+                onCreateCategory={(data) => {
+                  // TODO: Implement category creation API call
+                  console.log("Create category:", data);
+                }}
+                onUpdateCategory={(id, data) => {
+                  // TODO: Implement category update API call
+                  console.log("Update category:", id, data);
+                }}
+                onDeleteCategory={(id) => {
+                  // TODO: Implement category deletion API call
+                  console.log("Delete category:", id);
+                }}
+                onArchiveCategory={(id) => {
+                  // TODO: Implement category archiving API call
+                  console.log("Archive category:", id);
+                }}
+                onMergeCategories={(sourceId, targetId) => {
+                  // TODO: Implement category merging API call
+                  console.log("Merge categories:", sourceId, "->", targetId);
+                }}
+              />
+            )}
           </main>
         </div>
       </div>
 
-      <TransactionDialog
+      <EnhancedTransactionDialog
         open={isAddingTransaction}
-        onOpenChange={(open) => {
+        onOpenChange={(open: boolean) => {
           setIsAddingTransaction(open);
           if (!open) setEditingTransaction(null);
         }}
@@ -396,6 +583,8 @@ export default function FinanceDemo({ loaderData }: Route.ComponentProps) {
         selectedCategory={selectedCategory}
         mode={editingTransaction ? "edit" : "add"}
         transaction={editingTransaction || undefined}
+        categories={[]} // For now, empty array - will be populated from API
+        useLegacyCategories={true} // Use legacy categories for now
       />
       <Toaster />
     </div>

@@ -276,9 +276,9 @@ export default function List({
                       <TableCell>{transaction.type}</TableCell>
                       <TableCell
                         className={clsx("text-right font-medium", {
-                          "text-green-600": transaction.type === "income",
-                          "text-red-600": transaction.type === "expense",
-                          "text-blue-600": transaction.type === "investment",
+                          "text-chart-2": transaction.type === "income",
+                          "text-destructive": transaction.type === "expense",
+                          "text-chart-1": transaction.type === "investment",
                         })}
                       >
                         {transaction.type === "expense" ? "-" : "+"}$

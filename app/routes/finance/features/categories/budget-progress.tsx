@@ -37,15 +37,15 @@ export default function BudgetProgress({
   const isOverBudget = spent > budgetLimit;
 
   const getStatusColor = () => {
-    if (isOverBudget) return "text-red-600";
-    if (percentage >= 80) return "text-yellow-600";
-    return "text-green-600";
+    if (isOverBudget) return "text-destructive";
+    if (percentage >= 80) return "text-chart-4";
+    return "text-chart-2";
   };
 
   const getProgressColor = () => {
-    if (isOverBudget) return "bg-red-500";
-    if (percentage >= 80) return "bg-yellow-500";
-    return "bg-green-500";
+    if (isOverBudget) return "bg-destructive";
+    if (percentage >= 80) return "bg-chart-4";
+    return "bg-chart-2";
   };
 
   const getTrendIcon = () => {
@@ -53,9 +53,9 @@ export default function BudgetProgress({
 
     switch (category.spending_trend) {
       case "increasing":
-        return <TrendingUp className="h-4 w-4 text-red-500" />;
+        return <TrendingUp className="h-4 w-4 text-destructive" />;
       case "decreasing":
-        return <TrendingDown className="h-4 w-4 text-green-500" />;
+        return <TrendingDown className="h-4 w-4 text-chart-2" />;
       default:
         return null;
     }
@@ -84,33 +84,39 @@ export default function BudgetProgress({
   if (compact) {
     return (
       <div
-        className={`p-3 rounded-lg border hover:bg-muted/50 cursor-pointer transition-colors ${
-          onClick ? "hover:border-primary/50" : ""
+        className={`p-4 rounded-lg border border-border bg-card hover:bg-accent/50 cursor-pointer transition-all duration-200 ${
+          onClick ? "hover:border-primary/50 hover:shadow-sm" : ""
         }`}
         onClick={onClick}
       >
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             {category.icon && (
-              <span style={{ color: category.color || undefined }}>
+              <span
+                className="text-lg"
+                style={{
+                  color: category.color || "hsl(var(--muted-foreground))",
+                }}
+              >
                 {category.icon}
               </span>
             )}
-            <span className="font-medium text-sm">{category.name}</span>
+            <span className="font-medium text-sm text-card-foreground">
+              {category.name}
+            </span>
             {getTrendIcon()}
           </div>
           <div className="flex items-center gap-2">
-            {isOverBudget && <AlertTriangle className="h-4 w-4 text-red-500" />}
+            {isOverBudget && (
+              <AlertTriangle className="h-4 w-4 text-destructive" />
+            )}
             <span className={clsx("text-sm font-medium", getStatusColor())}>
               {percentage.toFixed(0)}%
             </span>
           </div>
         </div>
-        <Progress
-          value={percentage}
-          className={clsx("h-2", getProgressColor())}
-        />
-        <div className="flex justify-between text-xs text-muted-foreground mt-1">
+        <Progress value={percentage} className="h-2" />
+        <div className="flex justify-between text-xs text-muted-foreground mt-2">
           <span>{formatCurrency(spent)}</span>
           <span>{formatCurrency(budgetLimit)}</span>
         </div>
@@ -121,18 +127,20 @@ export default function BudgetProgress({
   return (
     <Card
       className={clsx(
-        "transition-colors",
-        onClick && "cursor-pointer hover:border-primary/50",
+        "border border-border bg-card shadow-sm transition-all duration-200",
+        onClick && "cursor-pointer hover:border-primary/50 hover:shadow-md",
       )}
       onClick={onClick}
     >
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center justify-between text-card-foreground">
+          <div className="flex items-center gap-3">
             {category.icon && (
               <span
                 className="text-lg"
-                style={{ color: category.color || undefined }}
+                style={{
+                  color: category.color || "hsl(var(--muted-foreground))",
+                }}
               >
                 {category.icon}
               </span>
@@ -141,7 +149,7 @@ export default function BudgetProgress({
             {getTrendIcon()}
           </div>
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="secondary" className="text-xs">
               <Calendar className="h-3 w-3 mr-1" />
               {formatBudgetPeriod(category.budget_period)}
             </Badge>
@@ -149,7 +157,7 @@ export default function BudgetProgress({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
-                    <AlertTriangle className="h-4 w-4 text-red-500" />
+                    <AlertTriangle className="h-4 w-4 text-destructive" />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Over budget by {formatCurrency(spent - budgetLimit)}</p>
@@ -160,18 +168,15 @@ export default function BudgetProgress({
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-2">
+      <CardContent className="space-y-6">
+        <div className="space-y-3">
           <div className="flex justify-between text-sm">
-            <span>Spent</span>
+            <span className="text-muted-foreground">Spent</span>
             <span className={clsx("font-medium", getStatusColor())}>
               {formatCurrency(spent)}
             </span>
           </div>
-          <Progress
-            value={percentage}
-            className={clsx("h-3", getProgressColor())}
-          />
+          <Progress value={percentage} className="h-3" />
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>
               {isOverBudget
@@ -183,18 +188,22 @@ export default function BudgetProgress({
         </div>
 
         <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
+          <div className="space-y-1">
             <span className="text-muted-foreground">Budget</span>
-            <div className="font-medium">{formatCurrency(budgetLimit)}</div>
+            <div className="font-medium text-foreground">
+              {formatCurrency(budgetLimit)}
+            </div>
           </div>
-          <div>
+          <div className="space-y-1">
             <span className="text-muted-foreground">Transactions</span>
-            <div className="font-medium">{category.transaction_count || 0}</div>
+            <div className="font-medium text-foreground">
+              {category.transaction_count || 0}
+            </div>
           </div>
         </div>
 
         {category.last_transaction_date && (
-          <div className="text-xs text-muted-foreground">
+          <div className="text-xs text-muted-foreground border-t border-border pt-3">
             Last transaction:{" "}
             {new Date(category.last_transaction_date).toLocaleDateString()}
           </div>

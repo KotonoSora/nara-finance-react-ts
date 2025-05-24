@@ -44,9 +44,9 @@ export default function CategorySummaryCard({
   const getTrendIcon = () => {
     switch (category.spending_trend) {
       case "increasing":
-        return <TrendingUp className="h-4 w-4 text-red-500" />;
+        return <TrendingUp className="h-4 w-4 text-destructive" />;
       case "decreasing":
-        return <TrendingDown className="h-4 w-4 text-green-500" />;
+        return <TrendingDown className="h-4 w-4 text-chart-2" />;
       default:
         return <div className="h-4 w-4" />; // Empty space for alignment
     }
@@ -55,9 +55,9 @@ export default function CategorySummaryCard({
   const getTrendColor = () => {
     switch (category.spending_trend) {
       case "increasing":
-        return "text-red-600";
+        return "text-destructive";
       case "decreasing":
-        return "text-green-600";
+        return "text-chart-2";
       default:
         return "text-muted-foreground";
     }
@@ -67,9 +67,9 @@ export default function CategorySummaryCard({
     if (!category.budget_limit) return null;
 
     const percentage = (category.spent / category.budget_limit) * 100;
-    if (percentage >= 100) return { status: "over", color: "bg-red-500" };
-    if (percentage >= 80) return { status: "warning", color: "bg-yellow-500" };
-    return { status: "safe", color: "bg-green-500" };
+    if (percentage >= 100) return { status: "over", color: "bg-destructive" };
+    if (percentage >= 80) return { status: "warning", color: "bg-chart-4" };
+    return { status: "safe", color: "bg-chart-2" };
   };
 
   const budgetStatus = getBudgetStatus();
@@ -209,9 +209,9 @@ export default function CategorySummaryCard({
               <span
                 className={clsx(
                   "text-sm",
-                  budgetStatus?.status === "over" && "text-red-600",
-                  budgetStatus?.status === "warning" && "text-yellow-600",
-                  budgetStatus?.status === "safe" && "text-green-600",
+                  budgetStatus?.status === "over" && "text-destructive",
+                  budgetStatus?.status === "warning" && "text-chart-4",
+                  budgetStatus?.status === "safe" && "text-chart-2",
                 )}
               >
                 {((category.spent / category.budget_limit) * 100).toFixed(1)}%

@@ -449,31 +449,34 @@ export default function FinanceDemo({ loaderData }: Route.ComponentProps) {
   return (
     <div className="min-h-screen bg-background">
       <div className="container max-w-[1440px] mx-auto px-4 py-4 md:py-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 md:mb-6">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-              Finance
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 md:mb-8">
+          <div className="space-y-1">
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+              Finance Dashboard
             </h1>
             <p className="text-sm md:text-base text-muted-foreground">
-              Manage your transactions and track your spending
+              Manage your transactions and track your spending with detailed
+              insights
             </p>
           </div>
           <div className="flex gap-2">
             <Button
-              variant={currentView === "transactions" ? "default" : "outline"}
+              variant={currentView === "transactions" ? "default" : "secondary"}
               onClick={() => setCurrentView("transactions")}
+              className="transition-all duration-200"
             >
               Transactions
             </Button>
             <Button
-              variant={currentView === "categories" ? "default" : "outline"}
+              variant={currentView === "categories" ? "default" : "secondary"}
               onClick={() => setCurrentView("categories")}
+              className="transition-all duration-200"
             >
               Categories
             </Button>
             <Button
-              variant="outline"
-              className="ml-4"
+              variant="default"
+              className="ml-2 shadow-sm hover:shadow-md transition-all duration-200"
               onClick={() => setIsAddingTransaction(true)}
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -482,11 +485,11 @@ export default function FinanceDemo({ loaderData }: Route.ComponentProps) {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-[300px_1fr] gap-4 md:gap-6">
-          <aside className="space-y-4 md:space-y-6">
+        <div className="grid lg:grid-cols-[320px_1fr] gap-6 md:gap-8">
+          <aside className="space-y-6">
             <Suspense
               fallback={
-                <div className="h-[200px] animate-pulse bg-muted rounded-lg" />
+                <div className="h-[240px] animate-pulse bg-muted/50 rounded-lg border" />
               }
             >
               {currentView === "categories" ? (
@@ -516,7 +519,7 @@ export default function FinanceDemo({ loaderData }: Route.ComponentProps) {
             </Suspense>
             <Suspense
               fallback={
-                <div className="h-[300px] animate-pulse bg-muted rounded-lg" />
+                <div className="h-[340px] animate-pulse bg-muted/50 rounded-lg border" />
               }
             >
               <IncomeExpenseChart summary={summary} />

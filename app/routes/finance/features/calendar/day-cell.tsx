@@ -83,8 +83,8 @@ export default function DayCell(props: DayCellProps) {
           <div
             key={i}
             className={clsx("font-medium", {
-              "text-green-600": text.includes("Income"),
-              "text-red-600": text.includes("Expenses"),
+              "text-chart-2": text.includes("Income"),
+              "text-destructive": text.includes("Expenses"),
             })}
           >
             {text}
@@ -118,12 +118,12 @@ export default function DayCell(props: DayCellProps) {
                   {transactionSummary && (
                     <>
                       {transactionSummary.income > 0 && (
-                        <span className="text-green-600 font-medium">
+                        <span className="text-chart-2 font-medium">
                           +${transactionSummary.income.toFixed(2)}
                         </span>
                       )}
                       {transactionSummary.expense > 0 && (
-                        <span className="text-red-600 font-medium">
+                        <span className="text-destructive font-medium">
                           -${transactionSummary.expense.toFixed(2)}
                         </span>
                       )}

@@ -1,26 +1,29 @@
 /**
- * Mapping of transaction categories to their display colors
+ * Mapping of transaction categories to their display colors using theme-aware CSS variables
  * @example
  * ```ts
- * categoryColors.food      // "#3b82f6"
- * categoryColors.transport // "#22c55e"
+ * categoryColors.food      // "hsl(var(--chart-1))"
+ * categoryColors.transport // "hsl(var(--chart-2))"
  * ```
  */
 export const categoryColors: Record<string, string> = {
-  food: "#3b82f6",
-  transport: "#22c55e",
-  shopping: "#f97316",
-  other: "#6b7280",
+  food: "hsl(var(--chart-1))",
+  transport: "hsl(var(--chart-2))",
+  shopping: "hsl(var(--chart-4))",
+  other: "hsl(var(--muted-foreground))",
+  salary: "hsl(var(--chart-2))",
+  entertainment: "hsl(var(--chart-3))",
+  healthcare: "hsl(var(--chart-5))",
 };
 
 /**
- * Retrieves the display color for a transaction category
+ * Retrieves the theme-aware display color for a transaction category
  * @param category - Transaction category name
- * @returns Hex color code for the category or default color if not found
+ * @returns CSS custom property color for the category or default color if not found
  * @example
  * ```ts
- * getCategoryColor('food')      // "#3b82f6"
- * getCategoryColor('unknown')   // "#6b7280" (other color)
+ * getCategoryColor('food')      // "hsl(var(--chart-1))"
+ * getCategoryColor('unknown')   // "hsl(var(--muted-foreground))" (other color)
  * ```
  */
 export function getCategoryColor(category: string): string {

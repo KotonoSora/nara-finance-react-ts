@@ -51,10 +51,13 @@ export default function FinancialInsights({
     return (
       <div className="flex items-center gap-1 text-xs ml-2">
         <div
-          className={clsx("px-2 py-0.5 rounded-full", {
-            "bg-green-100 text-green-700": changeType === "positive",
-            "bg-red-100 text-red-700": changeType === "negative",
-            "bg-yellow-100 text-yellow-700": changeType === "neutral",
+          className={clsx("px-2 py-0.5 rounded-full text-xs font-medium", {
+            "bg-chart-2/10 text-chart-2 border border-chart-2/20":
+              changeType === "positive",
+            "bg-destructive/10 text-destructive border border-destructive/20":
+              changeType === "negative",
+            "bg-chart-4/10 text-chart-4 border border-chart-4/20":
+              changeType === "neutral",
           })}
         >
           {isPositive ? "↑" : "↓"} {Math.abs(change).toFixed(1)}%
@@ -68,7 +71,7 @@ export default function FinancialInsights({
     <div className="space-y-6 px-1">
       <h3 className="text-lg font-semibold px-1">{getDateRangeText()}</h3>
       <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-3">
-        <Card className="hover:border-primary/50 transition-colors">
+        <Card className="hover:shadow-md transition-all duration-200 border-border/50">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center">
               Total Income
@@ -83,7 +86,7 @@ export default function FinancialInsights({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">
+            <div className="text-2xl font-bold text-chart-2">
               ${summary.totalIncome.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
@@ -91,7 +94,7 @@ export default function FinancialInsights({
             </p>
           </CardContent>
         </Card>
-        <Card className="hover:border-primary/50 transition-colors">
+        <Card className="hover:shadow-md transition-all duration-200 border-border/50">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center">
               Total Expenses
@@ -106,7 +109,7 @@ export default function FinancialInsights({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">
+            <div className="text-2xl font-bold text-destructive">
               ${summary.totalExpenses.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
@@ -114,7 +117,7 @@ export default function FinancialInsights({
             </p>
           </CardContent>
         </Card>
-        <Card className="hover:border-primary/50 transition-colors">
+        <Card className="hover:shadow-md transition-all duration-200 border-border/50">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center">
               Savings
@@ -126,7 +129,7 @@ export default function FinancialInsights({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">
+            <div className="text-2xl font-bold text-chart-1">
               ${summary.savings.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
@@ -135,18 +138,18 @@ export default function FinancialInsights({
           </CardContent>
         </Card>
       </div>
-      <Card className="col-span-full">
-        <CardHeader className="pb-2 px-4 md:px-6">
-          <CardTitle className="flex items-center justify-between">
+      <Card className="col-span-full border-border/50 shadow-sm hover:shadow-md transition-all duration-200">
+        <CardHeader className="pb-4 px-4 md:px-6 border-b border-border/50">
+          <CardTitle className="flex items-center justify-between text-foreground">
             Spending by Category
             <Select
               defaultValue="month"
               onValueChange={(val) => console.log(val)}
             >
-              <SelectTrigger className="h-8">
+              <SelectTrigger className="h-8 w-[120px] border-border/50">
                 <SelectValue placeholder="Select view" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="border-border/50">
                 <SelectItem value="week">This Week</SelectItem>
                 <SelectItem value="month">This Month</SelectItem>
                 <SelectItem value="year">This Year</SelectItem>

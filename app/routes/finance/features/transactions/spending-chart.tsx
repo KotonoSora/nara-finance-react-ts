@@ -36,12 +36,12 @@ export default function SpendingChart({
             const trend = trends?.find((t) => t.category === data.category);
 
             return (
-              <div className="rounded-lg border bg-card p-3 shadow-sm">
-                <div className="font-medium mb-1">
+              <div className="rounded-lg border border-border/50 bg-card p-3 shadow-sm">
+                <div className="font-medium mb-1 text-foreground">
                   {data.category.charAt(0).toUpperCase() +
                     data.category.slice(1)}
                 </div>
-                <div className="text-2xl font-bold">
+                <div className="text-2xl font-bold text-foreground">
                   ${data.amount.toFixed(2)}
                 </div>
                 {budget && (
@@ -53,11 +53,11 @@ export default function SpendingChart({
                     <div className="w-full bg-muted rounded-full h-2">
                       <div
                         className={clsx("h-full rounded-full", {
-                          "bg-green-500": budget.spent / budget.limit < 0.8,
-                          "bg-yellow-500":
+                          "bg-chart-2": budget.spent / budget.limit < 0.8,
+                          "bg-chart-4":
                             budget.spent / budget.limit >= 0.8 &&
                             budget.spent / budget.limit < 1,
-                          "bg-red-500": budget.spent / budget.limit >= 1,
+                          "bg-destructive": budget.spent / budget.limit >= 1,
                         })}
                         style={{
                           width: `${Math.min((budget.spent / budget.limit) * 100, 100)}%`,
@@ -72,9 +72,9 @@ export default function SpendingChart({
                       Trend:
                       <span
                         className={clsx({
-                          "text-green-500": trend.trend === "increasing",
-                          "text-red-500": trend.trend === "decreasing",
-                          "text-yellow-500": trend.trend === "stable",
+                          "text-chart-2": trend.trend === "increasing",
+                          "text-destructive": trend.trend === "decreasing",
+                          "text-chart-4": trend.trend === "stable",
                         })}
                       >
                         {trend.trend}
@@ -89,7 +89,7 @@ export default function SpendingChart({
         />
         <Bar
           dataKey="amount"
-          fill="var(--primary)"
+          fill="hsl(var(--chart-1))"
           onClick={(data) => onCategorySelect?.(data.category)}
           className="cursor-pointer transition-opacity hover:opacity-80"
         >

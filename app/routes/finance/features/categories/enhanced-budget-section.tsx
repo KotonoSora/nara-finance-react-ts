@@ -46,10 +46,13 @@ export default function EnhancedBudgetSection({
 
   if (budgetCategories.length === 0) {
     return (
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center justify-between">
-            <span>Budget Tracking</span>
+      <Card className="border border-border bg-card shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center justify-between text-card-foreground">
+            <div className="flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full bg-primary"></div>
+              <span>Budget Tracking</span>
+            </div>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -57,6 +60,7 @@ export default function EnhancedBudgetSection({
                     variant="outline"
                     size="sm"
                     onClick={handleCreateBudgetCategory}
+                    className="border-border hover:bg-accent hover:text-accent-foreground transition-colors"
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
@@ -69,16 +73,20 @@ export default function EnhancedBudgetSection({
           </CardTitle>
         </CardHeader>
         <CardContent className="text-center py-8">
-          <div className="text-muted-foreground mb-4">
-            <p>No budget categories found</p>
+          <div className="text-muted-foreground mb-6 space-y-2">
+            <div className="w-16 h-16 mx-auto bg-muted rounded-full flex items-center justify-center mb-4">
+              <Plus className="h-8 w-8 text-muted-foreground" />
+            </div>
+            <p className="font-medium">No budget categories found</p>
             <p className="text-sm">
               Create categories with budget limits to track spending
             </p>
           </div>
           <Button
-            variant="outline"
+            variant="default"
             size="sm"
             onClick={handleCreateBudgetCategory}
+            className="shadow-sm hover:shadow-md transition-all duration-200"
           >
             <Plus className="h-4 w-4 mr-2" />
             Create Budget Category
@@ -90,10 +98,13 @@ export default function EnhancedBudgetSection({
 
   return (
     <>
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center justify-between">
-            <span>Budget Tracking</span>
+      <Card className="border border-border bg-card shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center justify-between text-card-foreground">
+            <div className="flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full bg-primary"></div>
+              <span>Budget Tracking</span>
+            </div>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -101,6 +112,7 @@ export default function EnhancedBudgetSection({
                     variant="outline"
                     size="sm"
                     onClick={handleCreateBudgetCategory}
+                    className="border-border hover:bg-accent hover:text-accent-foreground transition-colors"
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
@@ -112,7 +124,7 @@ export default function EnhancedBudgetSection({
             </TooltipProvider>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-3">
           {budgetCategories.map((category) => (
             <BudgetProgress
               key={category.id}

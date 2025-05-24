@@ -476,10 +476,10 @@ export default function List({
                         <div className="flex items-center justify-end gap-2">
                           <span
                             className={clsx("font-medium", {
-                              "text-green-600": transaction.type === "income",
-                              "text-red-600": transaction.type === "expense",
-                              "text-blue-600":
-                                transaction.type === "investment",
+                              "text-chart-2": transaction.type === "income",
+                              "text-destructive":
+                                transaction.type === "expense",
+                              "text-chart-1": transaction.type === "investment",
                             })}
                           >
                             {transaction.type === "expense" ? "-" : "+"}$
@@ -505,7 +505,7 @@ export default function List({
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
                                 onClick={() => handleDeleteClick(transaction)}
-                                className="text-red-600"
+                                className="text-destructive focus:text-destructive"
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />
                                 Delete

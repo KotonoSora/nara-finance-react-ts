@@ -65,11 +65,11 @@ export default function TrendAnalysis({
   const getTrendIcon = (trend: "increasing" | "decreasing" | "stable") => {
     switch (trend) {
       case "increasing":
-        return <ArrowUpIcon className="h-4 w-4 text-red-500" />;
+        return <ArrowUpIcon className="h-4 w-4 text-destructive" />;
       case "decreasing":
-        return <ArrowDownIcon className="h-4 w-4 text-green-500" />;
+        return <ArrowDownIcon className="h-4 w-4 text-chart-2" />;
       case "stable":
-        return <ArrowRightIcon className="h-4 w-4 text-yellow-500" />;
+        return <ArrowRightIcon className="h-4 w-4 text-chart-4" />;
     }
   };
 
@@ -84,10 +84,10 @@ export default function TrendAnalysis({
   };
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="border-border/50 shadow-sm hover:shadow-md transition-all duration-200">
+      <CardHeader className="pb-3 border-b border-border/50">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-foreground">
             Spending Trends
             <TooltipProvider>
               <UITooltip>
@@ -106,10 +106,10 @@ export default function TrendAnalysis({
               handleCategorySelect(value)
             }
           >
-            <SelectTrigger className="w-[120px]">
+            <SelectTrigger className="w-[140px] border-border/50">
               <SelectValue placeholder="Select period" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="border-border/50">
               <SelectItem value="all">All Categories</SelectItem>
               {trends.map((t) => (
                 <SelectItem key={t.category} value={t.category}>
@@ -124,19 +124,21 @@ export default function TrendAnalysis({
         {visibleTrends.map((trend) => (
           <div
             key={trend.category}
-            className="space-y-2 cursor-pointer hover:opacity-90 transition-opacity"
+            className="space-y-3 cursor-pointer hover:bg-muted/30 p-3 rounded-lg transition-all duration-200 border border-transparent hover:border-border/50"
             onClick={() => handleCategorySelect(trend.category)}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="capitalize font-medium">{trend.category}</span>
+                <span className="capitalize font-medium text-foreground">
+                  {trend.category}
+                </span>
                 {getTrendIcon(trend.trend)}
               </div>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm text-muted-foreground font-medium">
                 Forecast: ${trend.forecast.toFixed(2)}
               </span>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               {getTrendSummary(trend)}
             </p>
             <div className="h-[100px]">
@@ -152,12 +154,12 @@ export default function TrendAnalysis({
                     >
                       <stop
                         offset="5%"
-                        stopColor="var(--primary)"
+                        stopColor="hsl(var(--chart-1))"
                         stopOpacity={0.3}
                       />
                       <stop
                         offset="95%"
-                        stopColor="var(--primary)"
+                        stopColor="hsl(var(--chart-1))"
                         stopOpacity={0}
                       />
                     </linearGradient>
@@ -174,8 +176,10 @@ export default function TrendAnalysis({
                       if (!active || !payload?.[0]?.payload) return null;
                       const data = payload[0].payload as ChartDataPoint;
                       return (
-                        <div className="rounded-lg border bg-background p-2 shadow-sm">
-                          <div className="font-medium">{data.month}</div>
+                        <div className="rounded-lg border border-border/50 bg-background p-2 shadow-sm">
+                          <div className="font-medium text-foreground">
+                            {data.month}
+                          </div>
                           <div className="text-muted-foreground">
                             ${data.amount.toFixed(2)}
                           </div>
@@ -186,7 +190,7 @@ export default function TrendAnalysis({
                   <Area
                     type="monotone"
                     dataKey="amount"
-                    stroke="var(--primary)"
+                    stroke="hsl(var(--chart-1))"
                     fill={`url(#gradient-${trend.category})`}
                   />
                 </AreaChart>

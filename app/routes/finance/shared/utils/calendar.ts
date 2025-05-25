@@ -1,4 +1,7 @@
-import { DEFAULT_LOCALE, getLocalizedDaysOfWeek } from "./locale";
+import {
+  DEFAULT_LOCALE,
+  getLocalizedDaysOfWeek,
+} from "~/routes/finance/shared/utils/locale";
 
 export function prepareCalendarData(
   date: Date = new Date(),

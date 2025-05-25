@@ -1,7 +1,7 @@
 import { getLoadContext } from "load-context";
 import { createRequestHandler } from "react-router";
 
-import { api, app, book, posts } from "./api";
+import { api, app, book, categories, posts, transactions } from "./api";
 
 const requestHandler = createRequestHandler(
   () => import("virtual:react-router/server-build"),
@@ -11,6 +11,8 @@ const requestHandler = createRequestHandler(
 // Routes
 api.route("/posts", posts);
 api.route("/book", book);
+api.route("/categories", categories);
+api.route("/transactions", transactions);
 app.route("/api", api);
 
 app.all("*", async (c) => {

@@ -1,5 +1,4 @@
-import AuditTrail from "./audit";
-import { FinancialAmount } from "./financial-precision";
+import { FinancialAmount } from "~/routes/finance/shared/utils/financial-precision";
 
 /**
  * Evaluates the significance of change between two numerical values
@@ -112,12 +111,4 @@ export function analyzeTrend(historicalData: number[]): {
  * formatCurrency(0)        // "$0.00"
  * ```
  */
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-});
-
-export function formatCurrency(amount: number): string {
-  const financialAmount = new FinancialAmount(amount);
-  return currencyFormatter.format(financialAmount.toNumber());
-}
+export { formatCurrency } from "./format";

@@ -1,6 +1,5 @@
 import { HelpCircle } from "lucide-react";
-import { useMemo } from "react";
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { lazy, Suspense, useMemo } from "react";
 
 import type { ResidencyStatus, TaxBreakdown } from "../types/tax";
 
@@ -33,7 +32,14 @@ import { countryToLanguage, getTranslation } from "../utils/translations";
 import { BracketNavigationAnnouncement } from "./accessibility-announcement";
 import { AccessibleTaxInfo } from "./accessible-tax-info";
 import { NonResidentTaxInfo } from "./non-resident-tax-info";
-import { TaxRateInfo } from "./tax-rate-info";
+
+const LazyTaxChart = lazy(() => import("./tax-chart-impl"));
+
+const ChartSkeleton = () => (
+  <div className="w-full h-[300px] sm:h-[400px] lg:h-[300px] bg-muted/10 animate-pulse rounded-lg flex items-center justify-center">
+    <div className="text-sm text-muted-foreground">Loading chart...</div>
+  </div>
+);
 
 interface TaxResultsProps {
   result: TaxBreakdown;
@@ -141,52 +147,14 @@ export function TaxResults({
             role="img"
             aria-label={getTranslation("Results.ChartAriaLabel", language)}
           >
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={chartData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={2}
-                  label={({ name, value }) =>
-                    `${name}: ${formatCurrency(value, country)}`
-                  }
-                >
-                  {chartData.map((entry, index) => (
-                    <Cell
-                      key={index}
-                      fill={entry.color}
-                      strokeWidth={2}
-                      className="transition-all duration-200 hover:opacity-80 hover:stroke-2"
-                    />
-                  ))}
-                </Pie>
-                <Tooltip
-                  content={({ active, payload }) => {
-                    if (!active || !payload?.length) return null;
-                    const data = payload[0].payload;
-                    return (
-                      <div className="rounded-lg border bg-card p-3 shadow-lg">
-                        <div className="font-semibold">{data.name}</div>
-                        <div className="text-lg">
-                          {formatCurrency(data.value, country)}
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          {formatPercent(
-                            (data.value / result.grossIncome) * 100,
-                          )}{" "}
-                          {getTranslation("Results.OfGrossIncome", language)}
-                        </div>
-                      </div>
-                    );
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+            <Suspense fallback={<ChartSkeleton />}>
+              <LazyTaxChart
+                data={chartData}
+                result={result}
+                country={country}
+                language={language}
+              />
+            </Suspense>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">

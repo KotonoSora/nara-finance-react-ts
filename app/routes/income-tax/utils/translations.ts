@@ -1,4 +1,4 @@
-type Language = "en" | "vi" | "ja";
+export type Language = "en" | "vi" | "ja";
 
 interface Translations {
   [key: string]: {

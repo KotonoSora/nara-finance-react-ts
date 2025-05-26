@@ -1,4 +1,4 @@
-import type { Transaction } from "~/routes/finance/types/finance";
+import type { Transaction } from "~/routes/finance/presentation/types/ui.types";
 
 import {
   AlertDialog,

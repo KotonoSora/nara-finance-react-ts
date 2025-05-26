@@ -6,7 +6,7 @@
  */
 
 import type { Transaction as DomainTransaction } from "~/routes/finance/domain/entities/transaction.entity";
-import type { Transaction as LegacyTransaction } from "~/routes/finance/types/finance";
+import type { Transaction as LegacyTransaction } from "~/routes/finance/presentation/types/ui.types";
 
 /**
  * Maps domain transaction to UI transaction

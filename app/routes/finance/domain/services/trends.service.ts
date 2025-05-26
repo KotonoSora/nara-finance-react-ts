@@ -6,7 +6,7 @@ import {
 } from "date-fns";
 
 import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
-import type { CategoryTrend } from "~/routes/finance/types/finance";
+import type { CategoryTrend } from "~/routes/finance/domain/types/analytics.types";
 
 /**
  * Domain service for analyzing spending trends and forecasting

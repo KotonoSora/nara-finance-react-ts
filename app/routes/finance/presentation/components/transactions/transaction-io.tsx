@@ -4,7 +4,7 @@ import type {
   ExportResult,
   FinancialSummary,
   Transaction,
-} from "~/routes/finance/types/finance";
+} from "~/routes/finance/presentation/types/ui.types";
 
 import { Button } from "~/components/ui/button";
 import { exportToCSV } from "~/routes/finance/application/services/export.service";

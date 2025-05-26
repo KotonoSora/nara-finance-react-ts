@@ -11,7 +11,7 @@ import type {
   TableSort,
   Transaction,
   TransactionFilters,
-} from "~/routes/finance/types/finance";
+} from "~/routes/finance/presentation/types/ui.types";
 import type { DateRange } from "react-day-picker";
 
 import { Badge } from "~/components/ui/badge";

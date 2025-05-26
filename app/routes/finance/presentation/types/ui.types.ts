@@ -7,13 +7,13 @@
 import type { Budget as DomainBudget } from "~/routes/finance/domain/entities/budget.entity";
 import type { Category as DomainCategory } from "~/routes/finance/domain/entities/category.entity";
 import type { Transaction as DomainTransaction } from "~/routes/finance/domain/entities/transaction.entity";
-import type { TransactionType } from "~/routes/finance/domain/value-objects/finance-constants";
 import type {
-  CategoryFormData as DomainCategoryFormData,
   CategoryTrend as DomainCategoryTrend,
   CategoryWithAnalytics as DomainCategoryWithAnalytics,
-  TableSort as DomainTableSort,
-} from "~/routes/finance/types/finance";
+} from "~/routes/finance/domain/types/analytics.types";
+import type { CategoryFormData as DomainCategoryFormData } from "~/routes/finance/domain/types/entity.types";
+import type { TableSort as DomainTableSort } from "~/routes/finance/domain/types/filter.types";
+import type { TransactionType } from "~/routes/finance/domain/value-objects/finance-constants";
 
 // Re-export TransactionType for consistency
 export type { TransactionType };
@@ -67,71 +67,105 @@ export interface ChartData {
   fill?: string;
 }
 
-export interface CalendarData {
-  date: Date;
-  amount: number;
-  type: "income" | "expense";
-  count: number;
+/** Align with domain CategoryWithAnalytics **/
+export type CategoryWithAnalytics = DomainCategoryWithAnalytics;
+
+/** Align with domain CategoryFormData **/
+export type CategoryFormData = DomainCategoryFormData;
+
+// UI-specific types for calendar and components
+export interface DayItemBase {
+  month: number;
+  day: number;
+  isCurrentMonth: boolean;
+  isWeekend: boolean;
+  isToday: boolean;
+  selected: boolean;
+  onDateClick?: (date: Date) => void;
 }
 
-// Notification Types
-export type NotificationType = "success" | "error" | "warning" | "info";
-
-export interface NotificationOptions {
-  type: NotificationType;
-  title: string;
-  description?: string;
-  duration?: number;
+export interface DragDropProps {
+  onMouseDown?: () => void;
+  onMouseEnter?: () => void;
+  onMouseUp?: () => void;
+  isInRange: boolean;
 }
 
-// Shortcut Types
-export type ShortcutAction =
-  | "add-transaction"
-  | "add-income"
-  | "add-expense"
-  | "export-data"
-  | "import-data"
-  | "toggle-theme";
+export interface DayItem extends DayItemBase, DragDropProps {}
 
-export type ShortcutHandler = () => void;
-
-export interface ShortcutHandlers {
-  [key: string]: ShortcutHandler;
-}
-
-export interface ShortcutConfig {
-  key: string;
-  action: ShortcutAction;
-  description: string;
-  handler: ShortcutHandler;
-}
-
-export interface UseFinanceShortcutsOptions {
-  enabled?: boolean;
-  preventDefault?: boolean;
-}
-
-export interface UseFinanceShortcutsReturn {
-  shortcuts: ShortcutConfig[];
-  isEnabled: boolean;
-  setEnabled: (enabled: boolean) => void;
-}
-
-// Chart Configuration Types
-export interface ChartConfig {
-  [key: string]: {
-    label: string;
-    color?: string;
+export interface DayCellProps extends DayItem {
+  transactionCount?: number;
+  transactionSummary?: {
+    income: number;
+    expense: number;
   };
 }
 
-// Filter State Types
-export interface FilterState {
-  dateRange: DateRange | null;
-  categories: string[];
-  type: TransactionType | null;
-  searchTerm: string;
+export interface CalendarData {
+  nowDate: Date;
+  currentYear: number;
+  currentMonth: number;
+  currentDate: number;
+  daysOfWeek: string[];
+  daysInMonth: number;
+  firstDayOfWeek: number;
+  prevMonthDays: number;
+  prevMonth: number;
+  nextMonth: number;
 }
+
+export interface ICalendarProps {
+  calendarDetail: CalendarData;
+  selectedDate: Date | null;
+  currentViewDate: Date;
+  onDateSelect: (date: Date) => void;
+  onMonthChange: (date: Date) => void;
+  onDateRangeSelect?: (range: DateRange) => void;
+  transactions: Transaction[];
+}
+
+export interface IListProps {
+  selectedDate: Date | null;
+  transactions?: Transaction[];
+  onFilter?: (filters: TransactionFilters) => void;
+  dateRange?: DateRange;
+  summary?: FinancialSummary;
+  selectedCategory?: string | null;
+  onCategoryChange?: (category: string | null) => void;
+}
+
+export interface FinancialInsightsProps {
+  summary: FinancialSummary;
+  dateRange?: DateRange;
+  onCategorySelect?: (category: string) => void;
+  previousPeriod?: {
+    totalIncome: number;
+    totalExpenses: number;
+    savings: number;
+  };
+  timeframe?: "week" | "month" | "year";
+}
+
+export interface SpendingChartProps {
+  data: Array<{
+    category: string;
+    amount: number;
+    color: string;
+  }>;
+  onCategorySelect?: (category: string) => void;
+  budgets?: Budget[];
+  trends?: CategoryTrend[];
+}
+
+export interface CategoryTheme {
+  color: string;
+  icon?: string;
+  label: string;
+}
+
+export type CategoryThemes = Record<string, CategoryTheme>;
+
+export type ViewMode = "day" | "week" | "month";
 
 // Export Types
 export interface ExportOptions {
@@ -150,9 +184,3 @@ export interface ImportOptions {
   skipValidation?: boolean;
   allowDuplicates?: boolean;
 }
-
-/** Align with domain CategoryWithAnalytics **/
-export type CategoryWithAnalytics = DomainCategoryWithAnalytics;
-
-/** Align with domain CategoryFormData **/
-export type CategoryFormData = DomainCategoryFormData;

@@ -6,7 +6,8 @@ import {
   ChevronUp,
 } from "lucide-react";
 
-import type { Budget, CategoryTrend } from "~/routes/finance/types/finance";
+import type { CategoryTrend } from "~/routes/finance/domain/types/analytics.types";
+import type { Budget } from "~/routes/finance/domain/types/entity.types";
 
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
@@ -16,10 +17,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-import {
-  analyzeBudgetWarningLevel,
-  generateBudgetRecommendation,
-} from "~/routes/finance/application/services/analytics.service";
 
 interface BudgetSectionProps {
   budgets: Budget[];

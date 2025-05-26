@@ -2,12 +2,12 @@ import { CalendarDays, LineChart, ListIcon } from "lucide-react";
 import { lazy, Suspense } from "react";
 
 import type {
+  CalendarData,
   Category,
   DateRange,
   FinancialSummary,
   Transaction,
 } from "~/routes/finance/presentation/types/ui.types";
-import type { CalendarData } from "~/routes/finance/types/finance";
 
 import { Card } from "~/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";

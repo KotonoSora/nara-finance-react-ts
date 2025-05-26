@@ -5,7 +5,7 @@ import type {
   Category,
   CategoryFormData,
   CategoryWithAnalytics,
-} from "~/routes/finance/types/finance";
+} from "~/routes/finance/presentation/types/ui.types";
 
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";

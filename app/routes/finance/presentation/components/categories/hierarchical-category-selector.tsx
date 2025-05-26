@@ -1,7 +1,7 @@
 import { Check, ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-import type { Category } from "~/routes/finance/types/finance";
+import type { Category } from "~/routes/finance/presentation/types/ui.types";
 
 import { Button } from "~/components/ui/button";
 import {

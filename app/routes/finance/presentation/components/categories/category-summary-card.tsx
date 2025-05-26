@@ -9,7 +9,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 
-import type { CategoryWithAnalytics } from "~/routes/finance/types/finance";
+import type { CategoryWithAnalytics } from "~/routes/finance/presentation/types/ui.types";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";

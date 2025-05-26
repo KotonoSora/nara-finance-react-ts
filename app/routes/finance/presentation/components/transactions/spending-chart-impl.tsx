@@ -11,7 +11,7 @@ import {
   YAxis,
 } from "recharts";
 
-import type { SpendingChartProps } from "~/routes/finance/types/finance";
+import type { SpendingChartProps } from "~/routes/finance/presentation/types/ui.types";
 
 import { formatCurrency } from "~/routes/finance/presentation/utils/formatters";
 

@@ -2,7 +2,7 @@ import { endOfMonth, isWithinInterval, startOfMonth } from "date-fns";
 
 import type { Budget } from "~/routes/finance/domain/entities/budget.entity";
 import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
-import type { CategoryTrend } from "~/routes/finance/types/finance";
+import type { CategoryTrend } from "~/routes/finance/domain/types/analytics.types";
 
 export type WarningLevel = "safe" | "warning" | "danger";
 

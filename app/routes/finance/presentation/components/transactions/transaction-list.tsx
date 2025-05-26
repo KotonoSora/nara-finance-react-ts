@@ -16,12 +16,12 @@ import { useState } from "react";
 import type {
   Category,
   ExportResult,
+  FinancialSummary,
   TableSort,
   Transaction,
   TransactionFilters,
   TransactionType,
 } from "~/routes/finance/presentation/types/ui.types";
-import type { FinancialSummary } from "~/routes/finance/types/finance";
 import type { DateRange } from "react-day-picker";
 
 import { Badge } from "~/components/ui/badge";

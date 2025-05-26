@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { CategoryWithAnalytics } from "~/routes/finance/types/finance";
+import type { CategoryWithAnalytics } from "~/routes/finance/presentation/types/ui.types";
 
 import { Button } from "~/components/ui/button";
 import {

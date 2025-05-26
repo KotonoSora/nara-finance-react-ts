@@ -11,12 +11,12 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
+import type { FinancialSummary } from "~/routes/finance/domain/types/analytics.types";
 import type {
   Budget,
-  FinancialSummary,
   Transaction,
-  TransactionType,
-} from "~/routes/finance/types/finance";
+} from "~/routes/finance/domain/types/entity.types";
+import type { TransactionType } from "~/routes/finance/domain/value-objects/finance-constants";
 
 import { transactionService } from "~/routes/finance/domain/services/transaction.service";
 import { formatCurrency } from "~/routes/finance/infrastructure/formatters/currency.formatter";

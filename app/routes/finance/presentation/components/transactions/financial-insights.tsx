@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { format, startOfMonth } from "date-fns";
 
-import type { FinancialInsightsProps } from "~/routes/finance/types/finance";
+import type { FinancialInsightsProps } from "~/routes/finance/presentation/types/ui.types";
 
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {

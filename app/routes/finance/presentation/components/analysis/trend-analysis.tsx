@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 
-import type { CategoryTrend } from "~/routes/finance/types/finance";
+import type { CategoryTrend } from "~/routes/finance/domain/types/analytics.types";
 
 const LazyTrendAnalysis = lazy(
   () =>

@@ -8,10 +8,8 @@
  * @category Services
  */
 
-import type {
-  Transaction,
-  TransactionType,
-} from "~/routes/finance/types/finance";
+import type { Transaction } from "~/routes/finance/domain/types/entity.types";
+import type { TransactionType } from "~/routes/finance/domain/value-objects/finance-constants";
 
 import { FinancialAmount } from "~/routes/finance/domain/value-objects/financial-amount";
 import { validateBusinessRules } from "~/routes/finance/domain/value-objects/validation";

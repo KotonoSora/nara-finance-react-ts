@@ -1,13 +1,13 @@
+import type { CategoryTrend as DomainCategoryTrend } from "~/routes/finance/domain/types/analytics.types";
+import type {
+  Budget as DomainBudget,
+  Transaction as DomainTransaction,
+} from "~/routes/finance/domain/types/entity.types";
 import type {
   Budget,
   CategoryTrend,
   Transaction,
 } from "~/routes/finance/presentation/types/ui.types";
-import type {
-  Budget as DomainBudget,
-  CategoryTrend as DomainCategoryTrend,
-  Transaction as DomainTransaction,
-} from "~/routes/finance/types/finance";
 
 export function mapDomainTransactionToPresentation(
   domainTransaction: DomainTransaction,

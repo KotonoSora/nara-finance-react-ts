@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-import type { ICalendarProps } from "~/routes/finance/types/finance";
+import type { ICalendarProps } from "~/routes/finance/presentation/types/ui.types";
 
 import { Button } from "~/components/ui/button";
 import DayCell from "~/routes/finance/presentation/components/calendar/day-cell";

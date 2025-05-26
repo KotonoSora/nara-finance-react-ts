@@ -2,14 +2,20 @@
 import {
   CATEGORY_COLORS,
   CATEGORY_ICONS,
-} from "~/routes/finance/shared/utils/constants";
+} from "~/routes/finance/domain/value-objects/finance-constants";
 
 export function getCategoryColor(category: string): string {
-  return CATEGORY_COLORS[category] || CATEGORY_COLORS.other;
+  return (
+    CATEGORY_COLORS[category as keyof typeof CATEGORY_COLORS] ||
+    CATEGORY_COLORS.other
+  );
 }
 
 export function getCategoryIcon(category: string): string {
-  return CATEGORY_ICONS[category] || CATEGORY_ICONS.other;
+  return (
+    CATEGORY_ICONS[category as keyof typeof CATEGORY_ICONS] ||
+    CATEGORY_ICONS.other
+  );
 }
 
 export function getCategoryLabel(category: string): string {

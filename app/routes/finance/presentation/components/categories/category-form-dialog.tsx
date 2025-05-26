@@ -197,15 +197,6 @@ export default function CategoryFormDialog({
     }
   };
 
-  // Filter categories for parent selection (exclude self and children)
-  const availableParents = categories.filter((cat) => {
-    if (category) {
-      // Exclude self and descendants
-      return cat.id !== category.id && !isDescendant(cat, category, categories);
-    }
-    return cat.type === form.watch("type");
-  });
-
   // Helper function to check if a category is a descendant of another
   const isDescendant = (
     potentialParent: Category,
@@ -220,6 +211,15 @@ export default function CategoryFormDialog({
     );
     return parent ? isDescendant(parent, targetCategory, allCategories) : false;
   };
+
+  // Filter categories for parent selection (exclude self and children)
+  const availableParents = categories.filter((cat) => {
+    if (category) {
+      // Exclude self and descendants
+      return cat.id !== category.id && !isDescendant(cat, category, categories);
+    }
+    return cat.type === form.watch("type");
+  });
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

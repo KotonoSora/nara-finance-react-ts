@@ -6,6 +6,9 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import type { Category } from "~/routes/finance/domain/entities/category.entity";
+import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
+
 import { Button } from "~/components/ui/button";
 import { Calendar } from "~/components/ui/calendar";
 import {
@@ -39,7 +42,7 @@ import {
 } from "~/components/ui/select";
 import HierarchicalCategorySelector from "~/routes/finance/presentation/components/categories/hierarchical-category-selector";
 
-// Enhanced schema to support both legacy and new category system
+// Enhanced schema: require only category_id
 const transactionSchema = z
   .object({
     date: z.date({
@@ -48,11 +51,7 @@ const transactionSchema = z
     type: z.enum(["income", "expense", "investment"], {
       required_error: "Please select a transaction type",
     }),
-    // Support both legacy category enum and new category_id
-    category: z
-      .enum(["food", "transport", "shopping", "salary", "other"])
-      .optional(),
-    category_id: z.string().optional(),
+    category_id: z.string({ required_error: "Please select a category" }),
     amount: z.coerce
       .number({
         required_error: "Please enter an amount",
@@ -64,10 +63,7 @@ const transactionSchema = z
       .min(3, "Description must be at least 3 characters")
       .max(100, "Description must not exceed 100 characters"),
   })
-  .refine((data) => data.category || data.category_id, {
-    message: "Please select a category",
-    path: ["category_id"],
-  });
+  .required();
 
 type FormData = z.infer<typeof transactionSchema>;
 
@@ -76,12 +72,9 @@ interface TransactionDialogProps {
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: Omit<Transaction, "id">) => void;
   initialDate?: Date;
-  selectedCategory?: TransactionCategory | null;
   selectedCategoryId?: string | null;
-  mode?: "add" | "edit";
   transaction?: Transaction;
-  categories?: Category[]; // New category system
-  useLegacyCategories?: boolean; // Fallback to legacy system
+  categories?: Category[];
 }
 
 export default function EnhancedTransactionDialog({
@@ -89,19 +82,15 @@ export default function EnhancedTransactionDialog({
   onOpenChange,
   onSubmit,
   initialDate,
-  selectedCategory,
   selectedCategoryId,
-  mode = "add",
   transaction,
   categories = [],
-  useLegacyCategories = false,
 }: TransactionDialogProps) {
   const form = useForm<FormData>({
     resolver: zodResolver(transactionSchema),
     defaultValues: transaction || {
       date: initialDate || new Date(),
       type: "expense",
-      category: selectedCategory || undefined,
       category_id: selectedCategoryId || undefined,
       amount: undefined,
       description: "",
@@ -114,24 +103,12 @@ export default function EnhancedTransactionDialog({
       form.reset({
         date: transaction.date,
         type: transaction.type,
-        category: transaction.category,
         category_id: transaction.category_id,
         amount: transaction.amount,
         description: transaction.description,
       });
     }
   }, [transaction, form]);
-
-  // Update form when selectedCategory or selectedCategoryId changes in add mode
-  useEffect(() => {
-    if (mode === "add") {
-      if (selectedCategory && useLegacyCategories) {
-        form.setValue("category", selectedCategory);
-      } else if (selectedCategoryId && !useLegacyCategories) {
-        form.setValue("category_id", selectedCategoryId);
-      }
-    }
-  }, [selectedCategory, selectedCategoryId, form, mode, useLegacyCategories]);
 
   const handleSubmit = (data: FormData) => {
     // Convert form data to transaction format
@@ -140,16 +117,12 @@ export default function EnhancedTransactionDialog({
       type: data.type,
       amount: data.amount,
       description: data.description,
-      // Handle both legacy and new category systems
-      category: data.category || "other", // Fallback for legacy support
-      category_id: data.category_id || "1", // Default to first category if not set
+      category_id: data.category_id,
     };
 
     onSubmit(transactionData);
     onOpenChange(false);
-    if (mode === "add") {
-      form.reset();
-    }
+    form.reset();
   };
 
   const transactionType = form.watch("type");
@@ -159,7 +132,7 @@ export default function EnhancedTransactionDialog({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            {mode === "add" ? "Add Transaction" : "Edit Transaction"}
+            {transaction ? "Edit Transaction" : "Add Transaction"}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -235,8 +208,8 @@ export default function EnhancedTransactionDialog({
               )}
             />
 
-            {/* Category selection - use new hierarchical selector if categories are available */}
-            {!useLegacyCategories && categories.length > 0 ? (
+            {/* Category selection */}
+            {categories.length > 0 && (
               <FormField
                 control={form.control}
                 name="category_id"
@@ -255,35 +228,6 @@ export default function EnhancedTransactionDialog({
                     <FormDescription>
                       Choose a category that matches your transaction type
                     </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ) : (
-              // Fallback to legacy category selector
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="food">Food</SelectItem>
-                        <SelectItem value="transport">Transport</SelectItem>
-                        <SelectItem value="shopping">Shopping</SelectItem>
-                        <SelectItem value="salary">Salary</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -326,7 +270,7 @@ export default function EnhancedTransactionDialog({
 
             <DialogFooter>
               <Button type="submit">
-                {mode === "add" ? "Add Transaction" : "Save Changes"}
+                {transaction ? "Save Changes" : "Add Transaction"}
               </Button>
             </DialogFooter>
           </form>

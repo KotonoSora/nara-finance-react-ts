@@ -1,6 +1,6 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
-import type { FinancialSummary } from "~/routes/finance/presentation/types";
+import type { FinancialSummary } from "~/routes/finance/presentation/types/ui.types";
 
 interface IncomeExpenseChartImplProps {
   summary: FinancialSummary;

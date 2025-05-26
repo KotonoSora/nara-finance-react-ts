@@ -1,4 +1,4 @@
-import type { TransactionType } from "~/routes/finance/domain/types";
+import type { TransactionType } from "~/routes/finance/domain/value-objects/finance-constants";
 
 export interface Transaction {
   id: string;

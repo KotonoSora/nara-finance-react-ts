@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { format, startOfMonth } from "date-fns";
 
-import type { FinancialInsightsProps } from "~/routes/finance/presentation/types";
+import type { FinancialInsightsProps } from "~/routes/finance/types/finance";
 
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
@@ -11,9 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { getChangeType } from "~/routes/finance/domain/utilities/financial-analysis.utils";
 import SpendingChart from "~/routes/finance/presentation/components/transactions/spending-chart";
 import { getCategoryColor } from "~/routes/finance/presentation/utils/ui-helpers";
-import { getChangeType } from "~/routes/finance/shared/utils/finance";
 
 export default function FinancialInsights({
   summary,
@@ -176,12 +176,7 @@ export default function FinancialInsights({
           <div className="h-[240px] sm:h-[280px] md:h-[300px]">
             <SpendingChart
               data={chartData}
-              onCategorySelect={
-                onCategorySelect
-                  ? (category: string) =>
-                      onCategorySelect(category as TransactionCategory)
-                  : undefined
-              }
+              onCategorySelect={onCategorySelect}
               budgets={summary.budgets}
               trends={summary.trends}
             />

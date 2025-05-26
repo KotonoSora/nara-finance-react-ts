@@ -1,5 +1,7 @@
 import clsx from "clsx";
 
+import type { DayCellProps } from "~/routes/finance/types/finance";
+
 import {
   Tooltip,
   TooltipContent,

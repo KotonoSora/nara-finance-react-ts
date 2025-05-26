@@ -1,4 +1,7 @@
-import type { BudgetPeriod, CategoryType } from "~/routes/finance/domain/types";
+import type {
+  BudgetPeriod,
+  CategoryType,
+} from "~/routes/finance/domain/value-objects/finance-constants";
 
 export interface Category {
   id: string;

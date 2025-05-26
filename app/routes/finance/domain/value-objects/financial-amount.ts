@@ -1,8 +1,14 @@
 import Decimal from "decimal.js";
 
+import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
+
 // Set precision to handle up to 16 decimal places (industry standard)
 Decimal.set({ precision: 16 });
 
+/**
+ * Domain Value Object for handling financial amounts with precision
+ * Ensures data integrity and proper decimal arithmetic for financial calculations
+ */
 export class FinancialAmount {
   private value: Decimal;
   private checksum: string | undefined;
@@ -38,6 +44,37 @@ export class FinancialAmount {
     return new FinancialAmount(this.value.times(other.value).toString());
   }
 
+  public divide(other: FinancialAmount): FinancialAmount {
+    if (other.value.isZero()) {
+      throw new Error("Division by zero");
+    }
+    return new FinancialAmount(this.value.dividedBy(other.value).toString());
+  }
+
+  public isEqual(other: FinancialAmount): boolean {
+    return this.value.equals(other.value);
+  }
+
+  public isGreaterThan(other: FinancialAmount): boolean {
+    return this.value.greaterThan(other.value);
+  }
+
+  public isLessThan(other: FinancialAmount): boolean {
+    return this.value.lessThan(other.value);
+  }
+
+  public isZero(): boolean {
+    return this.value.isZero();
+  }
+
+  public isNegative(): boolean {
+    return this.value.isNegative();
+  }
+
+  public abs(): FinancialAmount {
+    return new FinancialAmount(this.value.abs().toString());
+  }
+
   public toNumber(): number {
     return this.value.toNumber();
   }
@@ -49,20 +86,30 @@ export class FinancialAmount {
   public toPreciseString(): string {
     return this.value.toString();
   }
+
+  public toJSON(): string {
+    return this.toString();
+  }
 }
 
+/**
+ * Domain service for validating transaction financial integrity
+ */
 export async function validateTransaction(
   transaction: Transaction,
 ): Promise<boolean> {
   const amount = new FinancialAmount(transaction.amount);
   if (!(await amount.verify())) return false;
 
-  // Ensure amounts are non-negative
-  if (amount.toNumber() < 0) return false;
+  // Business rule: amounts must be non-negative
+  if (amount.isNegative()) return false;
 
   return true;
 }
 
+/**
+ * Domain service for reconciling multiple transactions
+ */
 export async function reconcileTransactions(
   transactions: Transaction[],
 ): Promise<{

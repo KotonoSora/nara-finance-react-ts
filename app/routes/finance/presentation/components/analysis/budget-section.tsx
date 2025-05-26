@@ -6,6 +6,8 @@ import {
   ChevronUp,
 } from "lucide-react";
 
+import type { Budget, CategoryTrend } from "~/routes/finance/types/finance";
+
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
 import {
@@ -15,22 +17,72 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import {
-  getBudgetRecommendation,
-  getBudgetStatusMessage,
-  getBudgetWarningLevel,
-} from "~/routes/finance/shared/utils/budget";
+  analyzeBudgetWarningLevel,
+  generateBudgetRecommendation,
+} from "~/routes/finance/application/services/analytics.service";
 
 interface BudgetSectionProps {
   budgets: Budget[];
   trends?: CategoryTrend[];
-  onBudgetClick?: (category: TransactionCategory) => void;
+  categories?: Array<{ id: string; name: string; type: string }>; // Added categories prop
+  onBudgetClick?: (categoryId: string) => void; // Changed to use string (category_id)
 }
 
 export default function BudgetSection({
   budgets,
   trends = [],
+  categories = [],
   onBudgetClick,
 }: BudgetSectionProps) {
+  const getBudgetWarningLevel = (
+    budget: Budget,
+  ): "safe" | "warning" | "danger" => {
+    const percentage =
+      budget.limit > 0 ? (budget.spent / budget.limit) * 100 : 0;
+
+    if (percentage >= 90) return "danger";
+    if (percentage >= 75) return "warning";
+    return "safe";
+  };
+
+  const getBudgetStatusMessage = (budget: Budget): string => {
+    const percentage =
+      budget.limit > 0 ? (budget.spent / budget.limit) * 100 : 0;
+    const remaining = budget.limit - budget.spent;
+
+    if (percentage >= 100) {
+      return `Over budget by $${Math.abs(remaining).toLocaleString()}`;
+    } else if (percentage >= 90) {
+      return `Close to budget limit! $${remaining.toLocaleString()} remaining`;
+    } else if (percentage >= 75) {
+      return `Warning: $${remaining.toLocaleString()} remaining`;
+    } else {
+      return `On track: $${remaining.toLocaleString()} remaining`;
+    }
+  };
+
+  const getBudgetRecommendation = (
+    budget: Budget,
+    trends: CategoryTrend[],
+  ): string => {
+    const trend = trends.find((t) => t.category_id === budget.category_id);
+    if (!trend) return "";
+
+    const warningLevel = getBudgetWarningLevel(budget);
+    const spentPercentage =
+      budget.limit > 0 ? (budget.spent / budget.limit) * 100 : 0;
+
+    if (warningLevel === "danger") {
+      return "Consider reducing spending in this category.";
+    } else if (trend.trend === "increasing" && spentPercentage > 50) {
+      return "Spending is trending upward. Monitor closely.";
+    } else if (trend.trend === "decreasing") {
+      return "Good job! Spending in this category is decreasing.";
+    }
+
+    return "Keep monitoring your spending in this category.";
+  };
+
   const getBudgetStatusIcon = (budget: Budget) => {
     const status = getBudgetWarningLevel(budget);
     switch (status) {
@@ -40,18 +92,6 @@ export default function BudgetSection({
         return <AlertTriangle className="h-4 w-4 text-chart-4" />;
       case "danger":
         return <AlertTriangle className="h-4 w-4 text-destructive" />;
-    }
-  };
-
-  const getProgressColor = (budget: Budget) => {
-    const status = getBudgetWarningLevel(budget);
-    switch (status) {
-      case "safe":
-        return "bg-chart-2";
-      case "warning":
-        return "bg-chart-4";
-      case "danger":
-        return "bg-destructive";
     }
   };
 
@@ -89,21 +129,26 @@ export default function BudgetSection({
       </CardHeader>
       <CardContent className="space-y-4">
         {budgets.map((budget) => {
-          if (budget.category === "salary") return null; // Skip income categories
+          // Find the category to check its type
+          const category = categories.find((c) => c.id === budget.category_id);
+          if (category?.type === "income") return null; // Skip income categories
+
           const percentage = Math.min((budget.spent / budget.limit) * 100, 100);
-          const trend = trends.find((t) => t.category === budget.category);
+          const trend = trends.find(
+            (t) => t.category_id === budget.category_id,
+          );
           const recommendation = getBudgetRecommendation(budget, trends);
 
           return (
             <div
-              key={budget.category}
+              key={budget.category_id}
               className="space-y-3 p-3 rounded-lg border border-border hover:bg-accent/50 cursor-pointer transition-all duration-200 hover:border-primary/50"
-              onClick={() => onBudgetClick?.(budget.category)}
+              onClick={() => onBudgetClick?.(budget.category_id)}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="capitalize font-medium text-card-foreground">
-                    {budget.category}
+                    {category?.name || "Unknown Category"}
                   </span>
                   {getBudgetStatusIcon(budget)}
                   {getTrendIcon(trend)}

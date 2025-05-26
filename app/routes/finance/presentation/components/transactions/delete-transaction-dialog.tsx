@@ -1,3 +1,5 @@
+import type { Transaction } from "~/routes/finance/types/finance";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,7 +46,7 @@ export default function DeleteTransactionDialog({
                 <span className="font-medium">{formattedAmount}</span>
                 <span className="text-muted-foreground">Category:</span>
                 <span className="font-medium capitalize">
-                  {transaction.category}
+                  {transaction.category_id}
                 </span>
                 <span className="text-muted-foreground">Type:</span>
                 <span className="font-medium capitalize">

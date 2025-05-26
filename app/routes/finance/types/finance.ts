@@ -1,4 +1,4 @@
-interface DayItemBase {
+export interface DayItemBase {
   month: number;
   day: number;
   isCurrentMonth: boolean;
@@ -8,16 +8,16 @@ interface DayItemBase {
   onDateClick?: (date: Date) => void;
 }
 
-interface DragDropProps {
+export interface DragDropProps {
   onMouseDown?: () => void;
   onMouseEnter?: () => void;
   onMouseUp?: () => void;
   isInRange: boolean;
 }
 
-interface DayItem extends DayItemBase, DragDropProps {}
+export interface DayItem extends DayItemBase, DragDropProps {}
 
-interface CalendarData {
+export interface CalendarData {
   nowDate: Date;
   currentYear: number;
   currentMonth: number;
@@ -30,7 +30,7 @@ interface CalendarData {
   nextMonth: number;
 }
 
-interface ICalendarProps {
+export interface ICalendarProps {
   calendarDetail: CalendarData;
   selectedDate: Date | null;
   currentViewDate: Date;
@@ -40,15 +40,9 @@ interface ICalendarProps {
   transactions: Transaction[];
 }
 
-type TransactionType = "income" | "expense" | "investment";
-type TransactionCategory =
-  | "food"
-  | "transport"
-  | "shopping"
-  | "salary"
-  | "other";
+export type TransactionType = "income" | "expense" | "investment";
 
-interface Category {
+export interface Category {
   id: string;
   name: string;
   type: TransactionType;
@@ -64,24 +58,23 @@ interface Category {
   parent?: Category | null; // For parent reference
 }
 
-interface CategoryWithAnalytics extends Category {
+export interface CategoryWithAnalytics extends Category {
   spent: number;
   transaction_count: number;
   last_transaction_date?: string;
   spending_trend: "increasing" | "decreasing" | "stable";
 }
 
-interface Transaction {
+export interface Transaction {
   id: string;
   date: Date;
   amount: number;
   type: TransactionType;
-  category: TransactionCategory; // Legacy support
-  category_id: string; // New category reference - now required
+  category_id: string; // Category reference
   description: string;
 }
 
-interface CategoryFormData {
+export interface CategoryFormData {
   name: string;
   type: TransactionType;
   parent_id?: string | null;
@@ -94,9 +87,8 @@ interface CategoryFormData {
 /**
  * Represents a budget limit and spending for a specific category
  */
-interface Budget {
-  category: TransactionCategory; // Legacy support
-  category_id?: string; // New category reference
+export interface Budget {
+  category_id: string; // Category reference
   limit: number;
   spent: number;
   period: "monthly" | "weekly" | "yearly";
@@ -106,8 +98,8 @@ interface Budget {
 /**
  * Represents spending trend analysis for a category
  */
-interface CategoryTrend {
-  category: TransactionCategory;
+export interface CategoryTrend {
+  category_id: string; // Category reference
   values: number[]; // Historical spending values
   trend: "increasing" | "decreasing" | "stable";
   forecast: number; // Predicted next value
@@ -116,63 +108,63 @@ interface CategoryTrend {
 /**
  * Represents the summary of transactions including totals and analysis
  */
-interface TransactionSummary {
+export interface TransactionSummary {
   totalIncome: number;
   totalExpenses: number;
   savings: number;
-  categorySummary: Record<TransactionCategory, number>;
+  categorySummary: Record<string, number>; // category_id -> amount
   budgets?: Budget[];
   trends?: CategoryTrend[];
   forecastedExpenses?: number;
   forecastedSavings?: number;
 }
 
-interface FinancialSummary {
+export interface FinancialSummary {
   totalIncome: number;
   totalExpenses: number;
   savings: number;
-  categorySummary: Record<TransactionCategory, number>;
+  categorySummary: Record<string, number>; // category_id -> amount
   budgets: Budget[];
   trends: CategoryTrend[];
   forecastedExpenses: number;
   forecastedSavings: number;
 }
 
-interface TableSort {
+export interface TableSort {
   column: keyof Transaction;
   direction: "asc" | "desc";
 }
 
-interface IListProps {
+export interface IListProps {
   selectedDate: Date | null;
   transactions?: Transaction[];
   onFilter?: (filters: TransactionFilters) => void;
   dateRange?: DateRange;
   summary?: FinancialSummary;
-  selectedCategory?: TransactionCategory | null;
-  onCategoryChange?: (category: TransactionCategory | null) => void;
+  selectedCategory?: string | null; // category_id
+  onCategoryChange?: (category: string | null) => void; // category_id
 }
 
-interface TransactionFilters {
+export interface TransactionFilters {
   type?: TransactionType;
-  category?: TransactionCategory;
+  category?: string; // category_id
   dateRange?: {
     from: Date;
     to: Date;
   };
   searchTerm?: string;
-  categories?: TransactionCategory[];
+  categories?: string[]; // category_ids
 }
 
-interface DateRange {
+export interface DateRange {
   from: Date;
   to: Date;
 }
 
-interface FinancialInsightsProps {
+export interface FinancialInsightsProps {
   summary: FinancialSummary;
   dateRange?: DateRange;
-  onCategorySelect?: (category: TransactionCategory) => void;
+  onCategorySelect?: (category: string) => void; // category_id
   previousPeriod?: {
     totalIncome: number;
     totalExpenses: number;
@@ -182,17 +174,17 @@ interface FinancialInsightsProps {
 }
 
 // Add color theme support for categories
-interface CategoryTheme {
+export interface CategoryTheme {
   color: string;
   icon?: string;
   label: string;
 }
 
-type CategoryThemes = Record<TransactionCategory, CategoryTheme>;
+export type CategoryThemes = Record<string, CategoryTheme>; // category_id -> theme
 
-type ViewMode = "day" | "week" | "month";
+export type ViewMode = "day" | "week" | "month";
 
-interface DayCellProps extends DayItem {
+export interface DayCellProps extends DayItem {
   transactionCount?: number;
   transactionSummary?: {
     income: number;
@@ -200,7 +192,7 @@ interface DayCellProps extends DayItem {
   };
 }
 
-interface SpendingChartProps {
+export interface SpendingChartProps {
   data: Array<{
     category: string;
     amount: number;
@@ -211,15 +203,15 @@ interface SpendingChartProps {
   trends?: CategoryTrend[];
 }
 
-interface FinanceProps {
+export interface FinanceProps {
   loaderData: FinanceData & CalendarData;
 }
 
-interface FinanceData {
+export interface FinanceData {
   transactions: Transaction[];
   summary: FinancialSummary;
 }
 
-interface ExportResult {
+export interface ExportResult {
   filename: string;
 }

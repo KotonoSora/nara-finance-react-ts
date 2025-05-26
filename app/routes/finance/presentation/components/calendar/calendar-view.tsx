@@ -1,6 +1,8 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
+import type { ICalendarProps } from "~/routes/finance/types/finance";
+
 import { Button } from "~/components/ui/button";
 import DayCell from "~/routes/finance/presentation/components/calendar/day-cell";
 import {
@@ -158,7 +160,7 @@ export default function Calendar({
         </div>
 
         <div className="grid grid-cols-7 gap-px bg-border/20 rounded-lg overflow-hidden">
-          {daysOfWeek.map((day, i) => (
+          {daysOfWeek.map((day: string, i: number) => (
             <div
               key={day}
               className="text-center text-xs sm:text-sm font-medium text-muted-foreground py-2 sm:py-3 bg-muted/30"
@@ -166,7 +168,7 @@ export default function Calendar({
               {day}
             </div>
           ))}
-          {getDaysGrid().map((props, i) => (
+          {getDaysGrid().map((props, i: number) => (
             <DayCell key={`${props.month}-${props.day}`} {...props} />
           ))}
         </div>

@@ -12,6 +12,7 @@ export { analyzeTrends, FinancialAmount };
 // Generate a default budget for a given category
 export function getDefaultBudget(category: Category): Budget {
   return new BudgetEntity({
+    category_id: category.id,
     limit: category.budget_limit ?? 0,
     spent: 0,
     period: category.budget_period,
@@ -25,12 +26,13 @@ export function updateBudgets(
 ): Budget[] {
   return budgets.map((budget) => {
     const spent = transactions
-      .filter((t) => t.type === (budget as any).type)
+      .filter((t) => t.category_id === budget.category_id)
       .reduce((sum, t) => sum + t.amount, 0);
     return new BudgetEntity({
-      limit: (budget as any).limit,
+      category_id: budget.category_id,
+      limit: budget.limit,
       spent,
-      period: (budget as any).period,
+      period: budget.period,
     });
   });
 }

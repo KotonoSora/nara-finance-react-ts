@@ -4,13 +4,14 @@ import { CalendarIcon, FileDown, FileUp, Search } from "lucide-react";
 import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
+import type { TransactionType } from "~/routes/finance/domain/value-objects/finance-constants";
 import type {
+  ExportResult,
   FinancialSummary,
   TableSort,
   Transaction,
-  TransactionCategory,
   TransactionFilters,
-} from "~/routes/finance/presentation/types";
+} from "~/routes/finance/types/finance";
 import type { DateRange } from "react-day-picker";
 
 import { Badge } from "~/components/ui/badge";
@@ -38,17 +39,18 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import FinancialInsights from "~/routes/finance/presentation/components/transactions/financial-insights";
+import ImportDialog from "~/routes/finance/presentation/components/transactions/import-dialog";
 import { showExportToastFromPromise } from "~/routes/finance/presentation/utils/notifications";
 
-import FinancialInsights from "./financial-insights";
-import ImportDialog from "./import-dialog";
-
 const exportToCSV = () =>
-  import("~/routes/finance/shared/utils/export").then((mod) => mod.exportToCSV);
+  import("~/routes/finance/application/services/export.service").then(
+    (mod) => mod.exportToCSV,
+  );
 
 const exportToPDF = () =>
-  import("~/routes/finance/shared/utils/export-pdf").then(
-    (mod) => mod.exportToPDF,
+  import("~/routes/finance/application/services/pdf-export.service").then(
+    (mod) => new mod.PDFExportService().exportToPDF,
   );
 
 interface ListProps {
@@ -56,6 +58,7 @@ interface ListProps {
   transactions?: Transaction[];
   summary?: FinancialSummary;
   addTransactions: (transactions: Transaction[]) => void;
+  categories: { id: string; name: string }[]; // <-- Add categories prop
 }
 
 export default function List({
@@ -63,9 +66,16 @@ export default function List({
   transactions = [],
   summary,
   addTransactions,
+  categories, // <-- Destructure categories prop
 }: ListProps) {
   const [filters, setFilters] = useState<TransactionFilters>({});
-  const [sort, setSort] = useState<TableSort>({
+  // Clear filters handler
+  const handleClearFilters = () => setFilters({});
+
+  const [sort, setSort] = useState<{
+    column: string;
+    direction: "asc" | "desc";
+  }>({
     column: "date",
     direction: "desc",
   });
@@ -111,7 +121,15 @@ export default function List({
     const exportPromise = new Promise<ExportResult>(async (resolve, reject) => {
       try {
         const exportPDFFunc = await exportToPDF();
-        await exportPDFFunc(transactions, summary, filename);
+        const reportData = {
+          metadata: {
+            title: "Transaction Report",
+            generatedAt: new Date(),
+          },
+          summary,
+          transactions,
+        };
+        await exportPDFFunc(reportData, { filename });
         resolve({ filename: `${filename}.pdf` });
       } catch (error) {
         reject(error);
@@ -136,7 +154,7 @@ export default function List({
 
   const filteredTransactions = transactions.filter((transaction) => {
     if (filters.type && transaction.type !== filters.type) return false;
-    if (filters.category && transaction.category !== filters.category)
+    if (filters.category && transaction.category_id !== filters.category)
       return false;
     if (
       filters.searchTerm &&
@@ -154,7 +172,7 @@ export default function List({
         <FinancialInsights
           summary={summary}
           dateRange={filters.dateRange}
-          onCategorySelect={(category) =>
+          onCategorySelect={(category: string) =>
             setFilters((f) => ({ ...f, category }))
           }
         />
@@ -165,10 +183,18 @@ export default function List({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <h2 className="text-lg md:text-xl font-semibold">Transactions</h2>
             <div className="flex gap-2 w-full sm:w-auto">
-              <Button variant="outline" className="flex-1 sm:flex-initial">
+              <Button
+                variant="outline"
+                className="flex-1 sm:flex-initial"
+                onClick={handleClearFilters}
+              >
                 Clear Filters
               </Button>
-              <Button variant="outline" className="flex-1 sm:flex-initial">
+              <Button
+                variant="outline"
+                className="flex-1 sm:flex-initial"
+                onClick={handleExportCSV}
+              >
                 Export CSV
               </Button>
             </div>
@@ -194,18 +220,11 @@ export default function List({
                     className="w-full justify-start text-left font-normal"
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {filters.dateRange?.from ? (
-                      filters.dateRange.to ? (
-                        <>
-                          {format(filters.dateRange.from, "LLL dd, y")} -{" "}
-                          {format(filters.dateRange.to, "LLL dd, y")}
-                        </>
-                      ) : (
-                        format(filters.dateRange.from, "LLL dd, y")
-                      )
-                    ) : (
-                      <span>Pick a date range</span>
-                    )}
+                    {filters.dateRange?.from
+                      ? filters.dateRange.to
+                        ? `${format(filters.dateRange.from, "LLL dd, y")} - ${format(filters.dateRange.to, "LLL dd, y")}`
+                        : format(filters.dateRange.from, "LLL dd, y")
+                      : "Select a date range"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -227,6 +246,7 @@ export default function List({
               </Popover>
 
               <Select
+                value={filters.type}
                 onValueChange={(value: TransactionType) =>
                   setFilters((f) => ({ ...f, type: value }))
                 }
@@ -242,7 +262,8 @@ export default function List({
               </Select>
 
               <Select
-                onValueChange={(value: TransactionCategory) =>
+                value={filters.category}
+                onValueChange={(value: string) =>
                   setFilters((f) => ({ ...f, category: value }))
                 }
               >
@@ -250,11 +271,11 @@ export default function List({
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="food">Food</SelectItem>
-                  <SelectItem value="transport">Transport</SelectItem>
-                  <SelectItem value="shopping">Shopping</SelectItem>
-                  <SelectItem value="salary">Salary</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -285,7 +306,13 @@ export default function List({
                       </TableCell>
                       <TableCell>{transaction.description}</TableCell>
                       <TableCell>
-                        <Badge variant="outline">{transaction.category}</Badge>
+                        <Badge variant="outline">
+                          {
+                            categories.find(
+                              (c) => c.id === transaction.category_id,
+                            )?.name
+                          }
+                        </Badge>
                       </TableCell>
                       <TableCell>{transaction.type}</TableCell>
                       <TableCell
@@ -352,7 +379,7 @@ export default function List({
       <ImportDialog
         open={isImportOpen}
         onOpenChange={setIsImportOpen}
-        onImport={handleImport}
+        onImport={addTransactions}
       />
     </div>
   );

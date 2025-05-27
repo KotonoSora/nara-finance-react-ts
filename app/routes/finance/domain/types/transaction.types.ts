@@ -1,8 +1,8 @@
 // Domain types for transactions
 
-import type { Transaction } from "../entities/transaction.entity";
+import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
 
-import { FinancialAmount } from "../value-objects/financial-amount";
+import { FinancialAmount } from "~/routes/finance/domain/value-objects/financial-amount";
 
 /** Summary of transactions for a specific date */
 export interface DailyTransactionSummary {

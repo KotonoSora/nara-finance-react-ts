@@ -1,4 +1,4 @@
-import type { Budget } from "../entities/budget.entity";
+import type { Budget } from "~/routes/finance/domain/entities/budget.entity";
 
 /** Warning levels for budget thresholds */
 export type WarningLevel = "safe" | "warning" | "danger";

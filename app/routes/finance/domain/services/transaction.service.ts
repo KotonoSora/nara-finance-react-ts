@@ -12,8 +12,8 @@ import type {
   DailyTransactionSummary,
   Transaction,
   TransactionAnalysis,
-} from "../types/transaction.types";
-import type { TransactionType } from "../value-objects/finance-constants";
+} from "~/routes/finance/domain/types/transaction.types";
+import type { TransactionType } from "~/routes/finance/domain/value-objects/finance-constants";
 
 import { FinancialAmount } from "~/routes/finance/domain/value-objects/financial-amount";
 import { validateBusinessRules } from "~/routes/finance/domain/value-objects/validation";

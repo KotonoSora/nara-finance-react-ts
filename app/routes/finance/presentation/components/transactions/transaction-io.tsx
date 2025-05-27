@@ -7,7 +7,7 @@ import type {
 } from "~/routes/finance/presentation/types/ui.types";
 
 import { Button } from "~/components/ui/button";
-import { exportToCSV } from "~/routes/finance/application/services/export.service";
+import { ExportService } from "~/routes/finance/application/services/export.service";
 import { ImportService } from "~/routes/finance/application/services/import.service";
 
 const exportToPDF = () =>
@@ -56,7 +56,7 @@ export function TransactionIO({ transactions, onImport }: TransactionIOProps) {
     const filename = `transactions-${new Date().toISOString().split("T")[0]}`;
     const exportPromise = new Promise<ExportResult>(async (resolve, reject) => {
       try {
-        await exportToCSV(transactions, filename);
+        await new ExportService().exportToCSV(transactions, { filename });
         resolve({ filename: `${filename}.csv` });
       } catch (error) {
         reject(error);

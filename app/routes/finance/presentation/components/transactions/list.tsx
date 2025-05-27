@@ -45,7 +45,7 @@ import { showExportToastFromPromise } from "~/routes/finance/presentation/utils/
 
 const exportToCSV = () =>
   import("~/routes/finance/application/services/export.service").then(
-    (mod) => mod.exportToCSV,
+    (mod) => new mod.ExportService().exportToCSV,
   );
 
 const exportToPDF = () =>
@@ -102,7 +102,7 @@ export default function List({
     const exportPromise = new Promise<ExportResult>(async (resolve, reject) => {
       const exportCSVFunc = await exportToCSV();
       try {
-        await exportCSVFunc(transactions, filename);
+        await exportCSVFunc(transactions, { filename });
         resolve({ filename: `${filename}.csv` });
       } catch (error) {
         reject(error);

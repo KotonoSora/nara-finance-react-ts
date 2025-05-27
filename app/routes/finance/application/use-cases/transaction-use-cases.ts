@@ -1,6 +1,13 @@
+/**
+ * Transaction Use Cases
+ *
+ * Business logic for transaction management operations
+ */
+
 import type { IUseCase } from "~/routes/finance/application/interfaces/use-case";
 import type {
   CreateTransactionInput,
+  TransactionSummary,
   UpdateTransactionInput,
 } from "~/routes/finance/application/types";
 import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
@@ -12,6 +19,7 @@ export class CreateTransactionUseCase
   implements IUseCase<CreateTransactionInput, Transaction>
 {
   constructor(private dbContext: DatabaseContext) {}
+
   async execute(input: CreateTransactionInput): Promise<Transaction> {
     // Validate the amount
     const amount = new FinancialAmount(input.amount);
@@ -30,6 +38,7 @@ export class UpdateTransactionUseCase
   implements IUseCase<UpdateTransactionInput, Transaction>
 {
   constructor(private dbContext: DatabaseContext) {}
+
   async execute(input: UpdateTransactionInput): Promise<Transaction> {
     if (input.changes.amount !== undefined) {
       input.changes.amount = new FinancialAmount(
@@ -49,9 +58,12 @@ export class DeleteTransactionUseCase implements IUseCase<string, void> {
   }
 }
 
-export class GetTransactionSummaryUseCase implements IUseCase<void, any> {
+export class GetTransactionSummaryUseCase
+  implements IUseCase<void, TransactionSummary>
+{
   constructor(private dbContext: DatabaseContext) {}
-  async execute(): Promise<any> {
+
+  async execute(): Promise<TransactionSummary> {
     const transactions = await this.dbContext.transactions.findAll();
 
     const totalIncome = new FinancialAmount(

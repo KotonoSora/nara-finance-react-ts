@@ -263,7 +263,4 @@ export class ImportService {
   }
 }
 
-// Legacy export functions
-export const parseCSV = (file: File) => new ImportService().parseCSV(file);
-export const parseCSVTransactions = (csvText: string) =>
-  new ImportService().parseCSVText(csvText);
+// Note: Use ImportService class instead of these legacy functions

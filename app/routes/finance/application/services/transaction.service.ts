@@ -31,26 +31,6 @@ export class TransactionService {
     endDate: Date,
   ): Promise<Transaction[]> {
     return await this.transactionRepository.findByDateRange(startDate, endDate);
-  }
-  async calculateTransactionSummary(transactions: Transaction[]) {
-    const totalIncome = new FinancialAmount(
-      transactions
-        .filter((t) => t.type === "income")
-        .reduce((sum, t) => sum + t.amount, 0),
-    );
-
-    const totalExpenses = new FinancialAmount(
-      transactions
-        .filter((t) => t.type === "expense")
-        .reduce((sum, t) => sum + t.amount, 0),
-    );
-
-    const savings = totalIncome.subtract(totalExpenses);
-
-    return {
-      totalIncome: totalIncome.toNumber(),
-      totalExpenses: totalExpenses.toNumber(),
-      savings: savings.toNumber(),
-    };
-  }
+  } // Note: Transaction summary calculation moved to GetTransactionSummaryUseCase
+  // This avoids duplication and follows clean architecture principles
 }

@@ -25,17 +25,8 @@ export interface UpdateTransactionInput {
   };
 }
 
-export interface TransactionQuery {
-  startDate?: Date;
-  endDate?: Date;
-  categoryId?: string;
-  type?: TransactionType;
-  limit?: number;
-  offset?: number;
-}
-
-export interface CategoryQuery {
-  type?: TransactionType;
-  parentId?: string;
-  includeAnalytics?: boolean;
+export interface TransactionSummary {
+  totalIncome: number;
+  totalExpenses: number;
+  savings: number;
 }

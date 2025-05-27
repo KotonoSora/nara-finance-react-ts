@@ -64,7 +64,7 @@ import { showExportToastFromPromise } from "~/routes/finance/presentation/utils/
 
 const exportToCSV = () =>
   import("~/routes/finance/application/services/export.service").then(
-    (mod) => mod.exportToCSV,
+    (mod) => new mod.ExportService().exportToCSV,
   );
 
 const exportToPDF = () =>
@@ -185,7 +185,7 @@ export default function List({
       try {
         if (format === "csv") {
           const exportCSVFunc = await exportToCSV();
-          await exportCSVFunc(filteredTransactions, filename);
+          await exportCSVFunc(filteredTransactions, { filename });
         } else if (localSummary) {
           const exportPDFFunc = await exportToPDF();
           const reportData = {

@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-import { parseCSV } from "~/routes/finance/application/services/import.service";
+import { ImportService } from "~/routes/finance/application/services/import.service";
 
 // Use toast directly instead of notification helpers
 const showImportCompletedToast = (count: number) =>
@@ -46,15 +46,12 @@ export default function ImportDialog({
       try {
         setIsProcessing(true);
         const file = acceptedFiles[0];
-        const result = await parseCSV(file);
+        const importService = new ImportService();
+        const result = await importService.parseCSVTransactions(file);
 
-        if (result.success && result.transactions) {
-          onImport(result.transactions as Transaction[]);
-          showImportCompletedToast(result.transactions.length);
-          onOpenChange(false);
-        } else {
-          throw new Error(result.error || "Import failed");
-        }
+        onImport(result as Transaction[]);
+        showImportCompletedToast((result as Transaction[]).length);
+        onOpenChange(false);
       } catch (error) {
         showImportErrorToast(
           error instanceof Error ? error.message : "Failed to import file",

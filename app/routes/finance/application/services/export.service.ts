@@ -201,14 +201,4 @@ export class ExportService {
   }
 }
 
-// Legacy compatibility functions
-export const exportToCSV = (transactions: Transaction[], filename?: string) =>
-  new ExportService().exportToCSV(transactions, { filename });
-export const downloadCSV = (transactions: Transaction[], filename?: string) =>
-  new ExportService().downloadCSV(transactions, { filename });
-export const generateFinancialReport = (data: {
-  transactions: Transaction[];
-  summary: FinancialSummary;
-}) => new ExportService().generateFinancialReport(data);
-export const exportToJSON = (transactions: Transaction[], pretty?: boolean) =>
-  new ExportService().exportToJSON(transactions, { pretty });
+// Note: Use ExportService class instead of these legacy functions

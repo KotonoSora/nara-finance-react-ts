@@ -8,54 +8,15 @@
  * @category Services
  */
 
-import type { Transaction } from "~/routes/finance/domain/types/entity.types";
-import type { TransactionType } from "~/routes/finance/domain/value-objects/finance-constants";
+import type {
+  DailyTransactionSummary,
+  Transaction,
+  TransactionAnalysis,
+} from "../types/transaction.types";
+import type { TransactionType } from "../value-objects/finance-constants";
 
 import { FinancialAmount } from "~/routes/finance/domain/value-objects/financial-amount";
 import { validateBusinessRules } from "~/routes/finance/domain/value-objects/validation";
-
-/**
- * Transaction summary for a specific date
- */
-export interface DailyTransactionSummary {
-  /** Number of transactions on the date */
-  count: number;
-  /** Financial summary breakdown */
-  summary: {
-    /** Total income amount */
-    income: number;
-    /** Total expense amount */
-    expense: number;
-    /** Net amount (income - expenses) */
-    net: number;
-  };
-  /** Transactions included in summary */
-  transactions: Transaction[];
-}
-
-/**
- * Transaction analysis result
- */
-export interface TransactionAnalysis {
-  /** Total number of transactions */
-  totalTransactions: number;
-  /** Income transactions */
-  incomeTransactions: Transaction[];
-  /** Expense transactions */
-  expenseTransactions: Transaction[];
-  /** Total income amount */
-  totalIncome: FinancialAmount;
-  /** Total expenses amount */
-  totalExpenses: FinancialAmount;
-  /** Net amount (income - expenses) */
-  netAmount: FinancialAmount;
-  /** Average transaction amount */
-  averageAmount: FinancialAmount;
-  /** Largest transaction */
-  largestTransaction: Transaction | null;
-  /** Category breakdown */
-  categoryBreakdown: Map<string, FinancialAmount>;
-}
 
 /**
  * Transaction Service Class
@@ -315,14 +276,3 @@ export class TransactionService {
  * Singleton instance for convenience
  */
 export const transactionService = new TransactionService();
-
-/**
- * Legacy function for backward compatibility
- * @deprecated Use TransactionService.getTransactionSummaryForDate instead
- */
-export function getTransactionSummaryForDate(
-  date: Date,
-  transactions: Transaction[],
-): DailyTransactionSummary | null {
-  return transactionService.getTransactionSummaryForDate(date, transactions);
-}

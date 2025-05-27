@@ -6,8 +6,8 @@ import {
   ChevronUp,
 } from "lucide-react";
 
+import type { Budget } from "~/routes/finance/domain/entities/budget.entity";
 import type { CategoryTrend } from "~/routes/finance/domain/types/analytics.types";
-import type { Budget } from "~/routes/finance/domain/types/entity.types";
 
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";

@@ -7,25 +7,38 @@
 import type { Budget as DomainBudget } from "~/routes/finance/domain/entities/budget.entity";
 import type { Category as DomainCategory } from "~/routes/finance/domain/entities/category.entity";
 import type { Transaction as DomainTransaction } from "~/routes/finance/domain/entities/transaction.entity";
+import type { CategoryTrend as DomainCategoryTrend } from "~/routes/finance/domain/types/analytics.types";
 import type {
-  CategoryTrend as DomainCategoryTrend,
-  CategoryWithAnalytics as DomainCategoryWithAnalytics,
-} from "~/routes/finance/domain/types/analytics.types";
-import type { CategoryFormData as DomainCategoryFormData } from "~/routes/finance/domain/types/entity.types";
-import type { TableSort as DomainTableSort } from "~/routes/finance/domain/types/filter.types";
-import type { TransactionType } from "~/routes/finance/domain/value-objects/finance-constants";
+  BudgetPeriod,
+  CategoryType,
+} from "~/routes/finance/domain/value-objects/finance-constants";
 
-// Re-export TransactionType for consistency
-export type { TransactionType };
+/**
+ * Transaction type for financial operations
+ */
+export type TransactionType = "income" | "expense" | "investment";
+
+/**
+ * Transaction type for financial operations
+ */
+export type TableSort = {
+  column: string;
+  direction: "asc" | "desc";
+};
+
+/** Category with analytics for UI display */
+export interface CategoryWithAnalytics extends Category {
+  spent: number;
+  transaction_count: number;
+  last_transaction_date?: string;
+  spending_trend: "increasing" | "decreasing" | "stable";
+}
 
 // UI State Types
 export interface DateRange {
   from: Date;
   to: Date;
 }
-
-// Re-export TableSort for UI components
-export type TableSort = DomainTableSort;
 
 export interface TransactionFilters {
   type?: TransactionType;
@@ -67,11 +80,15 @@ export interface ChartData {
   fill?: string;
 }
 
-/** Align with domain CategoryWithAnalytics **/
-export type CategoryWithAnalytics = DomainCategoryWithAnalytics;
-
-/** Align with domain CategoryFormData **/
-export type CategoryFormData = DomainCategoryFormData;
+/** Category form data type for UI forms */
+export interface CategoryFormData {
+  name: string;
+  color?: string | null;
+  description?: string;
+  type?: CategoryType;
+  budget_limit?: number | null;
+  budget_period?: BudgetPeriod;
+}
 
 // UI-specific types for calendar and components
 export interface DayItemBase {

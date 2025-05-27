@@ -1,12 +1,12 @@
 import { toast } from "sonner";
 
-import { Money } from "~/routes/finance/domain/value-objects/money.value";
+import { FinancialAmount } from "~/routes/finance/domain/value-objects/financial-amount";
 
 export const showTransactionAddedToast = (
   amount: number,
   type: "income" | "expense",
 ) => {
-  const money = new Money(amount);
+  const money = new FinancialAmount(amount);
   toast.success(
     `${type === "income" ? "Income" : "Expense"} of ${money.toString()} added successfully`,
   );
@@ -21,7 +21,7 @@ export const showTransactionUpdatedToast = () => {
 };
 
 export const showBudgetWarningToast = (category: string, remaining: number) => {
-  const money = new Money(remaining);
+  const money = new FinancialAmount(remaining);
   toast.warning(
     `Warning: ${category} budget is nearing its limit. ${money.toString()} remaining.`,
   );

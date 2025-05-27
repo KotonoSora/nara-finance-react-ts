@@ -3,13 +3,7 @@ import { endOfMonth, isWithinInterval, startOfMonth } from "date-fns";
 import type { Budget } from "~/routes/finance/domain/entities/budget.entity";
 import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
 import type { CategoryTrend } from "~/routes/finance/domain/types/analytics.types";
-
-export type WarningLevel = "safe" | "warning" | "danger";
-
-// Extended budget interface for service operations
-export interface BudgetWithCategory extends Budget {
-  category_id: string;
-}
+import type { WarningLevel } from "~/routes/finance/domain/types/budget.types";
 
 /**
  * Domain service for budget calculations and business rules
@@ -19,10 +13,10 @@ export class BudgetService {
    * Update budgets with current month's spending
    */
   static updateBudgets(
-    budgets: BudgetWithCategory[],
+    budgets: Budget[],
     transactions: Transaction[],
     referenceDate: Date = new Date(),
-  ): BudgetWithCategory[] {
+  ): Budget[] {
     const firstDayOfMonth = startOfMonth(referenceDate);
     const lastDayOfMonth = endOfMonth(referenceDate);
 
@@ -92,7 +86,7 @@ export class BudgetService {
   /**
    * Get default budget for a category based on business rules
    */
-  static getDefaultBudget(categoryId: string): BudgetWithCategory {
+  static getDefaultBudget(categoryId: string): Budget {
     // Default budget with zero limit; customize limits externally
     return {
       category_id: categoryId,
@@ -106,7 +100,7 @@ export class BudgetService {
    * Generate budget recommendation based on spending trends
    */
   static getBudgetRecommendation(
-    budget: BudgetWithCategory,
+    budget: Budget,
     trends: CategoryTrend[],
   ): string {
     // Find trend by category_id
@@ -144,7 +138,7 @@ export class BudgetService {
   /**
    * Validate budget data according to business rules
    */
-  static validateBudget(budget: Partial<BudgetWithCategory>): {
+  static validateBudget(budget: Partial<Budget>): {
     isValid: boolean;
     errors: string[];
   } {

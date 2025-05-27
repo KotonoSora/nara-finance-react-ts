@@ -32,7 +32,7 @@ import {
   TooltipTrigger,
   Tooltip as UITooltip,
 } from "~/components/ui/tooltip";
-import { getTrendSummary } from "~/routes/finance/domain/services/trends.service";
+import { TrendsService } from "~/routes/finance/domain/services/trends.service";
 
 interface TrendAnalysisImplProps {
   trends: CategoryTrend[];
@@ -140,10 +140,10 @@ export function TrendAnalysisImpl({
               </div>
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Forecast: ${trend.forecast.toFixed(2)}
-              </span>
+              </span>{" "}
             </div>
             <p className="text-sm text-muted-foreground">
-              {getTrendSummary(trend)}
+              {TrendsService.getTrendSummary(trend)}
             </p>
             <div className="h-[120px]">
               <ResponsiveContainer width="100%" height="100%">

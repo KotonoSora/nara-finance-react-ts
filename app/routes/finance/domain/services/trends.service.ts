@@ -114,7 +114,3 @@ export class TrendsService {
     }
   }
 }
-
-// Export methods for backward compatibility
-export const analyzeTrends = TrendsService.analyzeTrends;
-export const getTrendSummary = TrendsService.getTrendSummary;

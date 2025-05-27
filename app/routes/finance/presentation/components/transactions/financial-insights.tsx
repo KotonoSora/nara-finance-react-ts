@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { getChangeType } from "~/routes/finance/domain/utilities/financial-analysis.utils";
+import { FinanceService } from "~/routes/finance/domain/services/finance.service";
 import SpendingChart from "~/routes/finance/presentation/components/transactions/spending-chart";
 import { getCategoryColor } from "~/routes/finance/presentation/utils/ui-helpers";
 
@@ -43,12 +43,11 @@ export default function FinancialInsights({
       return "Invalid date range";
     }
   };
-
   const getPercentageChange = (current: number, previous: number) => {
     if (previous === 0) return null;
     const change = ((current - previous) / previous) * 100;
     const isPositive = change > 0;
-    const changeType = getChangeType(current, previous);
+    const changeType = FinanceService.getChangeType(current, previous);
 
     return (
       <div className="flex items-center gap-1 text-[10px] sm:text-xs ml-1 sm:ml-2">

@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 
-import { Money } from "~/routes/finance/domain/value-objects/money.value";
+import { FinancialAmount } from "~/routes/finance/domain/value-objects/financial-amount";
 
 export function showSuccessToast(message: string) {
   toast.success(message);
@@ -15,7 +15,7 @@ export function showWarningToast(message: string) {
 }
 
 export const formatMoney = (amount: number): string => {
-  return new Money(amount).toString();
+  return new FinancialAmount(amount).toString();
 };
 
 export const formatCurrency = (amount: number): string => {

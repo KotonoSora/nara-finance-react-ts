@@ -4,13 +4,13 @@ import { CalendarIcon, FileDown, FileUp, Search } from "lucide-react";
 import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
-import type { TransactionType } from "~/routes/finance/domain/value-objects/finance-constants";
 import type {
   ExportResult,
   FinancialSummary,
   TableSort,
   Transaction,
   TransactionFilters,
+  TransactionType,
 } from "~/routes/finance/presentation/types/ui.types";
 import type { DateRange } from "react-day-picker";
 

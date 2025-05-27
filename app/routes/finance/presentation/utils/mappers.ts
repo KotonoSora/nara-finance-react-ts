@@ -1,8 +1,6 @@
+import type { Budget as DomainBudget } from "~/routes/finance/domain/entities/budget.entity";
+import type { Transaction as DomainTransaction } from "~/routes/finance/domain/entities/transaction.entity";
 import type { CategoryTrend as DomainCategoryTrend } from "~/routes/finance/domain/types/analytics.types";
-import type {
-  Budget as DomainBudget,
-  Transaction as DomainTransaction,
-} from "~/routes/finance/domain/types/entity.types";
 import type {
   Budget,
   CategoryTrend,

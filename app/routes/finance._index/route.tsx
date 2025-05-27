@@ -15,17 +15,15 @@ import type { Route } from "./+types/route";
 
 import { Button } from "~/components/ui/button";
 import { Toaster } from "~/components/ui/sonner";
+import { analyzeTrends } from "~/routes/finance/application/services/analytics.service";
+import { FinancialAmount } from "~/routes/finance/domain/value-objects/financial-amount";
 import CategoryManagement from "~/routes/finance/presentation/components/categories/category-management";
 import EnhancedTransactionDialog from "~/routes/finance/presentation/components/transactions/enhanced-transaction-dialog";
 import TabsView from "~/routes/finance/presentation/components/transactions/tabs-view";
 import { useFinanceShortcuts } from "~/routes/finance/presentation/hooks/use-finance-shortcuts";
 import { updateLocalBudgets } from "~/routes/finance/presentation/utils/budget.utils";
 import { prepareCalendarData } from "~/routes/finance/presentation/utils/calendar.utils";
-import {
-  analyzeTrends,
-  AuditTrail,
-  FinancialAmount,
-} from "~/routes/finance/presentation/utils/finance.utils";
+import { AuditTrail } from "~/routes/finance/presentation/utils/finance.utils";
 import {
   showBudgetWarningToast,
   showTransactionAddedToast,

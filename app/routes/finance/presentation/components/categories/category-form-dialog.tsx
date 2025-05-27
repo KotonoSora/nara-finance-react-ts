@@ -2,12 +2,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Palette, Smile } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { z } from "zod";
+
+import type {
+  Category,
+  CategoryFormData,
+  TransactionType,
+} from "~/routes/finance/presentation/types/ui.types";
 
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -36,39 +43,10 @@ import {
 } from "~/components/ui/select";
 import { Switch } from "~/components/ui/switch";
 
-// Local type definitions to avoid import issues
-type TransactionType = "income" | "expense" | "investment";
-
-interface Category {
-  id: string;
-  name: string;
-  type: TransactionType;
-  parent_id?: string | null;
-  budget_limit?: number | null;
-  budget_period: "monthly" | "weekly" | "yearly";
-  is_archived: boolean;
-  icon?: string | null;
-  color?: string | null;
-  created_at: string;
-  updated_at: string;
-  children?: Category[];
-  parent?: Category | null;
-}
-
-interface CategoryFormData {
-  name: string;
-  type: TransactionType;
-  parent_id?: string | null;
-  budget_limit?: number | null;
-  budget_period: "monthly" | "weekly" | "yearly";
-  icon?: string | null;
-  color?: string | null;
-}
-
 const categorySchema = z.object({
   name: z
     .string()
-    .min(2, "Name must be at least 2 characters")
+    .min(1, "Name is required")
     .max(50, "Name must not exceed 50 characters"),
   type: z.enum(["income", "expense", "investment"], {
     required_error: "Please select a transaction type",
@@ -79,7 +57,7 @@ const categorySchema = z.object({
     .min(0, "Budget must be positive")
     .optional()
     .nullable(),
-  budget_period: z.enum(["weekly", "monthly", "yearly"]),
+  budget_period: z.enum(["weekly", "monthly", "yearly"]).optional().nullable(),
   icon: z.string().optional().nullable(),
   color: z.string().optional().nullable(),
 });
@@ -90,9 +68,9 @@ interface CategoryFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: CategoryFormData) => void;
+  allCategories: Category[];
   category?: Category;
-  parentCategory?: Category;
-  categories: Category[];
+  parentCategory?: Category; // Added parentCategory prop
   mode?: "create" | "edit";
 }
 
@@ -137,9 +115,9 @@ export default function CategoryFormDialog({
   onOpenChange,
   onSubmit,
   category,
-  parentCategory,
-  categories,
   mode = "create",
+  allCategories,
+  parentCategory, // Added parentCategory to destructuring
 }: CategoryFormDialogProps) {
   const [enableBudget, setEnableBudget] = useState(false);
 
@@ -148,7 +126,7 @@ export default function CategoryFormDialog({
     defaultValues: {
       name: "",
       type: "expense",
-      parent_id: parentCategory?.id || null,
+      parent_id: null,
       budget_limit: null,
       budget_period: "monthly",
       icon: null,
@@ -169,11 +147,22 @@ export default function CategoryFormDialog({
         color: category.color,
       });
       setEnableBudget(!!category.budget_limit);
+    } else if (parentCategory) {
+      form.reset({
+        name: "",
+        type: parentCategory.type, // Default to parent's type
+        parent_id: parentCategory.id,
+        budget_limit: null,
+        budget_period: "monthly",
+        icon: null,
+        color: null,
+      });
+      setEnableBudget(false);
     } else {
       form.reset({
         name: "",
         type: "expense",
-        parent_id: parentCategory?.id || null,
+        parent_id: null,
         budget_limit: null,
         budget_period: "monthly",
         icon: null,
@@ -188,6 +177,9 @@ export default function CategoryFormDialog({
     const submitData: CategoryFormData = {
       ...data,
       budget_limit: enableBudget ? data.budget_limit : null,
+      budget_period: enableBudget
+        ? data.budget_period || "monthly" // Default to "monthly" if null/undefined and budget is enabled
+        : undefined, // Set to undefined if budget is not enabled
     };
     onSubmit(submitData);
     onOpenChange(false);
@@ -213,10 +205,12 @@ export default function CategoryFormDialog({
   };
 
   // Filter categories for parent selection (exclude self and children)
-  const availableParents = categories.filter((cat) => {
+  const availableParents = allCategories.filter((cat: Category) => {
     if (category) {
       // Exclude self and descendants
-      return cat.id !== category.id && !isDescendant(cat, category, categories);
+      return (
+        cat.id !== category.id && !isDescendant(cat, category, allCategories)
+      );
     }
     return cat.type === form.watch("type");
   });
@@ -295,8 +289,8 @@ export default function CategoryFormDialog({
                       <SelectItem value="none">
                         No parent (root category)
                       </SelectItem>
-                      {availableParents.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>
+                      {availableParents.map((cat: Category) => (
+                        <SelectItem key={cat.id} value={String(cat.id)}>
                           {cat.icon && `${cat.icon} `}
                           {cat.name}
                         </SelectItem>
@@ -463,7 +457,7 @@ export default function CategoryFormDialog({
                         <FormLabel>Budget Period</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          defaultValue={field.value ?? undefined} // Ensure null becomes undefined for Select
                         >
                           <FormControl>
                             <SelectTrigger>

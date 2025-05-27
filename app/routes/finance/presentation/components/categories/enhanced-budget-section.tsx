@@ -189,7 +189,7 @@ export default function EnhancedBudgetSection({
         open={showCategoryForm}
         onOpenChange={setShowCategoryForm}
         onSubmit={handleSubmitCategory}
-        categories={allCategories}
+        allCategories={allCategories}
         mode="create"
       />
 

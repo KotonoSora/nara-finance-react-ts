@@ -1,6 +1,9 @@
 import { useState } from "react";
 
-import type { CategoryWithAnalytics } from "~/routes/finance/presentation/types/ui.types";
+import type {
+  CategoryFormData,
+  CategoryWithAnalytics,
+} from "~/routes/finance/presentation/types/ui.types";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -21,16 +24,6 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import CategoryFormDialog from "~/routes/finance/presentation/components/categories/category-form-dialog";
-
-interface CategoryFormData {
-  name: string;
-  type: "income" | "expense" | "investment";
-  parent_id?: string | null;
-  budget_limit?: number | null;
-  budget_period: "monthly" | "weekly" | "yearly";
-  icon?: string | null;
-  color?: string | null;
-}
 
 interface EnableBudgetDialogProps {
   open: boolean;
@@ -62,7 +55,7 @@ export default function EnableBudgetDialog({
     const updateData: CategoryFormData = {
       name: selectedCategory.name,
       type: selectedCategory.type,
-      parent_id: selectedCategory.parent_id,
+      parent_id: selectedCategory.parent_id || undefined, // Ensure parent_id is string or undefined
       budget_limit: parseFloat(budgetLimit),
       budget_period: budgetPeriod,
       icon: selectedCategory.icon,
@@ -194,7 +187,7 @@ export default function EnableBudgetDialog({
           // This will be handled by the parent component's onCreateCategory
           setShowCategoryForm(false);
         }}
-        categories={categories}
+        allCategories={categories} // Changed prop name from categories to allCategories
         mode="create"
       />
     </>

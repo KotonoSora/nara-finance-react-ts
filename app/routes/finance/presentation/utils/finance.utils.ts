@@ -1,12 +1,8 @@
-import type { Budget } from "~/routes/finance/domain/entities/budget.entity";
-import type { Category } from "~/routes/finance/domain/entities/category.entity";
-import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
-
-import { analyzeTrends } from "~/routes/finance/application/services/analytics.service";
-import { FinancialAmount } from "~/routes/finance/domain/value-objects/financial-amount";
-
-// Re-export for convenience
-export { analyzeTrends, FinancialAmount };
+import type {
+  Budget,
+  Category,
+  Transaction,
+} from "~/routes/finance/presentation/types/ui.types";
 
 // Generate a default budget for a given category
 export function getDefaultBudget(category: Category): Budget {

@@ -316,9 +316,8 @@ export default function CategoryManagement({
         open={showCategoryForm}
         onOpenChange={setShowCategoryForm}
         onSubmit={handleSubmitCategory}
-        category={editingCategory || undefined}
-        parentCategory={parentCategory || undefined}
-        categories={categories}
+        category={editingCategory ?? undefined}
+        allCategories={categories} // use allCategories prop
         mode={editingCategory ? "edit" : "create"}
       />
 

@@ -86,6 +86,8 @@ export interface CategoryFormData {
   color?: string | null;
   description?: string;
   type?: CategoryType;
+  parent_id?: string | null; // Added parent_id property
+  icon?: string | null; // Added icon property
   budget_limit?: number | null;
   budget_period?: BudgetPeriod;
 }

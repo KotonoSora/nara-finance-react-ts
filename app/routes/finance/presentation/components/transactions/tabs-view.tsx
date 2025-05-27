@@ -103,11 +103,13 @@ export default function TabsView({
         >
           <Calendar
             calendarDetail={calendarDetail}
-            selectedDate={selectedDate}
+            selectedDate={selectedDate || new Date()}
             currentViewDate={selectedDate || new Date()}
             onDateSelect={onDateSelect}
             onMonthChange={onMonthChange}
-            onDateRangeSelect={onDateRangeSelect}
+            onDateRangeSelect={(start: Date, end: Date) => {
+              onDateRangeSelect({ from: start, to: end });
+            }}
             transactions={transactions}
           />
         </Suspense>

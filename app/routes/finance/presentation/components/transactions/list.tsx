@@ -41,7 +41,7 @@ import {
 } from "~/components/ui/table";
 import FinancialInsights from "~/routes/finance/presentation/components/transactions/financial-insights";
 import ImportDialog from "~/routes/finance/presentation/components/transactions/import-dialog";
-import { showExportToastFromPromise } from "~/routes/finance/presentation/utils/notifications";
+import { showExportToastFromPromise } from "~/routes/finance/presentation/utils/toast.utils";
 
 const exportToCSV = () =>
   import("~/routes/finance/application/services/export.service").then(

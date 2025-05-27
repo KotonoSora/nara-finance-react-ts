@@ -1,32 +1,13 @@
-import type { Budget as DomainBudget } from "~/routes/finance/domain/entities/budget.entity";
-import type { Transaction as DomainTransaction } from "~/routes/finance/domain/entities/transaction.entity";
-import type { CategoryTrend as DomainCategoryTrend } from "~/routes/finance/domain/types/analytics.types";
-import type {
-  Budget,
-  CategoryTrend,
-  Transaction,
-} from "~/routes/finance/presentation/types/ui.types";
+/**
+ * Domain to Presentation Layer Mappers
+ *
+ * Note: These mappers are redundant since the presentation layer
+ * simply re-exports domain types. Direct type usage is preferred.
+ *
+ * @deprecated Use domain types directly from ui.types.ts
+ */
 
-export function mapDomainTransactionToPresentation(
-  domainTransaction: DomainTransaction,
-): Transaction {
-  return domainTransaction;
-}
+// This file is kept for backward compatibility but should be removed
+// once all references are updated to use domain types directly.
 
-export function mapPresentationTransactionToDomain(
-  presentationTransaction: Omit<Transaction, "id">,
-): Omit<DomainTransaction, "id"> {
-  return presentationTransaction;
-}
-
-export function mapDomainBudgetToPresentation(
-  domainBudget: DomainBudget,
-): Budget {
-  return { ...domainBudget };
-}
-
-export function mapDomainCategoryTrendToPresentation(
-  domainTrend: DomainCategoryTrend,
-): CategoryTrend {
-  return domainTrend;
-}
+export {}; // Empty export to maintain module structure

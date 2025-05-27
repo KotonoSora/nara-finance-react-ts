@@ -22,14 +22,13 @@ import EnhancedTransactionDialog from "~/routes/finance/presentation/components/
 import TabsView from "~/routes/finance/presentation/components/transactions/tabs-view";
 import { useFinanceShortcuts } from "~/routes/finance/presentation/hooks/use-finance-shortcuts";
 import { updateLocalBudgets } from "~/routes/finance/presentation/utils/budget.utils";
-import { prepareCalendarData } from "~/routes/finance/presentation/utils/calendar.utils";
 import { AuditTrail } from "~/routes/finance/presentation/utils/finance.utils";
 import {
   showBudgetWarningToast,
   showTransactionAddedToast,
   showTransactionDeletedToast,
   showTransactionUpdatedToast,
-} from "~/routes/finance/presentation/utils/notifications.utils";
+} from "~/routes/finance/presentation/utils/toast.utils";
 
 // Lazy-loaded Presentation widgets
 const BudgetSection = lazy(
@@ -57,7 +56,24 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader({ context }: Route.LoaderArgs) {
-  const calendarData = prepareCalendarData();
+  // Generate calendar data inline
+  const today = new Date();
+  const calendarData = {
+    nowDate: today,
+    currentYear: today.getFullYear(),
+    currentMonth: today.getMonth(),
+    currentDate: today.getDate(),
+    daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    daysInMonth: new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      0,
+    ).getDate(),
+    firstDayOfWeek: new Date(today.getFullYear(), today.getMonth(), 1).getDay(),
+    prevMonthDays: new Date(today.getFullYear(), today.getMonth(), 0).getDate(),
+    prevMonth: today.getMonth() === 0 ? 11 : today.getMonth() - 1,
+    nextMonth: today.getMonth() === 11 ? 0 : today.getMonth() + 1,
+  };
 
   // Import database utilities
   const { eq, sql, desc } = await import("drizzle-orm");

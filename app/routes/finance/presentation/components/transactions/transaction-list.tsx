@@ -60,7 +60,7 @@ import FinancialInsights from "~/routes/finance/presentation/components/transact
 import DeleteTransactionDialog from "~/routes/finance/presentation/components/transactions/delete-transaction-dialog";
 import ImportDialog from "~/routes/finance/presentation/components/transactions/import-dialog";
 import { useFinanceShortcuts } from "~/routes/finance/presentation/hooks/use-advanced-shortcuts";
-import { showExportToastFromPromise } from "~/routes/finance/presentation/utils/notifications";
+import { showExportToastFromPromise } from "~/routes/finance/presentation/utils/toast.utils";
 
 const exportToCSV = () =>
   import("~/routes/finance/application/services/export.service").then(

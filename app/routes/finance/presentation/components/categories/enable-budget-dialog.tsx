@@ -51,15 +51,14 @@ export default function EnableBudgetDialog({
     if (!selectedCategory || !budgetLimit || parseFloat(budgetLimit) <= 0) {
       return;
     }
-
     const updateData: CategoryFormData = {
       name: selectedCategory.name,
       type: selectedCategory.type,
       parent_id: selectedCategory.parent_id || undefined, // Ensure parent_id is string or undefined
       budget_limit: parseFloat(budgetLimit),
       budget_period: budgetPeriod,
-      icon: selectedCategory.icon,
-      color: selectedCategory.color,
+      icon: selectedCategory.icon || undefined,
+      color: selectedCategory.color || undefined,
     };
 
     onEnableBudget(selectedCategory.id, updateData);

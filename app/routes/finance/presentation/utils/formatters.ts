@@ -1,23 +1,25 @@
-import { toast } from "sonner";
+/**
+ * Formatting Utilities - Presentation Layer
+ *
+ * Provides formatting functions for financial data and user interface display
+ */
 
 import { FinancialAmount } from "~/routes/finance/domain/value-objects/financial-amount";
 
-export function showSuccessToast(message: string) {
-  toast.success(message);
-}
+// ============================================================================
+// FINANCIAL FORMATTING
+// ============================================================================
 
-export function showErrorToast(message: string) {
-  toast.error(message);
-}
-
-export function showWarningToast(message: string) {
-  toast.warning(message);
-}
-
+/**
+ * Format amount using FinancialAmount domain object for consistency
+ */
 export const formatMoney = (amount: number): string => {
   return new FinancialAmount(amount).toString();
 };
 
+/**
+ * Format currency with USD as default
+ */
 export const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -26,6 +28,13 @@ export const formatCurrency = (amount: number): string => {
   }).format(amount);
 };
 
+// ============================================================================
+// DATE FORMATTING
+// ============================================================================
+
+/**
+ * Format date in medium format (e.g., "Jan 15, 2024")
+ */
 export const formatDate = (date: Date): string => {
   return new Intl.DateTimeFormat("en-US", {
     year: "numeric",
@@ -34,6 +43,9 @@ export const formatDate = (date: Date): string => {
   }).format(date);
 };
 
+/**
+ * Format date in long format (e.g., "January 15, 2024")
+ */
 export const formatDateLong = (date: Date): string => {
   return date.toLocaleDateString("en-US", {
     year: "numeric",
@@ -42,6 +54,9 @@ export const formatDateLong = (date: Date): string => {
   });
 };
 
+/**
+ * Format date in short format (e.g., "Jan 15")
+ */
 export const formatDateShort = (date: Date): string => {
   return date.toLocaleDateString("en-US", {
     month: "short",

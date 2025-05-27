@@ -13,7 +13,7 @@ import {
 } from "~/components/ui/select";
 import { FinanceService } from "~/routes/finance/domain/services/finance.service";
 import SpendingChart from "~/routes/finance/presentation/components/transactions/spending-chart";
-import { getCategoryColor } from "~/routes/finance/presentation/utils/ui-helpers";
+import { getCategoryColor } from "~/routes/finance/presentation/utils/category-theme.utils";
 
 export default function FinancialInsights({
   summary,

@@ -8,7 +8,7 @@
  * @category Utilities
  */
 
-import { getLocalizedDaysOfWeek } from "~/routes/finance/infrastructure/formatters/locale.formatter";
+import { LocaleFormatter } from "~/routes/finance/infrastructure/formatters/locale.formatter";
 
 /**
  * Calendar data structure for UI components
@@ -96,6 +96,9 @@ export class CalendarUtils {
     const currentMonth = utcDate.getUTCMonth();
     const currentDate = utcDate.getUTCDate();
 
+    // Localized days of the week (e.g., Monday, Tuesday)
+    const daysOfWeek = LocaleFormatter.getLocalizedDaysOfWeek(locale);
+
     // Calculate days in current month
     const daysInMonth = new Date(
       Date.UTC(currentYear, currentMonth + 1, 0),
@@ -123,7 +126,7 @@ export class CalendarUtils {
       currentYear,
       currentMonth,
       currentDate,
-      daysOfWeek: getLocalizedDaysOfWeek(locale),
+      daysOfWeek,
       daysInMonth,
       firstDayOfWeek,
       prevMonthDays,
@@ -323,15 +326,4 @@ export class CalendarUtils {
     const diffTime = Math.abs(end.getTime() - start.getTime());
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }
-}
-
-/**
- * Legacy function for backward compatibility
- * @deprecated Use CalendarUtils.prepareCalendarData instead
- */
-export function prepareCalendarData(
-  date: Date = new Date(),
-  locale: string = "en-US",
-): CalendarData {
-  return CalendarUtils.prepareCalendarData(date, locale);
 }

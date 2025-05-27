@@ -214,31 +214,3 @@ export class CurrencyFormatter {
     });
   }
 }
-
-/**
- * Default currency formatter instance
- */
-export const currencyFormatter = new CurrencyFormatter();
-
-/**
- * Legacy function exports for backward compatibility
- */
-export function formatCurrency(
-  amount: number,
-  currency: string = "USD",
-  locale: string = "en-US",
-): string {
-  return CurrencyFormatter.formatCurrency(amount, { currency, locale });
-}
-
-export function formatPercent(value: number, locale: string = "en-US"): string {
-  return CurrencyFormatter.formatPercent(value, locale);
-}
-
-export function formatCompactCurrency(
-  amount: number,
-  currency: string = "USD",
-  locale: string = "en-US",
-): string {
-  return CurrencyFormatter.formatCompactCurrency(amount, { currency, locale });
-}

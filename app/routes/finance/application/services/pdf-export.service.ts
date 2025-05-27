@@ -13,12 +13,11 @@ import autoTable from "jspdf-autotable";
 
 import type { Budget } from "~/routes/finance/domain/entities/budget.entity";
 import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
-import type { TransactionType } from "~/routes/finance/domain/value-objects/finance-constants";
 import type { FinancialSummary } from "~/routes/finance/presentation/types/ui.types";
 
 import { transactionService } from "~/routes/finance/domain/services/transaction.service";
-import { formatCurrency } from "~/routes/finance/infrastructure/formatters/currency.formatter";
-import { formatDate } from "~/routes/finance/infrastructure/formatters/date.formatter";
+import { CurrencyFormatter } from "~/routes/finance/infrastructure/formatters/currency.formatter";
+import { DateFormatter } from "~/routes/finance/infrastructure/formatters/date.formatter";
 
 /**
  * PDF export options
@@ -212,14 +211,14 @@ export class PDFExportService {
     if (metadata.dateRange) {
       doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
-      const dateText = `Period: ${formatDate(metadata.dateRange.start, config.locale)} - ${formatDate(metadata.dateRange.end, config.locale)}`;
+      const dateText = `Period: ${DateFormatter.formatDate(metadata.dateRange.start, config.locale)} - ${DateFormatter.formatDate(metadata.dateRange.end, config.locale)}`;
       doc.text(dateText, 14, yPosition);
       yPosition += 8;
     }
 
     // Generation date
     doc.setFontSize(8);
-    const generatedText = `Generated: ${formatDate(
+    const generatedText = `Generated: ${DateFormatter.formatDate(
       metadata.generatedAt,
       "PPPpp",
       { locale: config.locale },
@@ -252,15 +251,24 @@ export class PDFExportService {
     const summaryItems = [
       [
         `Total Income:`,
-        formatCurrency(summary.totalIncome, config.currency, config.locale),
+        CurrencyFormatter.formatCurrency(summary.totalIncome, {
+          currency: config.currency,
+          locale: config.locale,
+        }),
       ],
       [
         `Total Expenses:`,
-        formatCurrency(summary.totalExpenses, config.currency, config.locale),
+        CurrencyFormatter.formatCurrency(summary.totalExpenses, {
+          currency: config.currency,
+          locale: config.locale,
+        }),
       ],
       [
         `Net Savings:`,
-        formatCurrency(summary.savings, config.currency, config.locale),
+        CurrencyFormatter.formatCurrency(summary.savings, {
+          currency: config.currency,
+          locale: config.locale,
+        }),
       ],
     ];
 
@@ -291,8 +299,14 @@ export class PDFExportService {
       .filter((b) => b.category_id !== "salary")
       .map((budget) => [
         budget.category_id,
-        formatCurrency(budget.spent, config.currency, config.locale),
-        formatCurrency(budget.limit, config.currency, config.locale),
+        CurrencyFormatter.formatCurrency(budget.spent, {
+          currency: config.currency,
+          locale: config.locale,
+        }),
+        CurrencyFormatter.formatCurrency(budget.limit, {
+          currency: config.currency,
+          locale: config.locale,
+        }),
         `${Math.round((budget.spent / budget.limit) * 100)}%`,
         budget.spent > budget.limit ? "Over Budget" : "On Track",
       ]);
@@ -340,11 +354,14 @@ export class PDFExportService {
     doc.text("Transaction Details", 14, 20);
 
     const transactionData = transactions.map((t) => [
-      formatDate(t.date, "PPP", { locale: config.locale }),
+      DateFormatter.formatDate(t.date, "PPP", { locale: config.locale }),
       this.capitalizeFirst(t.type),
       this.capitalizeFirst(t.category_id),
       t.description || "-",
-      formatCurrency(t.amount, config.currency, config.locale),
+      CurrencyFormatter.formatCurrency(t.amount, {
+        currency: config.currency,
+        locale: config.locale,
+      }),
     ]);
 
     autoTable(doc, {
@@ -390,7 +407,7 @@ export class PDFExportService {
 
       // Generation date
       doc.text(
-        `Generated on ${formatDate(generatedAt, "PPP", { locale: config.locale })}`,
+        `Generated on ${DateFormatter.formatDate(generatedAt, "PPP", { locale: config.locale })}`,
         14,
         doc.internal.pageSize.height - 10,
       );
@@ -416,24 +433,3 @@ export class PDFExportService {
  * Singleton instance for convenience
  */
 export const pdfExportService = new PDFExportService();
-
-/**
- * Legacy function for backward compatibility
- * @deprecated Use PDFExportService.exportToPDF instead
- */
-export async function exportToPDF(
-  transactions: Transaction[],
-  summary: FinancialSummary,
-  filename: string,
-): Promise<void> {
-  const reportData: PDFReportData = {
-    metadata: {
-      title: "Financial Report",
-      generatedAt: new Date(),
-    },
-    summary,
-    transactions,
-  };
-
-  await pdfExportService.exportToPDF(reportData, { filename });
-}

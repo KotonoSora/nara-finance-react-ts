@@ -224,8 +224,3 @@ export class LocaleFormatter {
     return CALENDAR_LOCALE[locale] || CALENDAR_LOCALE[DEFAULT_LOCALE];
   }
 }
-
-// Legacy compatibility exports
-export const getLocalizedDaysOfWeek = LocaleFormatter.getLocalizedDaysOfWeek;
-export const formatLocaleDate = LocaleFormatter.formatDate;
-export const formatRelativeDate = LocaleFormatter.formatRelativeTime;

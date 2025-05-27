@@ -250,21 +250,3 @@ export class DateFormatter {
     };
   }
 }
-
-// Convenience exports for legacy compatibility
-export const formatDate = (
-  date: Date,
-  formatString?: string,
-  options?: DateFormatOptions,
-) => DateFormatter.formatDate(date, formatString, options);
-
-export const formatDateTime = (date: Date, options?: DateFormatOptions) =>
-  DateFormatter.formatDate(date, "PPp", options);
-
-export const formatForTransaction = (date: Date) =>
-  DateFormatter.formatForTransaction(date);
-
-export const formatForFinancialReport = (date: Date) =>
-  DateFormatter.formatForFinancialReport(date);
-
-export const formatISO = (date: Date) => DateFormatter.formatISO(date);

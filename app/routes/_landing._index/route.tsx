@@ -49,6 +49,10 @@ export function loader({ context }: Route.LoaderArgs) {
 }
 
 export function meta({ data }: Route.MetaArgs) {
+  if (!data) {
+    return [];
+  }
+
   const { name, description, slogan, domain, title, version, keywords } = data;
   const customTitle = `${name} | ${title} | ${slogan} | ${version}`;
   const baseUrl = `https://${domain}`;

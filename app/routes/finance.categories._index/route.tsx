@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import {
   Await,
   Form,
+  useAsyncValue,
   useFetcher,
   useLoaderData,
   useSearchParams,
@@ -105,33 +106,31 @@ export default function Page({ loaderData }: Route.ComponentProps) {
           </Card>
         </TabsContent>
         <TabsContent value="existing-categories">
-          <Suspense>
+          <Suspense fallback={<div>Loading...</div>}>
             <Await resolve={categories}>
-              {(resolvedCategories) => (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Existing Categories</CardTitle>
-                    <CardDescription>
-                      Below is a list of existing finance categories. You can
-                      use these to categorize your financial transactions.
-                    </CardDescription>
-                    <SearchCategoryForm />
-                  </CardHeader>
-                  <CardContent>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="w-[100px]">Name</TableHead>
-                          <TableHead className="text-right">Action</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        <ListCategories categories={resolvedCategories} />
-                      </TableBody>
-                    </Table>
-                  </CardContent>
-                </Card>
-              )}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Existing Categories</CardTitle>
+                  <CardDescription>
+                    Below is a list of existing finance categories. You can use
+                    these to categorize your financial transactions.
+                  </CardDescription>
+                  <SearchCategoryForm />
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-[100px]">Name</TableHead>
+                        <TableHead className="text-right">Action</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <ListCategories />
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
             </Await>
           </Suspense>
         </TabsContent>
@@ -238,14 +237,9 @@ const SearchCategoryForm = () => {
   );
 };
 
-const ListCategories = ({
-  categories,
-}: {
-  categories: {
-    id: number;
-    name: string;
-  }[];
-}) => {
+const ListCategories = () => {
+  const categories = useAsyncValue() as { id: number; name: string }[];
+
   return categories.map((category) => (
     <CategoryRowItem key={category.id} category={category} />
   ));

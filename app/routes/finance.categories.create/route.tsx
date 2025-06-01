@@ -1,3 +1,4 @@
+import { eq, sql } from "drizzle-orm";
 import { data } from "react-router";
 
 import type { Route } from "./+types/route";
@@ -30,6 +31,14 @@ export async function action({ request, context }: Route.ActionArgs) {
     }
 
     const name = categoryName.trim();
+
+    const existingCategory = await context.db.query.categories.findFirst({
+      where: eq(sql`LOWER(${categories.name})`, name.toLowerCase()),
+    });
+
+    if (existingCategory) {
+      throw new Error("Category name already exists.");
+    }
 
     await context.db.insert(categories).values({ name, type: "expense" });
 

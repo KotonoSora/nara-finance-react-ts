@@ -72,7 +72,7 @@ export function meta({ data }: Route.MetaArgs) {
     { property: "og:url", content: baseUrl },
     { property: "og:image", content: `${baseUrl}/assets/og-image.jpg` },
     { property: "og:site_name", content: name },
-    { property: "og:locale", content: "vi_VN" },
+    { property: "og:locale", content: "en_US" },
     // Twitter Card
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: customTitle },
@@ -102,7 +102,7 @@ export default function LandingPage({ loaderData }: Route.ComponentProps) {
       <Suspense
         fallback={
           <div className="flex justify-center items-center min-h-screen text-muted-foreground">
-            Đang tải...
+            Loading...
           </div>
         }
       >

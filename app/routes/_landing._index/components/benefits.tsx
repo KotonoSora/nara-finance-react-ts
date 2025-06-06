@@ -46,7 +46,7 @@ export default function BenefitsSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            Tại sao chọn {name}?
+            Why Choose {name}?
           </motion.h2>
 
           <div className="grid gap-6 sm:gap-8 lg:grid-cols-2 xl:grid-cols-3">
@@ -122,7 +122,7 @@ export default function BenefitsSection() {
                               className="bg-popover/95 fill-popover/95 backdrop-blur supports-[backdrop-filter]:bg-popover/85 border-border/50 shadow-lg"
                             >
                               <p className="text-sm font-medium text-foreground">
-                                Độ phức tạp thiết lập:{" "}
+                                Setup Complexity:{" "}
                                 <span className="text-primary capitalize">
                                   {benefit.setupComplexity}
                                 </span>
@@ -159,7 +159,7 @@ export default function BenefitsSection() {
                             </TooltipTrigger>
                             <TooltipContent side="top">
                               <p className="capitalize">
-                                Danh mục: {benefit.subCategory}
+                                Category: {benefit.subCategory}
                               </p>
                             </TooltipContent>
                           </Tooltip>

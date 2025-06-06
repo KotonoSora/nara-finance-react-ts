@@ -19,7 +19,7 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <ModeSwitcher />
             <Button asChild size="sm" className="h-8">
-              <a href="#email-form">Dùng thử miễn phí</a>
+              <a href="#email-form">Try for Free</a>
             </Button>
           </div>
         </div>

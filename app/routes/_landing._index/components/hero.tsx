@@ -13,7 +13,7 @@ import { useLandingContext } from "../context/landing-context";
 import screenshotApp from "/assets/landing-page/svg/screenshot-app.svg";
 
 const formSchema = z.object({
-  email: z.string().email("Vui lòng nhập email hợp lệ"),
+  email: z.string().email("Please enter a valid email address"),
 });
 
 export default function HeroSection() {
@@ -53,17 +53,17 @@ export default function HeroSection() {
               </div>
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-[1.1] tracking-tight">
-                Quản lý dòng tiền dễ dàng trong{" "}
+                Effortless Money Management in{" "}
                 <span className="text-primary relative">
-                  5 phút
+                  5 Minutes
                   <span className="absolute bottom-0 left-0 w-full h-[4px] bg-primary/20"></span>
                 </span>
               </h1>
             </div>
 
             <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-[700px] mx-auto md:mx-0">
-              Công cụ AI giúp bạn theo dõi giao dịch, lập ngân sách, tiết kiệm,
-              và quyết toán thuế một cách thông minh và hiệu quả.
+              AI-powered tools to track spending, budget smarter, save more, and
+              handle taxes with ease.
             </p>
 
             <div className="space-y-4">
@@ -80,7 +80,7 @@ export default function HeroSection() {
                       <FormItem className="flex-grow">
                         <FormControl>
                           <Input
-                            placeholder="Nhập email để bắt đầu dùng thử"
+                            placeholder="Enter your email to get started"
                             className="h-11 bg-background/60 backdrop-blur border-input"
                             {...field}
                           />
@@ -93,7 +93,7 @@ export default function HeroSection() {
                     variant="default"
                     className="h-11 px-8 font-medium"
                   >
-                    Bắt đầu ngay <ArrowRight className="ml-2 h-4 w-4" />
+                    Get Started <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </form>
               </Form>
@@ -101,11 +101,11 @@ export default function HeroSection() {
               <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <LockIcon className="w-4 h-4" />
-                  <span>Bảo mật SSL</span>
+                  <span>SSL Secured</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-primary" />
-                  <span>Miễn phí 14 ngày</span>
+                  <span>14-day Free Trial</span>
                 </div>
               </div>
 
@@ -119,8 +119,8 @@ export default function HeroSection() {
                   whileTap={{ scale: 0.95 }}
                 >
                   <img
-                    src="/assets/landing-page/svg/Download_on_the_App_Store_Badge_VN_RGB_blk_100217.svg"
-                    alt="Tải xuống trên App Store"
+                    src="/assets/landing-page/svg/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg"
+                    alt="Download on the App Store"
                     className="h-10 block object-contain"
                   />
                 </motion.a>
@@ -134,8 +134,8 @@ export default function HeroSection() {
                   whileTap={{ scale: 0.95 }}
                 >
                   <img
-                    src="/assets/landing-page/png/GetItOnGooglePlay_Badge_Web_color_Vietnamese.png"
-                    alt="Tải xuống trên Google Play"
+                    src="/assets/landing-page/png/GetItOnGooglePlay_Badge_Web_color_English.png"
+                    alt="Get it on Google Play"
                     className="h-10 block object-contain rounded-[5px]"
                   />
                 </motion.a>
@@ -171,7 +171,7 @@ export default function HeroSection() {
                     <TrendingUp className="h-4 w-4 text-primary" />
                   </div>
                   <div>
-                    <div className="text-sm font-medium">Tiết kiệm</div>
+                    <div className="text-sm font-medium">Savings</div>
                     <div className="text-2xl font-bold text-primary">+20%</div>
                   </div>
                 </div>
@@ -183,7 +183,7 @@ export default function HeroSection() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.7 }}
               >
-                <div className="text-sm font-medium mb-1">AI Phân tích</div>
+                <div className="text-sm font-medium mb-1">AI Analysis</div>
                 <div className="flex gap-1">
                   {"★★★★★".split("").map((star, i) => (
                     <span key={i} className="text-primary">

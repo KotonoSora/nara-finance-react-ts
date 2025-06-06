@@ -17,49 +17,49 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     quote:
-      "{{APP_NAME}} giúp tôi tiết kiệm được 20% thu nhập mỗi tháng. AI phân tích chi tiêu giúp tôi nhận ra nhiều khoản phí không cần thiết! App rất tiện lợi, tự động phân loại giao dịch chính xác.",
-    author: "Minh Trần",
+      "{{APP_NAME}} helped me save 20% of my monthly income. The AI spending analysis revealed unnecessary expenses I never noticed! The app is convenient and automatically categorizes my transactions with great accuracy.",
+    author: "Minh Tran",
     position: "Digital Marketing Freelancer",
-    location: "TP. Hồ Chí Minh",
+    location: "Ho Chi Minh City",
     avatar: undefined,
     rating: 5,
     verified: true,
     useCase: "personal",
     stats: [
       {
-        label: "Tiết kiệm",
-        value: "20%/tháng",
+        label: "Savings",
+        value: "20%/month",
       },
       {
-        label: "Thời gian dùng",
-        value: "8 tháng",
+        label: "Time using",
+        value: "8 months",
       },
     ],
     date: "2025-04-15",
   },
   {
     quote:
-      "Tôi đã thử nhiều app quản lý chi tiêu nhưng {{APP_NAME}} là app đầu tiên tôi dùng được liên tục 6 tháng. Giao diện đơn giản, dễ dùng! Đặc biệt yêu thích tính năng lập ngân sách thông minh.",
-    author: "Lan Nguyễn",
-    position: "Kế toán trưởng",
-    location: "Hà Nội",
+      "I've tried many expense tracking apps, but {{APP_NAME}} is the first one I've used consistently for 6 months. The interface is simple and easy to use! I especially love the smart budgeting feature.",
+    author: "Lan Nguyen",
+    position: "Chief Accountant",
+    location: "Hanoi",
     avatar: undefined,
     rating: 5,
     verified: true,
     useCase: "business",
     stats: [
       {
-        label: "Thời gian tiết kiệm",
-        value: "2 giờ/tuần",
+        label: "Time saved",
+        value: "2 hours/week",
       },
     ],
     date: "2025-03-28",
   },
   {
     quote:
-      "Tính năng phân tích và dự báo dòng tiền giúp tôi lên kế hoạch tài chính chính xác hơn. Đặc biệt hữu ích cho việc lập kế hoạch kinh doanh và quản lý chi phí công ty.",
+      "The cash flow analysis and forecasting feature helps me plan my finances more accurately. It's especially useful for business planning and expense management.",
     author: "Hùng Phạm",
-    position: "Chủ doanh nghiệp SME",
+    position: "SME Business Owner",
     location: "Đà Nẵng",
     avatar: undefined,
     rating: 5,
@@ -67,11 +67,11 @@ const testimonials: Testimonial[] = [
     useCase: "business",
     stats: [
       {
-        label: "Tăng trưởng",
-        value: "32%/năm",
+        label: "Growth",
+        value: "32%/year",
       },
       {
-        label: "Chi phí giảm",
+        label: "Cost reduction",
         value: "15%",
       },
     ],
@@ -79,9 +79,9 @@ const testimonials: Testimonial[] = [
   },
   {
     quote:
-      "Nhờ {{APP_NAME}}, tôi đã lập được kế hoạch tiết kiệm dài hạn để mua nhà. Tính năng nhắc nhở hóa đơn giúp tôi không bao giờ lỡ thanh toán, tiết kiệm được nhiều khoản phí phạt.",
+      "Thanks to {{APP_NAME}}, I've been able to create a long-term savings plan to buy a house. The bill reminder feature ensures I never miss a payment, saving me from late fees.",
     author: "Thảo Lê",
-    position: "Nhân viên văn phòng",
+    position: "Office Worker",
     location: "Cần Thơ",
     avatar: undefined,
     rating: 5,
@@ -89,21 +89,21 @@ const testimonials: Testimonial[] = [
     useCase: "personal",
     stats: [
       {
-        label: "Tiết kiệm",
-        value: "10 triệu VNĐ/năm",
+        label: "Savings",
+        value: "10 million VND/year",
       },
       {
-        label: "Thời gian dùng",
-        value: "5 tháng",
+        label: "Time using",
+        value: "5 months",
       },
     ],
     date: "2025-05-01",
   },
   {
     quote:
-      "{{APP_NAME}} giúp tôi tối ưu hóa danh mục đầu tư cá nhân. Báo cáo phân tích chi tiết và gợi ý đầu tư thông minh giúp tôi đưa ra quyết định đúng đắn hơn.",
+      "{{APP_NAME}} helps me optimize my personal investment portfolio. The detailed analysis reports and smart investment suggestions enable me to make better decisions.",
     author: "Việt Hoàng",
-    position: "Nhà đầu tư cá nhân",
+    position: "Individual Investor",
     location: "Hải Phòng",
     avatar: undefined,
     rating: 5,
@@ -111,17 +111,17 @@ const testimonials: Testimonial[] = [
     useCase: "investment",
     stats: [
       {
-        label: "Lợi nhuận tăng",
-        value: "18%/năm",
+        label: "Profit increase",
+        value: "18%/year",
       },
     ],
     date: "2025-04-20",
   },
   {
     quote:
-      "Tính năng quyết toán thuế của {{APP_NAME}} là cứu tinh cho tôi! Việc chuẩn bị hồ sơ thuế giờ đây chỉ mất vài phút thay vì hàng giờ như trước đây.",
+      "The tax settlement feature of {{APP_NAME}} is a lifesaver! Preparing tax documents now takes only a few minutes instead of hours like before.",
     author: "Mai Anh",
-    position: "Kinh doanh tự do",
+    position: "Freelancer",
     location: "Nha Trang",
     avatar: undefined,
     rating: 5,
@@ -129,11 +129,11 @@ const testimonials: Testimonial[] = [
     useCase: "business",
     stats: [
       {
-        label: "Thời gian tiết kiệm",
-        value: "10 giờ/năm",
+        label: "Time saved",
+        value: "10 hours/year",
       },
       {
-        label: "Chi phí thuế giảm",
+        label: "Tax cost reduction",
         value: "5%",
       },
     ],

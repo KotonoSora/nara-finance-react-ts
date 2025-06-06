@@ -16,17 +16,17 @@ export default function TrustSection() {
 
   const stats = [
     {
-      label: "Khách hàng tin tưởng",
+      label: "Trusted Users",
       value: userCount.value,
       icon: ShieldCheck,
     },
     {
-      label: "Giao dịch mỗi ngày",
+      label: "Transactions per Day",
       value: "1M+",
       icon: LockIcon,
     },
     {
-      label: "Độ hài lòng",
+      label: "Satisfaction Rate",
       value: satisfactionRating.value,
       icon: VerifiedIcon,
     },
@@ -50,11 +50,10 @@ export default function TrustSection() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-foreground tracking-tight">
-            Được tin tưởng bởi các doanh nghiệp hàng đầu
+            Trusted by Leading Businesses
           </h2>
           <p className="text-lg text-muted-foreground">
-            Hàng nghìn doanh nghiệp đã và đang sử dụng nền tảng của chúng tôi để
-            quản lý tài chính
+            Thousands of businesses trust our platform for financial management
           </p>
         </motion.div>
 

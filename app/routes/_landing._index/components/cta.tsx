@@ -15,7 +15,7 @@ export default function CTASection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          Sẵn sàng quản lý tài chính hiệu quả hơn?
+          Ready to take control of your finances?
         </motion.h2>
         <motion.p
           className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 max-w-2xl mx-auto text-primary-foreground/90"
@@ -23,8 +23,7 @@ export default function CTASection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          Tham gia {name} để dùng thử miễn phí và kiểm soát dòng tiền của bạn
-          ngay hôm nay!
+          Join {name} for free and start mastering your money today!
         </motion.p>
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -35,9 +34,9 @@ export default function CTASection() {
           <Button
             size="lg"
             variant="ghost"
-            className="border-2 border-primary-foreground/20 hover:border-primary-foreground/30 text-primary-foreground bg-primary-foreground/10"
+            className="border-2 border-primary-foreground/20 hover:border-primary-foreground/30 text-primary-foreground bg-primary-foreground/10 cursor-pointer"
           >
-            Bắt đầu dùng thử miễn phí
+            Start Free Trial
           </Button>
           <div className="flex flex-wrap justify-center md:justify-start gap-4">
             <motion.a
@@ -49,8 +48,8 @@ export default function CTASection() {
               whileTap={{ scale: 0.95 }}
             >
               <img
-                src="/assets/landing-page/svg/Download_on_the_App_Store_Badge_VN_RGB_blk_100217.svg"
-                alt="Tải xuống trên App Store"
+                src="/assets/landing-page/svg/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg"
+                alt="Download on the App Store"
                 className="h-10 block object-contain"
               />
             </motion.a>
@@ -64,8 +63,8 @@ export default function CTASection() {
               whileTap={{ scale: 0.95 }}
             >
               <img
-                src="/assets/landing-page/png/GetItOnGooglePlay_Badge_Web_color_Vietnamese.png"
-                alt="Tải xuống trên Google Play"
+                src="/assets/landing-page/png/GetItOnGooglePlay_Badge_Web_color_English.png"
+                alt="Get it on Google Play"
                 className="h-10 block object-contain rounded-[5px]"
               />
             </motion.a>

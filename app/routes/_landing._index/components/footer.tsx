@@ -63,7 +63,7 @@ export default function FooterSection() {
               {companyInformation.taxId && (
                 <p className="flex items-center gap-2">
                   <VerifiedIcon className="h-4 w-4" />
-                  <span>MST: {companyInformation.taxId}</span>
+                  <span>Tax ID: {companyInformation.taxId}</span>
                 </p>
               )}
             </div>
@@ -110,7 +110,7 @@ export default function FooterSection() {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-2 text-muted-foreground hover:text-foreground transition-colors"
-                          aria-label={`Theo dõi chúng tôi trên ${link.name}`}
+                          aria-label={`Follow us on ${link.name}`}
                         >
                           <img
                             src={link.icon}
@@ -120,7 +120,7 @@ export default function FooterSection() {
                         </a>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>Theo dõi chúng tôi trên {link.name}</p>
+                        <p>Follow us on {link.name}</p>
                       </TooltipContent>
                     </Tooltip>
                   ),
@@ -132,7 +132,7 @@ export default function FooterSection() {
           <div className="flex flex-wrap justify-center sm:justify-end items-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <LockIcon className="h-4 w-4" />
-              <span>Mã hóa SSL 256-bit</span>
+              <span>256-bit SSL Encryption</span>
             </div>
             <Separator orientation="vertical" className="h-4 hidden sm:block" />
             <div className="flex items-center gap-2">
@@ -141,7 +141,7 @@ export default function FooterSection() {
             </div>
             <Separator orientation="vertical" className="h-4 hidden sm:block" />
             <p>
-              &copy; {copyrightTime} {name}. Mọi quyền được bảo lưu.
+              &copy; {copyrightTime} {name}. All rights reserved.
             </p>
           </div>
         </div>

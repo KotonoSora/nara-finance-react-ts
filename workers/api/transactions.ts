@@ -66,4 +66,21 @@ app.delete("/:id", async (c) => {
   return c.json({ success: true });
 });
 
+app.put("/:id", async (c) => {
+  const db = drizzle(c.env.DB);
+  const id = c.req.param("id");
+  const body = await c.req.json();
+  const parsed = bodySchema.safeParse(body);
+
+  if (!parsed.success) {
+    return c.json({ error: parsed.error.flatten() }, 400);
+  }
+
+  const data = parsed.data;
+
+  await db.update(transactions).set(data).where(eq(transactions.id, id));
+
+  return c.json({ success: true });
+});
+
 export default app;

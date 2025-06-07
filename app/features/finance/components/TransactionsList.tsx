@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "~/components/ui/button";
 
-type Transaction = {
+export type Transaction = {
   id: string;
   type: "income" | "expense";
   amount: number;
@@ -11,7 +11,11 @@ type Transaction = {
   date: string;
 };
 
-export default function TransactionsList() {
+export default function TransactionsList({
+  onEdit,
+}: {
+  onEdit?: (tx: Transaction) => void;
+}) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -76,6 +80,11 @@ export default function TransactionsList() {
           <Button variant="destructive" onClick={() => handleDelete(tx.id)}>
             Xoá
           </Button>
+          {onEdit && (
+            <Button variant="secondary" onClick={() => onEdit(tx)}>
+              Sửa
+            </Button>
+          )}
         </div>
       ))}
     </div>

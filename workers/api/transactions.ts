@@ -57,4 +57,13 @@ app.get("/", async (c) => {
   return c.json(result);
 });
 
+app.delete("/:id", async (c) => {
+  const db = drizzle(c.env.DB);
+  const id = c.req.param("id");
+
+  await db.delete(transactions).where(eq(transactions.id, id));
+
+  return c.json({ success: true });
+});
+
 export default app;

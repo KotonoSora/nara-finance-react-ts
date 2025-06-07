@@ -1,1 +1,1 @@
-export * from './schema/transactions';
+export * from "./schema/transactions";

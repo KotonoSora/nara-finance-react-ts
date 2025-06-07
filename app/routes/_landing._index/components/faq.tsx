@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
+import { Link } from "react-router";
 
 import {
   Accordion,
@@ -64,10 +65,10 @@ export default function FAQSection() {
               Still have questions? Our support team is here to help.
             </p>
             <Button variant="outline" asChild className="gap-2">
-              <a href={`mailto:support@${domain}`}>
+              <Link to={`mailto:support@${domain}`}>
                 <MessageCircle className="h-4 w-4" />
                 Contact Support
-              </a>
+              </Link>
             </Button>
           </motion.div>
         </div>

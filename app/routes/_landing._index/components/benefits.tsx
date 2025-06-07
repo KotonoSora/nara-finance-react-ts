@@ -8,6 +8,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Fragment } from "react";
+import { Link } from "react-router";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -340,15 +341,15 @@ export default function BenefitsSection() {
                           )}
 
                         {benefit.demoUrl && (
-                          <a
-                            href={benefit.demoUrl}
+                          <Link
+                            to={benefit.demoUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center text-sm text-primary/90 hover:text-primary transition-colors"
                           >
                             Xem demo
                             <ExternalLink className="h-4 w-4 ml-1" />
-                          </a>
+                          </Link>
                         )}
                       </CardContent>
                     </Card>

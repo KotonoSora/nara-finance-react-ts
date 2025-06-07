@@ -6,6 +6,7 @@ import {
   ShieldCheck,
   BadgeCheck as VerifiedIcon,
 } from "lucide-react";
+import { Link } from "react-router";
 
 import { Separator } from "~/components/ui/separator";
 import {
@@ -44,21 +45,21 @@ export default function FooterSection() {
               </p>
               <p className="flex items-center gap-2">
                 <PhoneIcon className="h-4 w-4" />
-                <a
-                  href={`tel:${companyInformation.phone}`}
+                <Link
+                  to={`tel:${companyInformation.phone}`}
                   className="hover:text-foreground transition-colors"
                 >
                   {companyInformation.phone}
-                </a>
+                </Link>
               </p>
               <p className="flex items-center gap-2">
                 <MailIcon className="h-4 w-4" />
-                <a
-                  href={`mailto:${companyInformation.email}`}
+                <Link
+                  to={`mailto:${companyInformation.email}`}
                   className="hover:text-foreground transition-colors"
                 >
                   {companyInformation.email}
-                </a>
+                </Link>
               </p>
               {companyInformation.taxId && (
                 <p className="flex items-center gap-2">
@@ -79,12 +80,12 @@ export default function FooterSection() {
                 <ul className="space-y-2">
                   {footerLinks[category].map((link) => (
                     <li key={link.name}>
-                      <a
-                        href={link.href}
+                      <Link
+                        to={link.href}
                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                       >
                         {link.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -105,8 +106,8 @@ export default function FooterSection() {
                   link.icon && (
                     <Tooltip key={link.name}>
                       <TooltipTrigger asChild>
-                        <a
-                          href={link.href}
+                        <Link
+                          to={link.href}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -117,7 +118,7 @@ export default function FooterSection() {
                             alt={`${link.name} icon`}
                             className="h-5 w-5"
                           />
-                        </a>
+                        </Link>
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>Follow us on {link.name}</p>

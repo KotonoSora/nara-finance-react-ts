@@ -19,25 +19,6 @@ app.use("*", async (c, next) => {
   c.res.headers.set("Content-Security-Policy", "default-src 'self'");
 });
 
-// Block direct access
-app.use("*", async (c, next) => {
-  const site = c.req.header("sec-fetch-site");
-  const mode = c.req.header("sec-fetch-mode");
-  const userAgent = (c.req.header("user-agent") || "").toLowerCase().trim();
-
-  const allowedClients = ["curl", "postman", "insomnia"];
-
-  if (
-    (site === "same-origin" && mode === "cors") ||
-    allowedClients.some((client) => userAgent.includes(client)) ||
-    import.meta.env.NODE_ENV === "vitest"
-  ) {
-    return await next();
-  }
-
-  return c.text("Forbidden", 403);
-});
-
 // Error handling
 app.onError((err, c) => {
   if (err instanceof HTTPException) {

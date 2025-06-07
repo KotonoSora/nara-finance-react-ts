@@ -1,11 +1,13 @@
 import { lazy, Suspense } from "react";
 
-import type {
-  CategoryTrend,
-  TransactionCategory,
-} from "~/routes/finance/presentation/types";
+import type { CategoryTrend } from "~/routes/finance/domain/types/analytics.types";
 
-const LazyTrendAnalysis = lazy(() => import("./trend-analysis-impl"));
+const LazyTrendAnalysis = lazy(
+  () =>
+    import(
+      "~/routes/finance/presentation/components/analysis/trend-analysis-impl"
+    ),
+);
 
 const ChartSkeleton = () => (
   <div className="w-full h-full bg-muted/10 animate-pulse rounded-lg flex items-center justify-center">
@@ -15,7 +17,7 @@ const ChartSkeleton = () => (
 
 interface TrendAnalysisProps {
   trends: CategoryTrend[];
-  onCategorySelect?: (category: TransactionCategory) => void;
+  onCategorySelect?: (category: string) => void; // category_id
 }
 
 export default function TrendAnalysis({

@@ -18,7 +18,7 @@ import {
 import {
   showErrorToast,
   showSuccessToast,
-} from "~/routes/finance/presentation/utils/ui-helpers";
+} from "~/routes/finance/presentation/utils/toast.utils";
 
 export function useFinanceActions(dbContext: DatabaseContext) {
   const [isLoading, setIsLoading] = useState(false);

@@ -1,11 +1,18 @@
 import { Plus, Search, Settings } from "lucide-react";
 import { useState } from "react";
 
+import type {
+  Category,
+  CategoryFormData,
+  CategoryWithAnalytics,
+} from "~/routes/finance/presentation/types/ui.types";
+
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import BudgetProgress from "~/routes/finance/presentation/components/categories/budget-progress";
+import CategoryDetailsDialog from "~/routes/finance/presentation/components/categories/category-details-dialog";
 import CategoryFormDialog from "~/routes/finance/presentation/components/categories/category-form-dialog";
 import CategorySummaryCard from "~/routes/finance/presentation/components/categories/category-summary-card";
 import CategoryTreeView from "~/routes/finance/presentation/components/categories/category-tree-view";
@@ -13,11 +20,17 @@ import CategoryTreeView from "~/routes/finance/presentation/components/categorie
 interface CategoryManagementProps {
   categories: Category[];
   categoriesWithAnalytics: CategoryWithAnalytics[];
-  onCreateCategory?: (data: CategoryFormData) => void;
-  onUpdateCategory?: (id: string, data: CategoryFormData) => void;
-  onDeleteCategory?: (id: string) => void;
-  onArchiveCategory?: (id: string) => void;
-  onMergeCategories?: (sourceId: string, targetId: string) => void;
+  onCreateCategory?: (data: CategoryFormData) => void | Promise<void>;
+  onUpdateCategory?: (
+    id: string,
+    data: Partial<CategoryFormData>,
+  ) => void | Promise<void>;
+  onDeleteCategory?: (id: string) => void | Promise<void>;
+  onArchiveCategory?: (id: string) => void | Promise<void>;
+  onMergeCategories?: (
+    sourceIds: string | string[],
+    targetId: string,
+  ) => void | Promise<void>;
 }
 
 export default function CategoryManagement({
@@ -32,7 +45,10 @@ export default function CategoryManagement({
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [showCategoryDetails, setShowCategoryDetails] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [detailsCategory, setDetailsCategory] =
+    useState<CategoryWithAnalytics | null>(null);
   const [parentCategory, setParentCategory] = useState<Category | null>(null);
 
   // Build tree structure for categories
@@ -106,6 +122,14 @@ export default function CategoryManagement({
     setParentCategory(null);
   };
 
+  const handleViewDetails = (categoryId: string) => {
+    const category = categoriesWithAnalytics.find((c) => c.id === categoryId);
+    if (category) {
+      setDetailsCategory(category);
+      setShowCategoryDetails(true);
+    }
+  };
+
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
@@ -158,10 +182,7 @@ export default function CategoryManagement({
                 key={category.id}
                 category={category}
                 onClick={() => setSelectedCategory(category.id)}
-                onViewDetails={() => {
-                  // TODO: Implement category details view
-                  console.log("View details for", category.id);
-                }}
+                onViewDetails={() => handleViewDetails(category.id)}
               />
             ))}
           </div>
@@ -295,10 +316,21 @@ export default function CategoryManagement({
         open={showCategoryForm}
         onOpenChange={setShowCategoryForm}
         onSubmit={handleSubmitCategory}
-        category={editingCategory || undefined}
-        parentCategory={parentCategory || undefined}
-        categories={categories}
+        category={editingCategory ?? undefined}
+        allCategories={categories} // use allCategories prop
         mode={editingCategory ? "edit" : "create"}
+      />
+
+      <CategoryDetailsDialog
+        open={showCategoryDetails}
+        onOpenChange={setShowCategoryDetails}
+        category={detailsCategory}
+        onEdit={() => {
+          if (detailsCategory) {
+            setShowCategoryDetails(false);
+            handleEditCategory(detailsCategory.id);
+          }
+        }}
       />
     </div>
   );

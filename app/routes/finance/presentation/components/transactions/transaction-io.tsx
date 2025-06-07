@@ -1,14 +1,28 @@
 import { toast } from "sonner";
 
+import type {
+  ExportResult,
+  FinancialSummary,
+  Transaction,
+} from "~/routes/finance/presentation/types/ui.types";
+
 import { Button } from "~/components/ui/button";
-import { downloadCSV } from "~/routes/finance/shared/utils/export";
-import { parseCSVTransactions } from "~/routes/finance/shared/utils/import";
-import { showExportToast } from "~/routes/finance/shared/utils/notifications";
+import { ExportService } from "~/routes/finance/application/services/export.service";
+import { ImportService } from "~/routes/finance/application/services/import.service";
 
 const exportToPDF = () =>
-  import("~/routes/finance/shared/utils/export-pdf").then(
-    (mod) => mod.exportToPDF,
+  import("~/routes/finance/application/services/pdf-export.service").then(
+    (mod) => new mod.PDFExportService().exportToPDF,
   );
+
+// Use UI helpers for notifications
+const showExportToast = (promise: Promise<any>) => {
+  toast.promise(promise, {
+    loading: "Exporting...",
+    success: "Export completed successfully!",
+    error: "Export failed. Please try again.",
+  });
+};
 
 interface TransactionIOProps {
   transactions: Transaction[];
@@ -21,7 +35,9 @@ export function TransactionIO({ transactions, onImport }: TransactionIOProps) {
     if (!file) return;
 
     try {
-      const importedTransactions = await parseCSVTransactions(file);
+      const importService = new ImportService();
+      const importedTransactions =
+        await importService.parseCSVTransactions(file);
       await onImport(importedTransactions);
       toast.success("Import successful", {
         description: `Imported ${importedTransactions.length} transactions`,
@@ -40,7 +56,7 @@ export function TransactionIO({ transactions, onImport }: TransactionIOProps) {
     const filename = `transactions-${new Date().toISOString().split("T")[0]}`;
     const exportPromise = new Promise<ExportResult>(async (resolve, reject) => {
       try {
-        await downloadCSV(transactions, filename);
+        await new ExportService().exportToCSV(transactions, { filename });
         resolve({ filename: `${filename}.csv` });
       } catch (error) {
         reject(error);
@@ -56,7 +72,7 @@ export function TransactionIO({ transactions, onImport }: TransactionIOProps) {
       totalIncome: 0,
       totalExpenses: 0,
       savings: 0,
-      categorySummary: {} as Record<TransactionCategory, number>,
+      categorySummary: {} as Record<string, number>,
       budgets: [],
       trends: [],
       forecastedExpenses: 0,
@@ -66,7 +82,15 @@ export function TransactionIO({ transactions, onImport }: TransactionIOProps) {
     const exportPromise = new Promise<ExportResult>(async (resolve, reject) => {
       try {
         const exportPDFFunc = await exportToPDF();
-        await exportPDFFunc(transactions, summary, filename);
+        const reportData = {
+          metadata: {
+            title: "Transaction Report",
+            generatedAt: new Date(),
+          },
+          summary,
+          transactions,
+        };
+        await exportPDFFunc(reportData, { filename });
         resolve({ filename: `${filename}.pdf` });
       } catch (error) {
         reject(error);

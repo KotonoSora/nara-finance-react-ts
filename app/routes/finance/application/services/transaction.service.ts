@@ -5,7 +5,7 @@ import type {
 import type { ITransactionRepository } from "~/routes/finance/domain/repositories/transaction.repository";
 
 import { TransactionEntity } from "~/routes/finance/domain/entities/transaction.entity";
-import { Money } from "~/routes/finance/domain/value-objects/money.value";
+import { FinancialAmount } from "~/routes/finance/domain/value-objects/financial-amount";
 
 export class TransactionService {
   constructor(private transactionRepository: ITransactionRepository) {}
@@ -31,27 +31,6 @@ export class TransactionService {
     endDate: Date,
   ): Promise<Transaction[]> {
     return await this.transactionRepository.findByDateRange(startDate, endDate);
-  }
-
-  async calculateTransactionSummary(transactions: Transaction[]) {
-    const totalIncome = new Money(
-      transactions
-        .filter((t) => t.type === "income")
-        .reduce((sum, t) => sum + t.amount, 0),
-    );
-
-    const totalExpenses = new Money(
-      transactions
-        .filter((t) => t.type === "expense")
-        .reduce((sum, t) => sum + t.amount, 0),
-    );
-
-    const savings = totalIncome.subtract(totalExpenses);
-
-    return {
-      totalIncome: totalIncome.toNumber(),
-      totalExpenses: totalExpenses.toNumber(),
-      savings: savings.toNumber(),
-    };
-  }
+  } // Note: Transaction summary calculation moved to GetTransactionSummaryUseCase
+  // This avoids duplication and follows clean architecture principles
 }

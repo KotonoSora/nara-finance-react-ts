@@ -11,7 +11,7 @@ import {
   YAxis,
 } from "recharts";
 
-import type { SpendingChartProps } from "~/routes/finance/presentation/types";
+import type { SpendingChartProps } from "~/routes/finance/presentation/types/ui.types";
 
 import { formatCurrency } from "~/routes/finance/presentation/utils/formatters";
 
@@ -36,8 +36,12 @@ export function SpendingChartImpl({
           content={({ active, payload }) => {
             if (!active || !payload?.length) return null;
             const data = payload[0].payload;
-            const budget = budgets?.find((b) => b.category === data.category);
-            const trend = trends?.find((t) => t.category === data.category);
+            const budget = budgets?.find(
+              (b: any) => b.category_id === data.category,
+            );
+            const trend = trends?.find(
+              (t: any) => t.category_id === data.category,
+            );
 
             return (
               <div className="rounded-lg border border-border/50 bg-card p-3 shadow-sm">
@@ -97,8 +101,10 @@ export function SpendingChartImpl({
           onClick={(data: any) => onCategorySelect?.(data.category)}
           className="cursor-pointer transition-opacity hover:opacity-80"
         >
-          {data.map((entry, index) => {
-            const budget = budgets?.find((b) => b.category === entry.category);
+          {data.map((entry: any, index: number) => {
+            const budget = budgets?.find(
+              (b: any) => b.category_id === entry.category,
+            );
             return (
               <Cell
                 key={`cell-${index}`}
@@ -112,8 +118,9 @@ export function SpendingChartImpl({
           <ReferenceLine
             y={Math.max(
               ...data.map(
-                (d) =>
-                  trends?.find((t) => t.category === d.category)?.forecast || 0,
+                (d: any) =>
+                  trends?.find((t: any) => t.category_id === d.category)
+                    ?.forecast || 0,
               ),
             )}
             label="Forecast"

@@ -15,12 +15,13 @@ import { useState } from "react";
 
 import type {
   Category,
+  ExportResult,
   FinancialSummary,
   TableSort,
   Transaction,
-  TransactionCategory,
   TransactionFilters,
-} from "~/routes/finance/presentation/types";
+  TransactionType,
+} from "~/routes/finance/presentation/types/ui.types";
 import type { DateRange } from "react-day-picker";
 
 import { Badge } from "~/components/ui/badge";
@@ -55,19 +56,20 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { showExportToastFromPromise } from "~/routes/finance/presentation/utils/notifications";
-import { useFinanceShortcuts } from "~/routes/finance/shared/utils/shortcuts";
-
-import DeleteTransactionDialog from "./delete-transaction-dialog";
-import FinancialInsights from "./financial-insights";
-import ImportDialog from "./import-dialog";
+import FinancialInsights from "~/routes/finance/presentation/components/transactions//financial-insights";
+import DeleteTransactionDialog from "~/routes/finance/presentation/components/transactions/delete-transaction-dialog";
+import ImportDialog from "~/routes/finance/presentation/components/transactions/import-dialog";
+import { useFinanceShortcuts } from "~/routes/finance/presentation/hooks/use-advanced-shortcuts";
+import { showExportToastFromPromise } from "~/routes/finance/presentation/utils/toast.utils";
 
 const exportToCSV = () =>
-  import("~/routes/finance/shared/utils/export").then((mod) => mod.exportToCSV);
+  import("~/routes/finance/application/services/export.service").then(
+    (mod) => new mod.ExportService().exportToCSV,
+  );
 
 const exportToPDF = () =>
-  import("~/routes/finance/shared/utils/export-pdf").then(
-    (mod) => mod.exportToPDF,
+  import("~/routes/finance/application/services/pdf-export.service").then(
+    (mod) => new mod.PDFExportService().exportToPDF,
   );
 
 interface ListProps {
@@ -78,7 +80,6 @@ interface ListProps {
   onEditTransaction?: (transaction: Transaction) => void;
   onDeleteTransaction?: (transactionId: string) => void;
   categories?: Category[];
-  useLegacyCategories?: boolean;
 }
 
 export default function List({
@@ -89,7 +90,6 @@ export default function List({
   onEditTransaction,
   onDeleteTransaction,
   categories = [],
-  useLegacyCategories = true,
 }: ListProps) {
   const [filters, setFilters] = useState<TransactionFilters>({});
   const [isAddingTransaction, setIsAddingTransaction] = useState(false);
@@ -115,7 +115,7 @@ export default function List({
 
   const filteredTransactions = transactions.filter((transaction) => {
     if (filters.type && transaction.type !== filters.type) return false;
-    if (filters.category && transaction.category !== filters.category)
+    if (filters.category && transaction.category_id !== filters.category)
       return false;
     if (
       filters.searchTerm &&
@@ -142,9 +142,15 @@ export default function List({
       case "amount":
         return (a.amount - b.amount) * direction;
       case "description":
-      case "category":
       case "type":
         return a[sort.column].localeCompare(b[sort.column]) * direction;
+      case "category_id":
+        // For category sorting, we need to get category names
+        const aCategoryName =
+          categories.find((c) => c.id === a.category_id)?.name || "";
+        const bCategoryName =
+          categories.find((c) => c.id === b.category_id)?.name || "";
+        return aCategoryName.localeCompare(bCategoryName) * direction;
       default:
         return 0;
     }
@@ -179,10 +185,27 @@ export default function List({
       try {
         if (format === "csv") {
           const exportCSVFunc = await exportToCSV();
-          await exportCSVFunc(filteredTransactions, filename);
+          await exportCSVFunc(filteredTransactions, { filename });
         } else if (localSummary) {
           const exportPDFFunc = await exportToPDF();
-          await exportPDFFunc(transactions, localSummary, filename);
+          const reportData = {
+            metadata: {
+              title: "Transaction Report",
+              generatedAt: new Date(),
+            },
+            summary: {
+              ...localSummary,
+              budgets: localSummary.budgets.map((budget) => ({
+                ...budget,
+                category_id: "general", // Default category_id for domain budgets
+              })),
+              trends: localSummary.trends || [],
+              forecastedExpenses: localSummary.forecastedExpenses || 0,
+              forecastedSavings: localSummary.forecastedSavings || 0,
+            },
+            transactions,
+          };
+          await exportPDFFunc(reportData, { filename });
         }
         resolve({ filename: `${filename}.${format}` });
       } catch (error) {
@@ -237,10 +260,10 @@ export default function List({
         newTransactions.forEach((transaction) => {
           if (transaction.type === "expense") {
             newSummary.totalExpenses += transaction.amount;
-            if (!newSummary.categorySummary[transaction.category]) {
-              newSummary.categorySummary[transaction.category] = 0;
+            if (!newSummary.categorySummary[transaction.category_id]) {
+              newSummary.categorySummary[transaction.category_id] = 0;
             }
-            newSummary.categorySummary[transaction.category] +=
+            newSummary.categorySummary[transaction.category_id] +=
               transaction.amount;
           } else if (transaction.type === "income") {
             newSummary.totalIncome += transaction.amount;
@@ -256,19 +279,20 @@ export default function List({
 
   // Setup keyboard shortcuts
   useFinanceShortcuts({
-    add: () =>
-      onAddTransaction?.({
-        date: selectedDate || new Date(),
-        type: "expense",
-        category: "other",
-        category_id: "1", // Default category
-        amount: 0,
-        description: "",
-      }),
-    cancel: handleClearFilters,
-    import: () => setIsImportingTransactions(true),
-    exportCSV: () => handleExport("csv"),
-    exportPDF: () => handleExport("pdf"),
+    handlers: {
+      add: () =>
+        onAddTransaction?.({
+          date: selectedDate || new Date(),
+          type: "expense",
+          category_id: categories[0]?.id || "",
+          amount: 0,
+          description: "",
+        }),
+      cancel: handleClearFilters,
+      import: () => setIsImportingTransactions(true),
+      exportCSV: () => handleExport("csv"),
+      exportPDF: () => handleExport("pdf"),
+    },
   });
 
   return (
@@ -398,7 +422,7 @@ export default function List({
 
               <Select
                 value={filters.category}
-                onValueChange={(value: TransactionCategory) =>
+                onValueChange={(value: string) =>
                   setFilters((f) => ({ ...f, category: value }))
                 }
               >
@@ -406,11 +430,11 @@ export default function List({
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="food">Food</SelectItem>
-                  <SelectItem value="transport">Transport</SelectItem>
-                  <SelectItem value="shopping">Shopping</SelectItem>
-                  <SelectItem value="salary">Salary</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -443,11 +467,11 @@ export default function List({
                     </TableHead>
                     <TableHead
                       className="cursor-pointer hover:text-primary transition-colors"
-                      onClick={() => toggleSort("category")}
+                      onClick={() => toggleSort("category_id")}
                     >
                       <div className="flex items-center gap-2">
                         Category
-                        <SortIcon column="category" />
+                        <SortIcon column="category_id" />
                       </div>
                     </TableHead>
                     <TableHead
@@ -482,7 +506,11 @@ export default function List({
                       <TableCell>{transaction.description}</TableCell>
                       <TableCell>
                         <Badge variant="outline" className="capitalize">
-                          {transaction.category}
+                          {
+                            categories.find(
+                              (c) => c.id === transaction.category_id,
+                            )?.name
+                          }
                         </Badge>
                       </TableCell>
                       <TableCell className="capitalize">
@@ -555,8 +583,7 @@ export default function List({
                   onAddTransaction({
                     date: selectedDate || new Date(),
                     type: "expense",
-                    category: "other",
-                    category_id: "1", // Default category ID
+                    category_id: categories[0]?.id || "",
                     amount: 0,
                     description: "",
                   })

@@ -1,6 +1,12 @@
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
+import type {
+  Category,
+  CategoryFormData,
+  CategoryWithAnalytics,
+} from "~/routes/finance/presentation/types/ui.types";
+
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
@@ -11,6 +17,7 @@ import {
 } from "~/components/ui/tooltip";
 import BudgetProgress from "~/routes/finance/presentation/components/categories/budget-progress";
 import CategoryFormDialog from "~/routes/finance/presentation/components/categories/category-form-dialog";
+import EnableBudgetDialog from "~/routes/finance/presentation/components/categories/enable-budget-dialog";
 
 interface EnhancedBudgetSectionProps {
   categoriesWithAnalytics: CategoryWithAnalytics[];
@@ -28,19 +35,38 @@ export default function EnhancedBudgetSection({
   onUpdateCategory,
 }: EnhancedBudgetSectionProps) {
   const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [showEnableBudgetDialog, setShowEnableBudgetDialog] = useState(false);
 
   // Filter categories that have budget limits and are not income categories
   const budgetCategories = categoriesWithAnalytics.filter(
     (cat) => cat.budget_limit && cat.budget_limit > 0 && cat.type !== "income",
   );
 
+  // Categories without budget tracking (excluding income categories)
+  const categoriesWithoutBudget = categoriesWithAnalytics.filter(
+    (cat) =>
+      (!cat.budget_limit || cat.budget_limit <= 0) && cat.type !== "income",
+  );
+
   const handleCreateBudgetCategory = () => {
     setShowCategoryForm(true);
+  };
+
+  const handleEnableBudgetTracking = () => {
+    setShowEnableBudgetDialog(true);
   };
 
   const handleSubmitCategory = (data: CategoryFormData) => {
     onCreateCategory?.(data);
     setShowCategoryForm(false);
+  };
+
+  const handleEnableBudgetForCategory = (
+    categoryId: string,
+    data: CategoryFormData,
+  ) => {
+    onUpdateCategory?.(categoryId, data);
+    setShowEnableBudgetDialog(false);
   };
 
   if (budgetCategories.length === 0) {
@@ -84,18 +110,32 @@ export default function EnhancedBudgetSection({
               No budget categories found
             </p>
             <p className="text-xs sm:text-sm">
-              Create categories with budget limits to track spending
+              {categoriesWithoutBudget.length > 0
+                ? "Enable budget tracking on existing categories or create new ones"
+                : "Create categories with budget limits to track spending"}
             </p>
           </div>
-          <Button
-            variant="default"
-            size="sm"
-            onClick={handleCreateBudgetCategory}
-            className="shadow-sm hover:shadow-md transition-all duration-200 text-xs sm:text-sm px-3 sm:px-4 py-2"
-          >
-            <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
-            Create Budget Category
-          </Button>
+          <div className="space-y-2">
+            {categoriesWithoutBudget.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleEnableBudgetTracking}
+                className="shadow-sm hover:shadow-md transition-all duration-200 text-xs sm:text-sm px-3 sm:px-4 py-2 mr-2"
+              >
+                Enable Budget Tracking
+              </Button>
+            )}
+            <Button
+              variant="default"
+              size="sm"
+              onClick={handleCreateBudgetCategory}
+              className="shadow-sm hover:shadow-md transition-all duration-200 text-xs sm:text-sm px-3 sm:px-4 py-2"
+            >
+              <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
+              Create Budget Category
+            </Button>
+          </div>
         </CardContent>
       </Card>
     );
@@ -149,9 +189,19 @@ export default function EnhancedBudgetSection({
         open={showCategoryForm}
         onOpenChange={setShowCategoryForm}
         onSubmit={handleSubmitCategory}
-        categories={allCategories}
+        allCategories={allCategories}
         mode="create"
       />
+
+      {/* Enable Budget Tracking Dialog */}
+      {showEnableBudgetDialog && (
+        <EnableBudgetDialog
+          open={showEnableBudgetDialog}
+          onOpenChange={setShowEnableBudgetDialog}
+          categories={categoriesWithoutBudget}
+          onEnableBudget={handleEnableBudgetForCategory}
+        />
+      )}
     </>
   );
 }

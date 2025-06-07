@@ -13,36 +13,36 @@ interface FAQ {
 const faqs: FAQ[] = [
   // Pricing
   {
-    question: "{{APP_NAME}} có miễn phí không?",
+    question: "Is {{APP_NAME}} free?",
     answer:
-      "Có bản dùng thử miễn phí 14 ngày, không cần thẻ tín dụng! Sau đó, bạn có thể chọn gói Basic (miễn phí) hoặc Pro (chỉ từ 49k/tháng) tùy theo nhu cầu sử dụng.",
+      "Yes, we offer a 14-day free trial with no credit card required! After that, you can choose the Basic (free) plan or upgrade to Pro (from $2/month) depending on your needs.",
     category: "pricing",
     helpful: 245,
     relatedLinks: [
       {
-        text: "So sánh các gói",
+        text: "Compare plans",
         url: "/pricing",
       },
       {
-        text: "Chính sách hoàn tiền",
+        text: "Refund policy",
         url: "/refund-policy",
       },
     ],
     updatedAt: "2025-04-01",
   },
   {
-    question: "Có thể nâng cấp hoặc hủy gói bất kỳ lúc nào không?",
+    question: "Can I upgrade or cancel my plan at any time?",
     answer:
-      "Có, bạn có thể nâng cấp, hạ cấp hoặc hủy gói bất kỳ lúc nào qua cài đặt tài khoản. Các thay đổi có hiệu lực ngay lập tức, và bạn sẽ được hoàn tiền tỷ lệ cho thời gian chưa sử dụng nếu hủy gói Pro.",
+      "Absolutely! You can upgrade, downgrade, or cancel your plan anytime from your account settings. Changes take effect immediately, and you'll receive a prorated refund for any unused Pro time if you cancel.",
     category: "pricing",
     helpful: 180,
     relatedLinks: [
       {
-        text: "Quản lý gói đăng ký",
+        text: "Manage subscription",
         url: "/account/subscription",
       },
       {
-        text: "Chính sách hoàn tiền",
+        text: "Refund policy",
         url: "/refund-policy",
       },
     ],
@@ -51,36 +51,36 @@ const faqs: FAQ[] = [
 
   // Security
   {
-    question: "Dữ liệu của tôi có an toàn không?",
+    question: "Is my data safe?",
     answer:
-      "Chúng tôi sử dụng mã hóa cấp ngân hàng (AES-256), xác thực 2 yếu tố và tuân thủ các tiêu chuẩn bảo mật quốc tế như ISO 27001, PCI DSS. Dữ liệu của bạn được lưu trữ an toàn trên máy chủ đặt tại Việt Nam.",
+      "We use bank-grade encryption (AES-256), two-factor authentication, and comply with international security standards like ISO 27001 and PCI DSS. Your data is securely stored on servers located in Vietnam.",
     category: "security",
     helpful: 389,
     relatedLinks: [
       {
-        text: "Chính sách bảo mật",
+        text: "Privacy policy",
         url: "/privacy",
       },
       {
-        text: "Trung tâm bảo mật",
+        text: "Security center",
         url: "/security",
       },
     ],
     updatedAt: "2025-04-15",
   },
   {
-    question: "Làm thế nào để bật xác thực hai yếu tố (2FA)?",
+    question: "How do I enable two-factor authentication (2FA)?",
     answer:
-      "Bạn có thể bật 2FA trong phần cài đặt bảo mật của tài khoản. Chỉ cần làm theo hướng dẫn để liên kết với ứng dụng xác thực (như Google Authenticator) hoặc số điện thoại. Điều này tăng cường bảo mật cho tài khoản của bạn.",
+      "You can enable 2FA in the security settings of your account. Just follow the instructions to link it with an authentication app (like Google Authenticator) or your phone number. This adds an extra layer of security to your account.",
     category: "security",
     helpful: 120,
     relatedLinks: [
       {
-        text: "Hướng dẫn cài đặt 2FA",
+        text: "2FA setup guide",
         url: "/security/2fa-guide",
       },
       {
-        text: "Trung tâm bảo mật",
+        text: "Security center",
         url: "/security",
       },
     ],
@@ -89,50 +89,50 @@ const faqs: FAQ[] = [
 
   // Features
   {
-    question: "Tôi có cần biết tài chính không?",
+    question: "Do I need to know finance?",
     answer:
-      "Không, {{APP_NAME}} được thiết kế đơn giản cho mọi người. AI của chúng tôi sẽ tự động phân tích và đưa ra các gợi ý phù hợp với trình độ của bạn. Bạn chỉ cần theo dõi các giao dịch và thực hiện theo hướng dẫn.",
+      "Not at all, {{APP_NAME}} is designed to be simple for everyone. Our AI automatically analyzes and provides suggestions based on your level. You just need to monitor your transactions and follow the guidance.",
     category: "features",
     helpful: 156,
     relatedLinks: [
       {
-        text: "Hướng dẫn sử dụng",
+        text: "User guide",
         url: "/guides",
       },
       {
-        text: "Video hướng dẫn",
+        text: "Tutorial videos",
         url: "/tutorials",
       },
     ],
     updatedAt: "2025-03-28",
   },
   {
-    question: "Có hỗ trợ quyết toán thuế thật không?",
+    question: "Does it support real tax finalization?",
     answer:
-      "{{APP_NAME}} tích hợp trực tiếp với hệ thống của Tổng cục Thuế. Chúng tôi tự động phân loại thu nhập và chi phí theo quy định thuế TNCN, giúp bạn dễ dàng khai báo và quyết toán thuế cuối năm. Hệ thống được cập nhật thường xuyên theo các quy định mới nhất.",
+      "{{APP_NAME}} integrates directly with the General Department of Taxation's system. We automatically classify income and expenses according to personal income tax regulations, making it easy for you to declare and finalize your tax at the end of the year. The system is regularly updated according to the latest regulations.",
     category: "features",
     helpful: 234,
     relatedLinks: [
       {
-        text: "Hướng dẫn quyết toán thuế",
+        text: "Tax finalization guide",
         url: "/tax-guide",
       },
     ],
     updatedAt: "2025-05-10",
   },
   {
-    question: "Tính năng lập ngân sách hoạt động như thế nào?",
+    question: "How does the budgeting feature work?",
     answer:
-      "AI của {{APP_NAME}} phân tích thói quen chi tiêu của bạn và đề xuất ngân sách cá nhân hóa dựa trên thu nhập, chi phí định kỳ và mục tiêu tài chính. Bạn có thể điều chỉnh ngân sách bất kỳ lúc nào, và hệ thống sẽ cảnh báo nếu bạn chi tiêu vượt mức.",
+      "Our AI analyzes your spending habits and suggests a personalized budget based on your income, fixed expenses, and financial goals. You can adjust the budget at any time, and the system will alert you if you overspend.",
     category: "features",
     helpful: 190,
     relatedLinks: [
       {
-        text: "Hướng dẫn lập ngân sách",
+        text: "Budgeting guide",
         url: "/budgeting-guide",
       },
       {
-        text: "Tính năng cho người mới",
+        text: "Features for beginners",
         url: "/features/beginners",
       },
     ],
@@ -141,72 +141,72 @@ const faqs: FAQ[] = [
 
   // Getting Started
   {
-    question: "Mất bao lâu để bắt đầu?",
+    question: "How long does it take to get started?",
     answer:
-      "Chỉ 5 phút để thiết lập và bắt đầu quản lý tài chính! Quy trình đơn giản: (1) Đăng ký tài khoản, (2) Kết nối ngân hàng hoặc ví điện tử (tùy chọn), (3) Thiết lập mục tiêu tài chính. AI sẽ tự động theo dõi và phân tích các giao dịch của bạn.",
+      "Only 5 minutes to set up and start managing your finances! The simple process: (1) Sign up for an account, (2) Connect your bank or e-wallet (optional), (3) Set your financial goals. Our AI will automatically track and analyze your transactions.",
     category: "getting-started",
     helpful: 423,
     relatedLinks: [
       {
-        text: "Ngân hàng hỗ trợ",
+        text: "Supported banks",
         url: "/supported-banks",
       },
       {
-        text: "Hướng dẫn kết nối",
+        text: "Connection guide",
         url: "/connect",
       },
     ],
     updatedAt: "2025-04-10",
   },
   {
-    question: "Tôi cần kết nối tài khoản ngân hàng không?",
+    question: "Do I need to connect my bank account?",
     answer:
-      "Kết nối tài khoản ngân hàng là tùy chọn, nhưng sẽ giúp tự động hóa việc theo dõi chi tiêu. Chúng tôi hỗ trợ kết nối an toàn với hơn 25 ngân hàng tại Việt Nam. Bạn cũng có thể nhập giao dịch thủ công hoặc quét hóa đơn.",
+      "Connecting your bank account is optional, but it helps automate expense tracking. We support secure connections with over 25 banks in Vietnam. You can also manually enter transactions or scan receipts.",
     category: "getting-started",
     helpful: 156,
     relatedLinks: [
       {
-        text: "Danh sách ngân hàng hỗ trợ",
+        text: "List of supported banks",
         url: "/supported-banks",
       },
       {
-        text: "Hướng dẫn kết nối",
+        text: "Bank connection guide",
         url: "/connect-bank",
       },
     ],
     updatedAt: "2025-05-01",
   },
   {
-    question: "Dùng app có cần kỹ năng kế toán không?",
+    question: "Do I need accounting skills to use the app?",
     answer:
-      "Không! {{APP_NAME}} được thiết kế để dễ sử dụng cho mọi người, không cần kiến thức kế toán. AI của chúng tôi sẽ tự động xử lý và phân loại giao dịch. Với giao diện trực quan và hướng dẫn chi tiết, bạn có thể bắt đầu quản lý tài chính hiệu quả ngay lập tức.",
+      "No! {{APP_NAME}} is designed to be easy for everyone, with no accounting knowledge required. Our AI automatically handles and categorizes transactions. With an intuitive interface and detailed guidance, you can start managing your finances effectively right away.",
     category: "getting-started",
     helpful: 198,
     relatedLinks: [
       {
-        text: "Video hướng dẫn sử dụng",
+        text: "User tutorial videos",
         url: "/tutorials",
       },
       {
-        text: "Các tính năng cho người mới",
+        text: "Features for beginners",
         url: "/features/beginners",
       },
     ],
     updatedAt: "2025-05-11",
   },
   {
-    question: "Tôi có thể sử dụng {{APP_NAME}} trên nhiều thiết bị không?",
+    question: "Can I use {{APP_NAME}} on multiple devices?",
     answer:
-      "Có, {{APP_NAME}} hỗ trợ đồng bộ hóa dữ liệu trên nhiều thiết bị, bao gồm điện thoại, máy tính bảng và trình duyệt web. Chỉ cần đăng nhập bằng cùng một tài khoản để truy cập dữ liệu tài chính của bạn mọi lúc, mọi nơi.",
+      "Yes, {{APP_NAME}} supports data synchronization across multiple devices, including phones, tablets, and web browsers. Just log in with the same account to access your financial data anytime, anywhere.",
     category: "getting-started",
     helpful: 142,
     relatedLinks: [
       {
-        text: "Tải ứng dụng",
+        text: "Download the app",
         url: "/download",
       },
       {
-        text: "Hướng dẫn đồng bộ",
+        text: "Sync guide",
         url: "/sync-guide",
       },
     ],

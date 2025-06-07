@@ -1,92 +1,13 @@
-import type { CategoryTrend as DomainCategoryTrend } from "~/routes/finance/application/types";
-import type {
-  Budget as DomainBudget,
-  Transaction as DomainTransaction,
-} from "~/routes/finance/domain/types";
-import type {
-  Budget,
-  CategoryTrend,
-  Transaction,
-  TransactionCategory,
-} from "~/routes/finance/presentation/types";
+/**
+ * Domain to Presentation Layer Mappers
+ *
+ * Note: These mappers are redundant since the presentation layer
+ * simply re-exports domain types. Direct type usage is preferred.
+ *
+ * @deprecated Use domain types directly from ui.types.ts
+ */
 
-// Legacy category mapping
-const CATEGORY_ID_TO_LEGACY: Record<string, TransactionCategory> = {
-  "1": "food",
-  "2": "transport",
-  "3": "shopping",
-  "4": "salary",
-  "5": "other",
-};
+// This file is kept for backward compatibility but should be removed
+// once all references are updated to use domain types directly.
 
-const LEGACY_TO_CATEGORY_ID: Record<TransactionCategory, string> = {
-  food: "1",
-  transport: "2",
-  shopping: "3",
-  salary: "4",
-  other: "5",
-};
-
-export function mapDomainTransactionToPresentation(
-  domainTransaction: DomainTransaction,
-): Transaction {
-  const legacyCategory =
-    CATEGORY_ID_TO_LEGACY[domainTransaction.category_id] || "other";
-
-  return {
-    ...domainTransaction,
-    category: legacyCategory,
-  };
-}
-
-export function mapPresentationTransactionToDomain(
-  presentationTransaction: Omit<Transaction, "id">,
-): Omit<DomainTransaction, "id"> {
-  const categoryId =
-    LEGACY_TO_CATEGORY_ID[presentationTransaction.category] || "5";
-
-  return {
-    date: presentationTransaction.date,
-    amount: presentationTransaction.amount,
-    type: presentationTransaction.type,
-    category_id: categoryId,
-    description: presentationTransaction.description,
-  };
-}
-
-export function mapDomainBudgetToPresentation(
-  domainBudget: DomainBudget,
-  categoryId: string,
-): Budget {
-  const legacyCategory = CATEGORY_ID_TO_LEGACY[categoryId] || "other";
-
-  return {
-    ...domainBudget,
-    category: legacyCategory,
-    category_id: categoryId,
-  };
-}
-
-export function mapDomainCategoryTrendToPresentation(
-  domainTrend: DomainCategoryTrend,
-): CategoryTrend {
-  const legacyCategory =
-    CATEGORY_ID_TO_LEGACY[domainTrend.category_id] || "other";
-
-  return {
-    ...domainTrend,
-    category: legacyCategory,
-  };
-}
-
-export function getLegacyCategoryFromId(
-  categoryId: string,
-): TransactionCategory {
-  return CATEGORY_ID_TO_LEGACY[categoryId] || "other";
-}
-
-export function getCategoryIdFromLegacy(
-  legacyCategory: TransactionCategory,
-): string {
-  return LEGACY_TO_CATEGORY_ID[legacyCategory] || "5";
-}
+export {}; // Empty export to maintain module structure

@@ -1,6 +1,6 @@
 import type { TaxBreakdown, TaxCalculationInput } from "../types/tax";
 
-import { FinancialAmount } from "~/routes/finance/shared/utils/financial-precision";
+import { FinancialAmount } from "~/routes/finance/domain/value-objects/financial-amount";
 
 import {
   COUNTRY_SPECIFIC_RULES,

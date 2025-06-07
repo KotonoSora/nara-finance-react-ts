@@ -1,12 +1,14 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
+import type { ICalendarProps } from "~/routes/finance/presentation/types/ui.types";
+
 import { Button } from "~/components/ui/button";
 import DayCell from "~/routes/finance/presentation/components/calendar/day-cell";
 import {
   getTransactionSummaryForDate,
   isDateInRange,
-} from "~/routes/finance/presentation/utils/calendar";
+} from "~/routes/finance/presentation/utils/calendar.utils";
 
 export default function Calendar({
   calendarDetail,
@@ -54,39 +56,37 @@ export default function Calendar({
       setDragEnd(date);
     }
   };
-
   const handleDragEnd = () => {
     setIsSelecting(false);
     if (dragStart && dragEnd && onDateRangeSelect) {
-      const range = {
-        from: dragStart < dragEnd ? dragStart : dragEnd,
-        to: dragStart < dragEnd ? dragEnd : dragStart,
-      };
-      onDateRangeSelect(range);
+      onDateRangeSelect(dragStart, dragEnd);
     }
   };
-
   const getDayOptions = (date: Date) => {
     const options = {
+      date,
       month: currentMonth,
       day: date.getDate(),
       isCurrentMonth: date.getMonth() === currentMonth,
+      isOtherMonth: date.getMonth() !== currentMonth,
       isWeekend: date.getDay() === 0 || date.getDay() === 6,
       isToday: date.toDateString() === new Date().toDateString(),
+      isSelected: selectedDate
+        ? selectedDate.toDateString() === date.toDateString()
+        : false,
       selected: selectedDate
         ? selectedDate.toDateString() === date.toDateString()
         : false,
+      transactions: transactions || [],
+      onDateSelect,
     };
 
-    const summary = getTransactionSummaryForDate(date, transactions);
+    const summary = getTransactionSummaryForDate(date, transactions || []);
     const isInDateRange =
       dragStart && dragEnd ? isDateInRange(date, dragStart, dragEnd) : false;
 
     return {
       ...options,
-      selected: selectedDate
-        ? selectedDate.getTime() === date.getTime()
-        : false,
       onDateClick: () => handleClick(date),
       transactionCount: summary?.count || 0,
       transactionSummary: summary,
@@ -158,7 +158,7 @@ export default function Calendar({
         </div>
 
         <div className="grid grid-cols-7 gap-px bg-border/20 rounded-lg overflow-hidden">
-          {daysOfWeek.map((day, i) => (
+          {daysOfWeek.map((day: string, i: number) => (
             <div
               key={day}
               className="text-center text-xs sm:text-sm font-medium text-muted-foreground py-2 sm:py-3 bg-muted/30"
@@ -166,7 +166,7 @@ export default function Calendar({
               {day}
             </div>
           ))}
-          {getDaysGrid().map((props, i) => (
+          {getDaysGrid().map((props, i: number) => (
             <DayCell key={`${props.month}-${props.day}`} {...props} />
           ))}
         </div>

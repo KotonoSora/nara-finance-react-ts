@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
+import { Link } from "react-router";
 
 import {
   Accordion,
@@ -19,10 +20,10 @@ export default function FAQSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-foreground">
-            Câu hỏi thường gặp
+            Frequently Asked Questions
           </h2>
           <p className="text-muted-foreground/90 text-lg max-w-2xl mx-auto">
-            Tìm hiểu thêm về cách chúng tôi có thể giúp bạn
+            Learn how we can help you
           </p>
         </div>
 
@@ -61,14 +62,13 @@ export default function FAQSection() {
             transition={{ duration: 0.5, delay: 0.4 }}
           >
             <p className="text-muted-foreground mb-4">
-              Vẫn còn câu hỏi? Đội ngũ hỗ trợ chúng tôi luôn sẵn sàng giúp đỡ
-              bạn.
+              Still have questions? Our support team is here to help.
             </p>
             <Button variant="outline" asChild className="gap-2">
-              <a href={`mailto:support@${domain}`}>
+              <Link to={`mailto:support@${domain}`}>
                 <MessageCircle className="h-4 w-4" />
-                Chat với chúng tôi
-              </a>
+                Contact Support
+              </Link>
             </Button>
           </motion.div>
         </div>

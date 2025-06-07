@@ -1,7 +1,7 @@
 import type { Budget } from "~/routes/finance/domain/entities/budget.entity";
 import type { Transaction } from "~/routes/finance/domain/entities/transaction.entity";
 
-import { Money } from "~/routes/finance/domain/value-objects/money.value";
+import { FinancialAmount } from "~/routes/finance/domain/value-objects/financial-amount";
 
 export function analyzeBudgetWarningLevel(
   budget: Budget,
@@ -15,13 +15,13 @@ export function analyzeBudgetWarningLevel(
 
 export function generateBudgetRecommendation(budget: Budget): string {
   const spentPercentage = (budget.spent / budget.limit) * 100;
-  const remaining = new Money(budget.limit - budget.spent);
+  const remaining = new FinancialAmount(budget.limit - budget.spent);
   const daysInPeriod =
     budget.period === "monthly" ? 30 : budget.period === "weekly" ? 7 : 365;
-  const dailyRemaining = remaining.divide(daysInPeriod);
+  const dailyRemaining = remaining.divide(new FinancialAmount(daysInPeriod));
 
   if (spentPercentage >= 100) {
-    return `Budget exceeded by ${new Money(budget.spent - budget.limit).toString()}`;
+    return `Budget exceeded by ${new FinancialAmount(budget.spent - budget.limit).toString()}`;
   }
 
   if (spentPercentage >= 80) {
@@ -44,10 +44,9 @@ export function analyzeTrends(
     }
     categories.get(transaction.category_id)?.push(transaction.amount);
   });
-
   // Calculate trends for each category
   return Array.from(categories.entries()).map(([category, amounts]) => {
-    const avg = new Money(
+    const avg = new FinancialAmount(
       amounts.reduce((sum, amt) => sum + amt, 0) / amounts.length,
     );
     const trend = determineTrend(amounts);
@@ -57,7 +56,7 @@ export function analyzeTrends(
       category_id: category,
       values: amounts,
       trend,
-      forecast: new Money(forecast).toNumber(),
+      forecast: new FinancialAmount(forecast).toNumber(),
       average: avg.toNumber(),
     };
   });

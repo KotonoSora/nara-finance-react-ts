@@ -36,14 +36,14 @@ const trustedBy: TrustedEntity[] = [
     logo: undefined,
     type: "press",
     link: "https://cafef.vn",
-    description: "Top 10 Ứng dụng Tài chính Cá nhân 2025",
+    description: "Top 10 Personal Finance Apps 2025",
   },
   {
     name: "Vietcetera",
     logo: undefined,
     type: "press",
     link: "https://vietcetera.com",
-    description: "Startup Việt Triển Vọng 2025",
+    description: "Top Vietnamese Startups to Watch 2025",
   },
 
   // App Platforms
@@ -75,13 +75,13 @@ const trustedBy: TrustedEntity[] = [
     name: "ISO 27001",
     logo: undefined,
     type: "certificate",
-    description: "Chứng nhận Bảo mật Thông tin",
+    description: "Certified Information Security Management",
   },
   {
     name: "PCI DSS",
     logo: undefined,
     type: "certificate",
-    description: "Tiêu chuẩn Bảo mật Thanh toán",
+    description: "Payment Security Standard Compliant",
   },
   {
     name: "DMCA",
@@ -93,7 +93,7 @@ const trustedBy: TrustedEntity[] = [
     name: "SSL Secure",
     logo: undefined,
     type: "certificate",
-    description: "Mã hóa 256-bit",
+    description: "256-bit Encryption Enabled",
   },
 ];
 

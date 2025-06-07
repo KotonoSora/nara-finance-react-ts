@@ -16,10 +16,7 @@ import {
   YAxis,
 } from "recharts";
 
-import type {
-  CategoryTrend,
-  TransactionCategory,
-} from "~/routes/finance/presentation/types";
+import type { CategoryTrend } from "~/routes/finance/domain/types/analytics.types";
 
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
@@ -35,11 +32,11 @@ import {
   TooltipTrigger,
   Tooltip as UITooltip,
 } from "~/components/ui/tooltip";
-import { getTrendSummary } from "~/routes/finance/shared/utils/trends";
+import { TrendsService } from "~/routes/finance/domain/services/trends.service";
 
 interface TrendAnalysisImplProps {
   trends: CategoryTrend[];
-  onCategorySelect?: (category: TransactionCategory) => void;
+  onCategorySelect?: (category: string) => void; // category_id
 }
 
 type ChartDataPoint = {
@@ -51,11 +48,11 @@ export function TrendAnalysisImpl({
   trends,
   onCategorySelect,
 }: TrendAnalysisImplProps) {
-  const [selectedCategory, setSelectedCategory] = useState<
-    TransactionCategory | "all"
-  >("all");
+  const [selectedCategory, setSelectedCategory] = useState<string | "all">(
+    "all",
+  );
 
-  const handleCategorySelect = (category: TransactionCategory | "all") => {
+  const handleCategorySelect = (category: string | "all") => {
     setSelectedCategory(category);
     if (category !== "all" && onCategorySelect) {
       onCategorySelect(category);
@@ -65,7 +62,7 @@ export function TrendAnalysisImpl({
   const visibleTrends =
     selectedCategory === "all"
       ? trends
-      : trends.filter((t) => t.category === selectedCategory);
+      : trends.filter((t) => t.category_id === selectedCategory);
 
   const getTrendIcon = (trend: "increasing" | "decreasing" | "stable") => {
     switch (trend) {
@@ -108,7 +105,7 @@ export function TrendAnalysisImpl({
           </CardTitle>
           <Select
             value={selectedCategory}
-            onValueChange={(value: TransactionCategory | "all") =>
+            onValueChange={(value: string | "all") =>
               handleCategorySelect(value)
             }
           >
@@ -118,8 +115,9 @@ export function TrendAnalysisImpl({
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
               {trends.map((t) => (
-                <SelectItem key={t.category} value={t.category}>
-                  {t.category.charAt(0).toUpperCase() + t.category.slice(1)}
+                <SelectItem key={t.category_id} value={t.category_id}>
+                  {t.category_id.charAt(0).toUpperCase() +
+                    t.category_id.slice(1)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -129,30 +127,30 @@ export function TrendAnalysisImpl({
       <CardContent className="space-y-6">
         {visibleTrends.map((trend) => (
           <div
-            key={trend.category}
+            key={trend.category_id}
             className="space-y-3 p-4 rounded-lg border border-border hover:bg-accent/50 cursor-pointer transition-all duration-200 hover:border-primary/50"
-            onClick={() => handleCategorySelect(trend.category)}
+            onClick={() => handleCategorySelect(trend.category_id)}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="capitalize font-medium text-card-foreground">
-                  {trend.category}
+                  {trend.category_id}
                 </span>
                 {getTrendIcon(trend.trend)}
               </div>
               <span className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Forecast: ${trend.forecast.toFixed(2)}
-              </span>
+              </span>{" "}
             </div>
             <p className="text-sm text-muted-foreground">
-              {getTrendSummary(trend)}
+              {TrendsService.getTrendSummary(trend)}
             </p>
             <div className="h-[120px]">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={getChartData(trend)}>
                   <defs>
                     <linearGradient
-                      id={`gradient-${trend.category}`}
+                      id={`gradient-${trend.category_id}`}
                       x1="0"
                       y1="0"
                       x2="0"
@@ -203,7 +201,7 @@ export function TrendAnalysisImpl({
                     type="monotone"
                     dataKey="amount"
                     stroke="var(--primary)"
-                    fill={`url(#gradient-${trend.category})`}
+                    fill={`url(#gradient-${trend.category_id})`}
                     strokeWidth={2}
                     animationDuration={0} // Disable animations for better performance
                     isAnimationActive={false} // Disable all animations

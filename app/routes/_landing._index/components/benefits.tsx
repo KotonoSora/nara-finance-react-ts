@@ -8,6 +8,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Fragment } from "react";
+import { Link } from "react-router";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -46,7 +47,7 @@ export default function BenefitsSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            Tại sao chọn {name}?
+            Why Choose {name}?
           </motion.h2>
 
           <div className="grid gap-6 sm:gap-8 lg:grid-cols-2 xl:grid-cols-3">
@@ -122,7 +123,7 @@ export default function BenefitsSection() {
                               className="bg-popover/95 fill-popover/95 backdrop-blur supports-[backdrop-filter]:bg-popover/85 border-border/50 shadow-lg"
                             >
                               <p className="text-sm font-medium text-foreground">
-                                Độ phức tạp thiết lập:{" "}
+                                Setup Complexity:{" "}
                                 <span className="text-primary capitalize">
                                   {benefit.setupComplexity}
                                 </span>
@@ -159,7 +160,7 @@ export default function BenefitsSection() {
                             </TooltipTrigger>
                             <TooltipContent side="top">
                               <p className="capitalize">
-                                Danh mục: {benefit.subCategory}
+                                Category: {benefit.subCategory}
                               </p>
                             </TooltipContent>
                           </Tooltip>
@@ -340,15 +341,15 @@ export default function BenefitsSection() {
                           )}
 
                         {benefit.demoUrl && (
-                          <a
-                            href={benefit.demoUrl}
+                          <Link
+                            to={benefit.demoUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center text-sm text-primary/90 hover:text-primary transition-colors"
                           >
                             Xem demo
                             <ExternalLink className="h-4 w-4 ml-1" />
-                          </a>
+                          </Link>
                         )}
                       </CardContent>
                     </Card>

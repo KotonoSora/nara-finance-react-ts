@@ -1,9 +1,25 @@
+/**
+ * Category Use Cases
+ *
+ * Business logic for category management operations
+ */
+
 import type { IUseCase } from "~/routes/finance/application/interfaces/use-case";
 import type {
   Category,
   CategoryProps,
 } from "~/routes/finance/domain/entities/category.entity";
 import type { DatabaseContext } from "~/routes/finance/infrastructure/database-context";
+
+export interface UpdateCategoryInput {
+  id: string;
+  changes: Partial<CategoryProps>;
+}
+
+export interface MergeCategoriesInput {
+  sourceIds: string[];
+  targetId: string;
+}
 
 export class CreateCategoryUseCase
   implements IUseCase<CategoryProps, Category>
@@ -18,11 +34,6 @@ export class CreateCategoryUseCase
       updated_at: new Date().toISOString(),
     });
   }
-}
-
-export interface UpdateCategoryInput {
-  id: string;
-  changes: Partial<CategoryProps>;
 }
 
 export class UpdateCategoryUseCase
@@ -46,11 +57,6 @@ export class ArchiveCategoryUseCase implements IUseCase<string, void> {
   }
 }
 
-export interface MergeCategoriesInput {
-  sourceIds: string[];
-  targetId: string;
-}
-
 export class MergeCategoriesUseCase
   implements IUseCase<MergeCategoriesInput, void>
 {
@@ -58,13 +64,5 @@ export class MergeCategoriesUseCase
 
   async execute(input: MergeCategoriesInput): Promise<void> {
     await this.dbContext.categories.merge(input.sourceIds, input.targetId);
-  }
-}
-
-export class GetCategoryAnalyticsUseCase implements IUseCase<void, Category[]> {
-  constructor(private dbContext: DatabaseContext) {}
-
-  async execute(): Promise<Category[]> {
-    return await this.dbContext.categories.findAllWithAnalytics();
   }
 }

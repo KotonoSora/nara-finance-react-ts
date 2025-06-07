@@ -7,8 +7,7 @@ import type {
   DateRange,
   FinancialSummary,
   Transaction,
-  TransactionCategory,
-} from "~/routes/finance/presentation/types";
+} from "~/routes/finance/presentation/types/ui.types";
 
 import { Card } from "~/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -33,17 +32,16 @@ interface TabsViewProps {
   transactions: Transaction[];
   summary: FinancialSummary;
   dateRange?: DateRange;
-  selectedCategory?: TransactionCategory | null;
+  selectedCategory?: string | null;
   onDateSelect: (date: Date) => void;
   onMonthChange: (date: Date) => void;
   onDateRangeSelect: (range: DateRange) => void;
   onAddTransaction: (data: Omit<Transaction, "id">) => void;
   onEditTransaction: (transaction: Transaction) => void;
   onDeleteTransaction: (transactionId: string) => void;
-  onCategorySelect: (category: TransactionCategory) => void;
+  onCategorySelect: (category: string) => void;
   calendarDetail: CalendarData;
   categories?: Category[];
-  useLegacyCategories?: boolean;
 }
 
 export default function TabsView({
@@ -61,7 +59,6 @@ export default function TabsView({
   onCategorySelect,
   calendarDetail,
   categories = [],
-  useLegacyCategories = true,
 }: TabsViewProps) {
   return (
     <Tabs defaultValue="list" className="w-full">
@@ -94,7 +91,6 @@ export default function TabsView({
             onEditTransaction={onEditTransaction}
             onDeleteTransaction={onDeleteTransaction}
             categories={categories}
-            useLegacyCategories={useLegacyCategories}
           />
         </Suspense>
       </TabsContent>
@@ -107,11 +103,13 @@ export default function TabsView({
         >
           <Calendar
             calendarDetail={calendarDetail}
-            selectedDate={selectedDate}
+            selectedDate={selectedDate || new Date()}
             currentViewDate={selectedDate || new Date()}
             onDateSelect={onDateSelect}
             onMonthChange={onMonthChange}
-            onDateRangeSelect={onDateRangeSelect}
+            onDateRangeSelect={(start: Date, end: Date) => {
+              onDateRangeSelect({ from: start, to: end });
+            }}
             transactions={transactions}
           />
         </Suspense>
@@ -124,7 +122,7 @@ export default function TabsView({
           }
         >
           <TrendAnalysis
-            trends={summary.trends}
+            trends={summary.trends || []}
             onCategorySelect={onCategorySelect}
           />
         </Suspense>

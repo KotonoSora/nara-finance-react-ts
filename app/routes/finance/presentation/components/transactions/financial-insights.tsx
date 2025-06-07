@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { format, startOfMonth } from "date-fns";
 
-import type { FinancialInsightsProps } from "~/routes/finance/presentation/types";
+import type { FinancialInsightsProps } from "~/routes/finance/presentation/types/ui.types";
 
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
@@ -11,9 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { FinanceService } from "~/routes/finance/domain/services/finance.service";
 import SpendingChart from "~/routes/finance/presentation/components/transactions/spending-chart";
-import { getCategoryColor } from "~/routes/finance/presentation/utils/ui-helpers";
-import { getChangeType } from "~/routes/finance/shared/utils/finance";
+import { getCategoryColor } from "~/routes/finance/presentation/utils/category-theme.utils";
 
 export default function FinancialInsights({
   summary,
@@ -43,12 +43,11 @@ export default function FinancialInsights({
       return "Invalid date range";
     }
   };
-
   const getPercentageChange = (current: number, previous: number) => {
     if (previous === 0) return null;
     const change = ((current - previous) / previous) * 100;
     const isPositive = change > 0;
-    const changeType = getChangeType(current, previous);
+    const changeType = FinanceService.getChangeType(current, previous);
 
     return (
       <div className="flex items-center gap-1 text-[10px] sm:text-xs ml-1 sm:ml-2">
@@ -176,12 +175,7 @@ export default function FinancialInsights({
           <div className="h-[240px] sm:h-[280px] md:h-[300px]">
             <SpendingChart
               data={chartData}
-              onCategorySelect={
-                onCategorySelect
-                  ? (category: string) =>
-                      onCategorySelect(category as TransactionCategory)
-                  : undefined
-              }
+              onCategorySelect={onCategorySelect}
               budgets={summary.budgets}
               trends={summary.trends}
             />

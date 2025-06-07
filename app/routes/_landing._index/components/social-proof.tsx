@@ -22,10 +22,10 @@ export default function SocialProofSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-foreground">
-            Khách hàng nói gì về chúng tôi
+            What Our Users Say
           </h2>
           <p className="text-muted-foreground/90 text-lg max-w-2xl mx-auto">
-            Những đánh giá chân thực từ người dùng
+            Real feedback from our users
           </p>
         </div>
 
@@ -115,9 +115,7 @@ export default function SocialProofSection() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
               <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
             </span>
-            <span className="text-sm font-medium">
-              5,000+ người dùng hài lòng
-            </span>
+            <span className="text-sm font-medium">5,000+ satisfied users</span>
           </div>
         </motion.div>
       </div>

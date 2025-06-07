@@ -1,4 +1,7 @@
-import type { CategoryProps } from "~/routes/finance/domain/entities/category.entity";
+import type {
+  Category,
+  CategoryProps,
+} from "~/routes/finance/domain/entities/category.entity";
 import type { ICategoryRepository } from "~/routes/finance/domain/repositories/category.repository";
 
 import { CategoryEntity } from "~/routes/finance/domain/entities/category.entity";

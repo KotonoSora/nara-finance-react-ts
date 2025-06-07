@@ -1,5 +1,7 @@
 import clsx from "clsx";
 
+import type { DayCellProps } from "~/routes/finance/presentation/types/ui.types";
+
 import {
   Tooltip,
   TooltipContent,
@@ -9,6 +11,7 @@ import {
 
 export default function DayCell(props: DayCellProps) {
   const {
+    date,
     month,
     day,
     isCurrentMonth,
@@ -16,6 +19,7 @@ export default function DayCell(props: DayCellProps) {
     isToday,
     selected,
     onDateClick,
+    onDateSelect,
     transactionCount = 0,
     transactionSummary,
     isInRange,
@@ -23,12 +27,12 @@ export default function DayCell(props: DayCellProps) {
     onMouseEnter,
     onMouseUp,
   } = props;
-
   const handleClick = () => {
     if (onDateClick) {
-      // Use proper year from current view
-      const now = new Date();
-      onDateClick(new Date(now.getFullYear(), month, day));
+      onDateClick();
+    }
+    if (onDateSelect && date) {
+      onDateSelect(date);
     }
   };
 

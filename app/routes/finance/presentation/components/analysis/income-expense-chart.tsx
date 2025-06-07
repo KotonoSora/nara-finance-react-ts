@@ -1,11 +1,14 @@
 import { lazy, Suspense } from "react";
 
-import type { FinancialSummary } from "~/routes/finance/presentation/types";
+import type { FinancialSummary } from "~/routes/finance/presentation/types/ui.types";
 
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 const LazyIncomeExpenseChart = lazy(
-  () => import("./income-expense-chart-impl"),
+  () =>
+    import(
+      "~/routes/finance/presentation/components/analysis/income-expense-chart-impl"
+    ),
 );
 
 const ChartSkeleton = () => (

@@ -59,9 +59,9 @@ interface Benefit {
 
 const benefits: Benefit[] = [
   {
-    title: "Tiết kiệm thời gian đáng kể",
+    title: "Save Hours Every Month",
     description:
-      "Tiết kiệm trung bình 20 giờ mỗi tháng nhờ tự động hóa việc theo dõi chi tiêu và quản lý tài chính.",
+      "Save an average of 20 hours per month by automating your expense tracking and financial management.",
     Icon: Clock,
     category: "automation",
     subCategory: "transactions",
@@ -71,36 +71,36 @@ const benefits: Benefit[] = [
     stats: [
       {
         value: "20h",
-        label: "tiết kiệm/tháng",
+        label: "saved/month",
         timeframe: "monthly",
-        sourceInfo: "Dựa trên khảo sát người dùng Q1/2025",
+        sourceInfo: "Based on user survey Q1/2025",
         highlight: true,
       },
     ],
     features: [
       {
-        name: "Tự động phân loại",
+        name: "Automatic Categorization",
         status: "available",
-        description: "Phân loại thông minh mọi giao dịch ngay khi phát sinh",
+        description: "Intelligently categorize every transaction instantly",
       },
       {
-        name: "Nhận diện hóa đơn",
+        name: "Bill Scanning",
         status: "available",
-        description: "Quét và xử lý hóa đơn tự động bằng AI",
+        description: "Scan and process bills automatically with AI",
       },
     ],
     terms: [
       {
-        term: "tự động hóa",
+        term: "automation",
         definition:
-          "Hệ thống tự động xử lý và phân loại các giao dịch mà không cần thao tác thủ công",
+          "The system automatically processes and categorizes transactions without manual input.",
       },
     ],
   },
   {
-    title: "Theo dõi thu chi tự động",
+    title: "Automated Income & Expense Tracking",
     description:
-      "Kết nối trực tiếp với ngân hàng để tự động cập nhật và phân loại mọi giao dịch ngay khi phát sinh.",
+      "Connect directly to your bank to automatically update and categorize every transaction as it happens.",
     Icon: LineChart,
     category: "automation",
     subCategory: "transactions",
@@ -108,35 +108,35 @@ const benefits: Benefit[] = [
     priority: 2,
     features: [
       {
-        name: "Kết nối ngân hàng",
+        name: "Bank Connections",
         status: "available",
-        description: "Hỗ trợ 25+ ngân hàng tại Việt Nam",
+        description: "Supports 25+ banks (global support coming soon)",
       },
       {
-        name: "Phân loại AI",
+        name: "AI Categorization",
         status: "available",
-        description: "Độ chính xác lên đến 98%",
+        description: "Up to 98% accuracy",
       },
     ],
     stats: [
       {
         value: "98%",
-        label: "độ chính xác",
-        sourceInfo: "Dựa trên dữ liệu thực tế Q1/2025",
+        label: "accuracy",
+        sourceInfo: "Based on real user data Q1/2025",
       },
     ],
     terms: [
       {
-        term: "Phân loại AI",
+        term: "AI Categorization",
         definition:
-          "Hệ thống trí tuệ nhân tạo tự động nhận diện và phân loại các giao dịch theo danh mục",
+          "AI automatically recognizes and categorizes transactions by type.",
       },
     ],
   },
   {
-    title: "Đề xuất ngân sách thông minh",
+    title: "Smart Budget Recommendations",
     description:
-      "AI phân tích mẫu chi tiêu và đưa ra đề xuất ngân sách phù hợp với thói quen và mục tiêu của bạn.",
+      "AI analyzes your spending patterns and suggests budgets tailored to your habits and goals.",
     Icon: PieChart,
     category: "analytics",
     subCategory: "budgeting",
@@ -144,28 +144,29 @@ const benefits: Benefit[] = [
     priority: 3,
     features: [
       {
-        name: "Dự báo chi tiêu",
+        name: "Spending Forecast",
         status: "available",
-        description: "Dự đoán các khoản chi phí định kỳ",
+        description: "Predicts recurring expenses",
       },
       {
-        name: "Mục tiêu tài chính",
+        name: "Financial Goals",
         status: "beta",
-        description: "Tự động điều chỉnh ngân sách theo mục tiêu",
+        description:
+          "Automatically adjusts budgets to help you reach your goals",
       },
     ],
     terms: [
       {
-        term: "Dự báo chi tiêu",
+        term: "Spending Forecast",
         definition:
-          "Sử dụng AI để phân tích mẫu chi tiêu và dự đoán các khoản chi phí trong tương lai",
+          "Uses AI to analyze spending patterns and predict future expenses.",
       },
     ],
   },
   {
-    title: "Nhắc nhở hóa đơn thông minh",
+    title: "Smart Bill Reminders",
     description:
-      "Không bao giờ bỏ lỡ thanh toán với hệ thống nhắc nhở tự động và theo dõi hóa đơn định kỳ.",
+      "Never miss a payment with automatic reminders and recurring bill tracking.",
     Icon: Calendar,
     category: "planning",
     subCategory: "budgeting",
@@ -173,28 +174,28 @@ const benefits: Benefit[] = [
     priority: 4,
     features: [
       {
-        name: "Nhắc nhở tự động",
+        name: "Automatic Reminders",
         status: "available",
-        description: "Thông báo trước các khoản thanh toán",
+        description: "Get notified before every payment is due",
       },
       {
-        name: "Lịch thanh toán",
+        name: "Payment Calendar",
         status: "available",
-        description: "Xem và quản lý tất cả hóa đơn trong một lịch",
+        description: "View and manage all your bills in one calendar",
       },
     ],
     terms: [
       {
-        term: "Nhắc nhở tự động",
+        term: "Automatic Reminders",
         definition:
-          "Hệ thống gửi thông báo trước thời hạn thanh toán để đảm bảo không bỏ lỡ các khoản phải trả",
+          "The system sends notifications before payment deadlines so you never miss a bill.",
       },
     ],
   },
   {
-    title: "Hỗ trợ quyết toán thuế",
+    title: "Effortless Tax Filing Support",
     description:
-      "Tự động tổng hợp và phân loại các khoản thu chi theo quy định thuế, giúp việc quyết toán thuế TNCN dễ dàng hơn.",
+      "Automatically organize and categorize your income and expenses for easy tax filing and compliance.",
     Icon: FileText,
     category: "automation",
     subCategory: "taxes",
@@ -202,30 +203,30 @@ const benefits: Benefit[] = [
     priority: 5,
     features: [
       {
-        name: "Báo cáo thuế",
+        name: "Tax Reports",
         status: "available",
-        description: "Tự động tạo báo cáo theo mẫu của Tổng cục Thuế",
+        description: "Automatically generate reports for tax filing",
       },
       {
-        name: "Tư vấn thuế AI",
+        name: "AI Tax Advisor",
         status: "coming-soon",
-        description: "Tư vấn tối ưu thuế dựa trên tình hình tài chính",
+        description: "Get personalized tax optimization tips (Pro only)",
         requiresPlan: "pro",
       },
     ],
     terms: [
       {
-        term: "Quyết toán thuế",
+        term: "Tax Filing",
         definition:
-          "Quá trình tổng kết và báo cáo thu nhập cá nhân với cơ quan thuế theo quy định pháp luật",
+          "The process of summarizing and reporting your personal income to tax authorities.",
       },
     ],
-    integrations: ["Tổng cục Thuế", "MISA"],
+    integrations: ["IRS", "TurboTax"],
   },
   {
-    title: "Bảo mật tài chính tối ưu",
+    title: "Bank-Level Financial Security",
     description:
-      "Bảo vệ dữ liệu tài chính của bạn với mã hóa cấp ngân hàng, xác thực hai yếu tố và tuân thủ các tiêu chuẩn bảo mật quốc tế.",
+      "Protect your financial data with bank-grade encryption, two-factor authentication, and global security standards.",
     Icon: Lock,
     category: "security",
     subCategory: "transactions",
@@ -233,35 +234,35 @@ const benefits: Benefit[] = [
     priority: 6,
     features: [
       {
-        name: "Mã hóa AES-256",
+        name: "AES-256 Encryption",
         status: "available",
-        description: "Mã hóa cấp ngân hàng cho dữ liệu giao dịch",
+        description: "Bank-level encryption for all transaction data",
       },
       {
-        name: "Xác thực 2FA",
+        name: "2FA Authentication",
         status: "available",
-        description: "Bảo mật tài khoản với xác thực hai yếu tố",
+        description: "Secure your account with two-factor authentication",
       },
     ],
     stats: [
       {
         value: "100%",
-        label: "tuân thủ PCI DSS",
-        sourceInfo: "Chứng nhận bảo mật Q1/2025",
+        label: "PCI DSS compliant",
+        sourceInfo: "Security certification Q1/2025",
       },
     ],
     terms: [
       {
-        term: "Mã hóa AES-256",
+        term: "AES-256 Encryption",
         definition:
-          "Tiêu chuẩn mã hóa tiên tiến để bảo vệ dữ liệu giao dịch khỏi truy cập trái phép",
+          "Advanced encryption standard to protect your data from unauthorized access.",
       },
     ],
   },
   {
-    title: "Phân tích đầu tư thông minh",
+    title: "Intelligent Investment Analytics",
     description:
-      "Theo dõi và tối ưu hóa danh mục đầu tư với các công cụ phân tích AI, giúp bạn đưa ra quyết định đầu tư sáng suốt hơn.",
+      "Track and optimize your investment portfolio with AI-powered analytics for smarter decisions.",
     Icon: TrendingUp,
     category: "analytics",
     subCategory: "investments",
@@ -269,34 +270,36 @@ const benefits: Benefit[] = [
     priority: 7,
     features: [
       {
-        name: "Phân tích danh mục",
+        name: "Portfolio Analysis",
         status: "beta",
-        description: "Đánh giá hiệu suất đầu tư theo thời gian thực",
+        description:
+          "Real-time performance tracking for your investments (Pro only)",
         requiresPlan: "pro",
       },
       {
-        name: "Gợi ý đầu tư",
+        name: "Investment Suggestions",
         status: "coming-soon",
-        description: "Đề xuất đầu tư dựa trên hồ sơ rủi ro",
+        description:
+          "Personalized investment ideas based on your risk profile (Enterprise only)",
         requiresPlan: "enterprise",
       },
     ],
     stats: [
       {
         value: "18%",
-        label: "tăng trưởng trung bình",
+        label: "average growth",
         timeframe: "yearly",
-        sourceInfo: "Dựa trên dữ liệu người dùng Q1/2025",
+        sourceInfo: "Based on user data Q1/2025",
       },
     ],
     terms: [
       {
-        term: "Phân tích danh mục",
+        term: "Portfolio Analysis",
         definition:
-          "Công cụ AI đánh giá hiệu suất và rủi ro của các khoản đầu tư trong danh mục",
+          "AI tools evaluate the performance and risk of your investments.",
       },
     ],
-    integrations: ["VNDirect", "SSI"],
+    integrations: ["Vanguard", "Fidelity"],
   },
 ];
 

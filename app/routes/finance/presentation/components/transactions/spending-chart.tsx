@@ -3,7 +3,7 @@ import { lazy, Suspense } from "react";
 import type {
   Budget,
   CategoryTrend,
-} from "~/routes/finance/presentation/types";
+} from "~/routes/finance/presentation/types/ui.types";
 
 interface SpendingChartProps {
   data: { category: string; amount: number; color: string }[];
@@ -12,7 +12,12 @@ interface SpendingChartProps {
   trends?: CategoryTrend[];
 }
 
-const LazySpendingChart = lazy(() => import("./spending-chart-impl"));
+const LazySpendingChart = lazy(
+  () =>
+    import(
+      "~/routes/finance/presentation/components/transactions/spending-chart-impl"
+    ),
+);
 
 const ChartSkeleton = () => (
   <div className="w-full h-full bg-muted/10 animate-pulse rounded-lg flex items-center justify-center">

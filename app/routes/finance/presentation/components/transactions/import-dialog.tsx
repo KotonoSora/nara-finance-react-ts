@@ -1,6 +1,9 @@
 import { Upload, X } from "lucide-react";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { toast } from "sonner";
+
+import type { Transaction } from "~/routes/finance/presentation/types/ui.types";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -9,11 +12,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-import { parseCSV } from "~/routes/finance/shared/utils/import";
-import {
-  showImportCompletedToast,
-  showImportErrorToast,
-} from "~/routes/finance/shared/utils/notifications";
+import { ImportService } from "~/routes/finance/application/services/import.service";
+
+// Use toast directly instead of notification helpers
+const showImportCompletedToast = (count: number) =>
+  toast.success(`Successfully imported ${count} transactions`);
+const showImportErrorToast = (error: string) =>
+  toast.error(`Import failed: ${error}`);
 
 interface ImportDialogProps {
   open: boolean;
@@ -41,9 +46,11 @@ export default function ImportDialog({
       try {
         setIsProcessing(true);
         const file = acceptedFiles[0];
-        const transactions = await parseCSV(file);
-        onImport(transactions);
-        showImportCompletedToast(transactions.length);
+        const importService = new ImportService();
+        const result = await importService.parseCSVTransactions(file);
+
+        onImport(result as Transaction[]);
+        showImportCompletedToast((result as Transaction[]).length);
         onOpenChange(false);
       } catch (error) {
         showImportErrorToast(

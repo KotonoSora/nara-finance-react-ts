@@ -2,6 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import type { Currency } from "./CurrenciesList";
+
 import { Button } from "~/components/ui/button";
 import {
   Form,
@@ -27,14 +29,15 @@ const schema = z.object({
   amount: z.coerce.number().positive(),
   note: z.string().optional(),
   date: z.string().min(1, "Required"),
+  currency_code: z.string(),
 });
 
 type FormData = z.infer<typeof schema>;
 
 export function CreateTransactionForm({
-  onSuccess,
+  currencies,
 }: {
-  onSuccess?: () => void;
+  currencies: Currency[];
 }) {
   const {
     register,
@@ -53,7 +56,6 @@ export function CreateTransactionForm({
 
   const { createTransaction, loading, error } = useCreateTransaction(() => {
     reset();
-    onSuccess?.();
   });
 
   const onSubmit = (data: FormData) => createTransaction(data);
@@ -92,19 +94,47 @@ export function CreateTransactionForm({
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="amount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Số tiền</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-2">
+          <FormField
+            control={form.control}
+            name="amount"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Số tiền</FormLabel>
+                <FormControl>
+                  <Input type="number" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="currency_code"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tiền tệ</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Chọn tiền tệ" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {currencies &&
+                      currencies.map((currency) => (
+                        <SelectItem key={currency.code} value={currency.code}>
+                          {currency.name} ({currency.code})
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}

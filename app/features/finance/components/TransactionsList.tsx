@@ -5,6 +5,7 @@ import { Button } from "~/components/ui/button";
 export type Transaction = {
   id: string;
   type: "income" | "expense";
+  currency_code: string;
   amount: number;
   category: string | null;
   note: string | null;
@@ -13,28 +14,11 @@ export type Transaction = {
 
 export default function TransactionsList({
   onEdit,
+  transactions,
 }: {
   onEdit?: (tx: Transaction) => void;
+  transactions: Transaction[];
 }) {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchTransactions = async () => {
-    try {
-      const res = await fetch("/api/transactions");
-      const data = await res.json();
-      setTransactions(data as Transaction[]);
-    } catch (err) {
-      console.error("Lỗi khi lấy giao dịch:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchTransactions();
-  }, []);
-
   const handleDelete = async (id: string) => {
     if (!confirm("Bạn có chắc muốn xoá giao dịch này không?")) return;
 
@@ -45,7 +29,6 @@ export default function TransactionsList({
       if (!res.ok) throw new Error("Xoá không thành công");
 
       alert("Xoá giao dịch thành công");
-      fetchTransactions();
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error occurred";
@@ -53,7 +36,6 @@ export default function TransactionsList({
     }
   };
 
-  if (loading) return <p>Đang tải...</p>;
   if (transactions.length === 0) return <p>Chưa có giao dịch nào.</p>;
 
   return (

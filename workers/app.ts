@@ -2,6 +2,7 @@ import { getLoadContext } from "load-context";
 import { createRequestHandler } from "react-router";
 
 import apiRoute from "./api/common";
+import currenciesRoute from "./api/currencies";
 import appRoute from "./api/setup";
 import transactionsRoute from "./api/transactions";
 
@@ -11,6 +12,7 @@ const requestHandler = createRequestHandler(
 );
 
 // Routes
+apiRoute.route("/currencies", currenciesRoute);
 apiRoute.route("/transactions", transactionsRoute);
 appRoute.route("/api", apiRoute);
 

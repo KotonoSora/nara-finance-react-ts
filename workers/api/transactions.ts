@@ -4,13 +4,15 @@ import { Hono } from "hono";
 import { nanoid } from "nanoid";
 import { z } from "zod";
 
-import { transactions } from "../../database/schema/transactions";
+import { currencies } from "~/database/schema/currencies";
+import { transactions } from "~/database/schema/transactions";
 
 const app = new Hono<{ Bindings: CloudflareEnvironment }>();
 
 const bodySchema = z.object({
   type: z.enum(["income", "expense"]),
   amount: z.number().min(1),
+  currency_code: z.string().min(1),
   category: z.string().optional(),
   note: z.string().optional(),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Ngày không hợp lệ"),
@@ -27,8 +29,19 @@ app.post("/", async (c) => {
 
   const data = parsed.data;
 
+  const existingCurrency = await db
+    .select()
+    .from(currencies)
+    .where(eq(currencies.code, data.currency_code));
+
+  if (existingCurrency.length === 0) {
+    return c.json({ error: "currency_code không hợp lệ" }, 400);
+  }
+
   await db.insert(transactions).values({
     id: nanoid(),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
     ...data,
   });
 
@@ -48,10 +61,23 @@ app.get("/", async (c) => {
   }
 
   const result = await db
-    .select()
+    .select({
+      id: transactions.id,
+      type: transactions.type,
+      amount: transactions.amount,
+      currency_code: transactions.currency_code,
+      currency_symbol: currencies.symbol,
+      currency_name: currencies.name,
+      category: transactions.category,
+      note: transactions.note,
+      date: transactions.date,
+      created_at: transactions.created_at,
+      updated_at: transactions.updated_at,
+    })
     .from(transactions)
+    .leftJoin(currencies, eq(transactions.currency_code, currencies.code))
     .where(whereClause.length ? and(...whereClause) : undefined)
-    .orderBy(desc(transactions.date), desc(transactions.createdAt))
+    .orderBy(desc(transactions.date), desc(transactions.created_at))
     .limit(limit);
 
   return c.json(result);
@@ -78,7 +104,22 @@ app.put("/:id", async (c) => {
 
   const data = parsed.data;
 
-  await db.update(transactions).set(data).where(eq(transactions.id, id));
+  const existingCurrency = await db
+    .select()
+    .from(currencies)
+    .where(eq(currencies.code, data.currency_code));
+
+  if (existingCurrency.length === 0) {
+    return c.json({ error: "currency_code không hợp lệ" }, 400);
+  }
+
+  await db
+    .update(transactions)
+    .set({
+      ...data,
+      updated_at: new Date().toISOString(),
+    })
+    .where(eq(transactions.id, id));
 
   return c.json({ success: true });
 });

@@ -14,26 +14,22 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { currencies } from "~/database/schema";
 
 type Props = {
   open: boolean;
   onClose: () => void;
   transaction: Transaction | null;
-  onUpdated: () => void;
 };
 
-export function EditTransactionModal({
-  open,
-  onClose,
-  transaction,
-  onUpdated,
-}: Props) {
+export function EditTransactionModal({ open, onClose, transaction }: Props) {
   const { register, handleSubmit, reset } = useForm({
     defaultValues: {
       note: transaction?.note || "",
       amount: transaction?.amount || 0,
       date: transaction?.date || "",
-      type: transaction?.type || "expense", // mặc định là 'expense'
+      type: transaction?.type || "expense",
+      currency_code: transaction?.currency_code || "VND",
     },
   });
 
@@ -44,6 +40,7 @@ export function EditTransactionModal({
         amount: transaction.amount,
         date: transaction.date,
         type: transaction.type || "expense",
+        currency_code: transaction.currency_code || "VND",
       });
     }
   }, [transaction, reset]);
@@ -60,7 +57,6 @@ export function EditTransactionModal({
       if (!res.ok) throw new Error("Cập nhật thất bại");
 
       onClose();
-      onUpdated(); // gọi lại để reload danh sách
     } catch (err) {
       alert("Lỗi cập nhật: " + (err as Error).message);
     }

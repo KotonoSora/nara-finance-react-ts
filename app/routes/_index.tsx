@@ -1,13 +1,14 @@
 import { useState } from "react";
+import { Await } from "react-router";
 
 import type { Currency } from "~/features/finance/components/CurrenciesList";
 import type { Transaction } from "~/features/finance/components/TransactionsList";
 import type { Route } from "./+types/_index";
 
 import { ModeSwitcher } from "~/components/mode-switcher";
-import { CreateTransactionForm } from "~/features/finance/components/CreateTransactionForm";
+import CreateTransactionModal from "~/features/finance/components/CreateTransactionModal";
 import CurrenciesList from "~/features/finance/components/CurrenciesList";
-import { EditTransactionModal } from "~/features/finance/components/EditTransactionModal";
+import EditTransactionModal from "~/features/finance/components/EditTransactionModal";
 import TransactionsList from "~/features/finance/components/TransactionsList";
 
 export function meta({}: Route.MetaArgs) {
@@ -17,30 +18,35 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function clientLoader({ request, context }: Route.LoaderArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
+  const url = new URL(request.url);
+  const origin = url.origin;
+
   try {
-    const response = await fetch("/api/currencies");
-    const currencies = await response.json();
+    const currenciesRes = await fetch(`${origin}/api/currencies`);
+    if (!currenciesRes.ok) {
+      throw new Error(
+        `Failed to fetch currencies: ${currenciesRes.statusText}`,
+      );
+    }
+    const currencies: Currency[] = await currenciesRes.json();
 
-    const res = await fetch("/api/transactions");
-    const transactions = await res.json();
+    if (currencies.length === 0) {
+      return { currencies: [], transactions: [] };
+    }
 
-    return {
-      currencies: currencies as Currency[],
-      transactions: transactions as Transaction[],
-    };
+    const transactionsRes = await fetch(`${origin}/api/transactions`);
+    const transactions: Transaction[] = transactionsRes.ok
+      ? await transactionsRes.json()
+      : [];
+
+    return { currencies, transactions };
   } catch (error) {
-    console.error("Error loading currencies:", error);
-    return { currencies: [] as Currency[], transactions: [] as Transaction[] };
+    return { currencies: [], transactions: [] };
   }
 }
 
-export function HydrateFallback() {
-  return <div>Loading...</div>;
-}
-
 export default function Page({ loaderData }: Route.ComponentProps) {
-  const { currencies, transactions } = loaderData;
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
 
@@ -56,14 +62,26 @@ export default function Page({ loaderData }: Route.ComponentProps) {
       </div>
       <div className="space-y-8 p-4">
         <h1 className="text-xl font-bold">Giao dịch gần đây</h1>
-        <CurrenciesList currencies={currencies} />
-        <CreateTransactionForm currencies={currencies} />
-        <TransactionsList transactions={transactions} onEdit={handleEdit} />
-        <EditTransactionModal
-          open={editModalOpen}
-          onClose={() => setEditModalOpen(false)}
-          transaction={selectedTx}
-        />
+        <Await
+          errorElement={<div>Error loading data</div>}
+          resolve={loaderData}
+        >
+          {({ currencies, transactions }) => (
+            <>
+              <CurrenciesList currencies={currencies} />
+              <CreateTransactionModal currencies={currencies} />
+              <TransactionsList
+                transactions={transactions}
+                onEdit={handleEdit}
+              />
+              <EditTransactionModal
+                open={editModalOpen}
+                onClose={() => setEditModalOpen(false)}
+                transaction={selectedTx}
+              />
+            </>
+          )}
+        </Await>
       </div>
     </main>
   );

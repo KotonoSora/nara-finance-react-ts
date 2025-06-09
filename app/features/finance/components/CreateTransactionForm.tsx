@@ -34,32 +34,13 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-export function CreateTransactionForm({
+export default function CreateTransactionForm({
   currencies,
+  onSuccess,
 }: {
   currencies: Currency[];
+  onSuccess: () => void;
 }) {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      type: "expense",
-      amount: 0,
-      date: new Date().toISOString().split("T")[0], // YYYY-MM-DD
-    },
-  });
-
-  const { createTransaction, loading, error } = useCreateTransaction(() => {
-    reset();
-  });
-
-  const onSubmit = (data: FormData) => createTransaction(data);
-
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -69,11 +50,20 @@ export function CreateTransactionForm({
     },
   });
 
+  const { control, handleSubmit, reset } = form;
+
+  const { createTransaction, loading } = useCreateTransaction(() => {
+    reset();
+    onSuccess();
+  });
+
+  const onSubmit = (data: FormData) => createTransaction(data);
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <FormField
-          control={form.control}
+          control={control}
           name="type"
           render={({ field }) => (
             <FormItem>
@@ -96,7 +86,7 @@ export function CreateTransactionForm({
 
         <div className="grid grid-cols-2 gap-2">
           <FormField
-            control={form.control}
+            control={control}
             name="amount"
             render={({ field }) => (
               <FormItem>
@@ -110,7 +100,7 @@ export function CreateTransactionForm({
           />
 
           <FormField
-            control={form.control}
+            control={control}
             name="currency_code"
             render={({ field }) => (
               <FormItem>
@@ -137,7 +127,7 @@ export function CreateTransactionForm({
         </div>
 
         <FormField
-          control={form.control}
+          control={control}
           name="note"
           render={({ field }) => (
             <FormItem>
@@ -151,7 +141,7 @@ export function CreateTransactionForm({
         />
 
         <FormField
-          control={form.control}
+          control={control}
           name="date"
           render={({ field }) => (
             <FormItem>

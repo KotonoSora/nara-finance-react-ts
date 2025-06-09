@@ -14,7 +14,6 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { currencies } from "~/database/schema";
 
 type Props = {
   open: boolean;
@@ -22,7 +21,11 @@ type Props = {
   transaction: Transaction | null;
 };
 
-export function EditTransactionModal({ open, onClose, transaction }: Props) {
+export default function EditTransactionModal({
+  open,
+  onClose,
+  transaction,
+}: Props) {
   const { register, handleSubmit, reset } = useForm({
     defaultValues: {
       note: transaction?.note || "",

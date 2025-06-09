@@ -9,7 +9,7 @@ export type Currency = {
 };
 
 const CurrenciesList = ({ currencies }: { currencies: Currency[] }) => {
-  if (currencies.length === 0) {
+  if (!Array.isArray(currencies) || currencies.length === 0) {
     return <GenerateCurrencies />;
   }
 

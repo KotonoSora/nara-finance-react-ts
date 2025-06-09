@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
-
 import { Button } from "~/components/ui/button";
 
 export type Transaction = {
   id: string;
   type: "income" | "expense";
   currency_code: string;
+  currency_symbol?: string;
   amount: number;
   category: string | null;
   note: string | null;
@@ -56,7 +55,10 @@ export default function TransactionsList({
           <div
             className={`text-right ${tx.type === "income" ? "text-green-600" : "text-red-600"}`}
           >
-            <p className="text-lg font-bold">{tx.amount.toLocaleString()}₫</p>
+            <p className="text-lg font-bold">
+              {tx.amount.toLocaleString()}
+              {tx?.currency_symbol || ""}
+            </p>
             <p className="text-sm capitalize">{tx.type}</p>
           </div>
           <Button variant="destructive" onClick={() => handleDelete(tx.id)}>

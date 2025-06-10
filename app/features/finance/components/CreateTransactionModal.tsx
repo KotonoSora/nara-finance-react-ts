@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { Currency } from "./CurrenciesList";
+import type { Currency } from "~/features/finance/domain/types/DataContracts";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -12,7 +12,13 @@ import {
 
 import CreateTransactionForm from "./CreateTransactionForm";
 
-const CreateTransactionModal = ({ currencies }: { currencies: Currency[] }) => {
+interface CreateTransactionModalProps {
+  currencies: Currency[];
+}
+
+const CreateTransactionModal = ({
+  currencies,
+}: CreateTransactionModalProps) => {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>

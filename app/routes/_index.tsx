@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Await } from "react-router";
 
-import type { Currency } from "~/features/finance/components/CurrenciesList";
-import type { Transaction } from "~/features/finance/components/TransactionsList";
+import type {
+  Currency,
+  TransactionApiData,
+} from "~/features/finance/domain/types/DataContracts";
 import type { Route } from "./+types/_index";
 
 import { ModeSwitcher } from "~/components/mode-switcher";
+import { FinanceServicesProvider } from "~/features/finance/application/services/FinanceServices";
 import CreateTransactionModal from "~/features/finance/components/CreateTransactionModal";
 import CurrenciesList from "~/features/finance/components/CurrenciesList";
 import EditTransactionModal from "~/features/finance/components/EditTransactionModal";
@@ -36,7 +39,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     }
 
     const transactionsRes = await fetch(`${origin}/api/transactions`);
-    const transactions: Transaction[] = transactionsRes.ok
+    const transactions: TransactionApiData[] = transactionsRes.ok
       ? await transactionsRes.json()
       : [];
 
@@ -48,42 +51,44 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function Page({ loaderData }: Route.ComponentProps) {
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
+  const [selectedTx, setSelectedTx] = useState<TransactionApiData | null>(null);
 
-  const handleEdit = (tx: Transaction) => {
+  const handleEdit = (tx: TransactionApiData) => {
     setSelectedTx(tx);
     setEditModalOpen(true);
   };
 
   return (
-    <main className="p-6 max-w-2xl mx-auto min-h-svh">
-      <div className="fixed top-4 right-4 z-50">
-        <ModeSwitcher />
-      </div>
-      <div className="space-y-8 p-4">
-        <h1 className="text-xl font-bold">Giao dịch gần đây</h1>
-        <Await
-          errorElement={<div>Error loading data</div>}
-          resolve={loaderData}
-        >
-          {({ currencies, transactions }) => (
-            <>
-              <CurrenciesList currencies={currencies} />
-              <CreateTransactionModal currencies={currencies} />
-              <TransactionsList
-                transactions={transactions}
-                onEdit={handleEdit}
-              />
-              <EditTransactionModal
-                open={editModalOpen}
-                onClose={() => setEditModalOpen(false)}
-                transaction={selectedTx}
-                currencies={currencies}
-              />
-            </>
-          )}
-        </Await>
-      </div>
-    </main>
+    <FinanceServicesProvider>
+      <main className="p-6 max-w-2xl mx-auto min-h-svh">
+        <div className="fixed top-4 right-4 z-50">
+          <ModeSwitcher />
+        </div>
+        <div className="space-y-8 p-4">
+          <h1 className="text-xl font-bold">Giao dịch gần đây</h1>
+          <Await
+            errorElement={<div>Error loading data</div>}
+            resolve={loaderData}
+          >
+            {({ currencies, transactions }) => (
+              <>
+                <CurrenciesList currencies={currencies} />
+                <CreateTransactionModal currencies={currencies} />
+                <TransactionsList
+                  transactions={transactions}
+                  onEdit={handleEdit}
+                />
+                <EditTransactionModal
+                  open={editModalOpen}
+                  onClose={() => setEditModalOpen(false)}
+                  transaction={selectedTx}
+                  currencies={currencies}
+                />
+              </>
+            )}
+          </Await>
+        </div>
+      </main>
+    </FinanceServicesProvider>
   );
 }

@@ -3,8 +3,10 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import type { Currency } from "./CurrenciesList";
-import type { Transaction } from "./TransactionsList";
+import type {
+  Currency,
+  TransactionApiData,
+} from "~/features/finance/domain/types/DataContracts";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -46,13 +48,13 @@ const editTransactionSchema = z.object({
 
 type EditTransactionFormData = z.infer<typeof editTransactionSchema>;
 
-type Props = {
+interface EditTransactionModalProps {
   open: boolean;
   onClose: () => void;
-  transaction: Transaction | null;
+  transaction: TransactionApiData | null;
   categories?: Array<{ id: string; name: string }>;
   currencies: Currency[];
-};
+}
 
 export default function EditTransactionModal({
   open,
@@ -60,7 +62,7 @@ export default function EditTransactionModal({
   transaction,
   categories = [],
   currencies,
-}: Props) {
+}: EditTransactionModalProps) {
   const form = useForm<EditTransactionFormData>({
     resolver: zodResolver(editTransactionSchema),
     defaultValues: {

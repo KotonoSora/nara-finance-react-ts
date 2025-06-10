@@ -1,14 +1,12 @@
+import type { Currency } from "~/features/finance/domain/types/DataContracts";
+
 import GenerateCurrencies from "./GenerateCurrencies";
 
-export type Currency = {
-  code: string;
-  name: string;
-  symbol: string;
-  unit: string;
-  country: string;
-};
+interface CurrenciesListProps {
+  currencies: Currency[];
+}
 
-const CurrenciesList = ({ currencies }: { currencies: Currency[] }) => {
+const CurrenciesList = ({ currencies }: CurrenciesListProps) => {
   if (!Array.isArray(currencies) || currencies.length === 0) {
     return <GenerateCurrencies />;
   }

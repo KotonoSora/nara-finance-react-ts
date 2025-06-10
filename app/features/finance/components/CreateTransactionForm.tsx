@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import type { Currency } from "./CurrenciesList";
+import type { Currency } from "~/features/finance/domain/types/DataContracts";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -22,8 +22,8 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
-
-import { useCreateTransaction } from "../hooks/useCreateTransaction";
+import { useCreateTransaction } from "~/features/finance/application/hooks/useCreateTransaction";
+import { useFinanceServices } from "~/features/finance/application/services/FinanceServices";
 
 // Enhanced validation schema
 const createTransactionSchema = z.object({
@@ -53,6 +53,8 @@ export default function CreateTransactionForm({
   onSuccess,
   categories = [],
 }: CreateTransactionFormProps) {
+  const { createTransactionUseCase } = useFinanceServices();
+
   const form = useForm<CreateTransactionFormData>({
     resolver: zodResolver(createTransactionSchema),
     defaultValues: {
@@ -65,13 +67,25 @@ export default function CreateTransactionForm({
     },
   });
 
-  const { createTransaction, loading } = useCreateTransaction(() => {
-    form.reset();
-    onSuccess();
-  });
+  const { createTransaction, loading } = useCreateTransaction(
+    createTransactionUseCase,
+    {
+      onSuccess: () => {
+        form.reset();
+        onSuccess();
+      },
+    },
+  );
 
   const onSubmit = (data: CreateTransactionFormData) => {
-    createTransaction(data);
+    createTransaction({
+      type: data.type,
+      amount: data.amount,
+      currencyCode: data.currency_code,
+      date: data.date,
+      note: data.note,
+      category: data.category,
+    });
   };
   return (
     <Form {...form}>

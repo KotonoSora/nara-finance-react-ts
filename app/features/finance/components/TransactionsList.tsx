@@ -1,6 +1,8 @@
 import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 
+import type { TransactionApiData } from "~/features/finance/domain/types/DataContracts";
+
 import { Button } from "~/components/ui/button";
 import {
   Pagination,
@@ -19,20 +21,9 @@ import {
   TableRow,
 } from "~/components/ui/table";
 
-export type Transaction = {
-  id: string;
-  type: "income" | "expense";
-  currency_code: string;
-  currency_symbol?: string;
-  amount: number;
-  category: string | null;
-  note: string | null;
-  date: string;
-};
-
 interface TransactionsListProps {
-  onEdit?: (tx: Transaction) => void;
-  transactions: Transaction[];
+  onEdit?: (tx: TransactionApiData) => void;
+  transactions: TransactionApiData[];
   itemsPerPage?: number;
 }
 
@@ -58,10 +49,8 @@ export default function TransactionsList({
       if (!res.ok) throw new Error("Xoá không thành công");
 
       alert("Xoá giao dịch thành công");
-      // Adjust current page if we're on the last page and it becomes empty
-      if (currentTransactions.length === 1 && currentPage > 1) {
-        setCurrentPage(currentPage - 1);
-      }
+      // Reload the page to refresh the data
+      window.location.reload();
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error occurred";

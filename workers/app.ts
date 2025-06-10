@@ -1,7 +1,10 @@
 import { getLoadContext } from "load-context";
 import { createRequestHandler } from "react-router";
 
-import { api, app, book, categories, posts, transactions } from "./api";
+import apiRoute from "./api/common";
+import currenciesRoute from "./api/currencies";
+import appRoute from "./api/setup";
+import transactionsRoute from "./api/transactions";
 
 const requestHandler = createRequestHandler(
   () => import("virtual:react-router/server-build"),
@@ -9,13 +12,11 @@ const requestHandler = createRequestHandler(
 );
 
 // Routes
-api.route("/posts", posts);
-api.route("/book", book);
-api.route("/categories", categories);
-api.route("/transactions", transactions);
-app.route("/api", api);
+apiRoute.route("/currencies", currenciesRoute);
+apiRoute.route("/transactions", transactionsRoute);
+appRoute.route("/api", apiRoute);
 
-app.all("*", async (c) => {
+appRoute.all("*", async (c) => {
   const request = c.req.raw; // Get the raw Request object
   const env = c.env; // Cloudflare environment
   const ctx = c.executionCtx; // Cloudflare execution context
@@ -29,4 +30,4 @@ app.all("*", async (c) => {
   return response;
 });
 
-export default app;
+export default appRoute;

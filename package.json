@@ -23,7 +23,7 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@hookform/resolvers": "5.0.1",
+    "@hookform/resolvers": "5.1.0",
     "@radix-ui/react-accordion": "1.2.11",
     "@radix-ui/react-alert-dialog": "1.1.14",
     "@radix-ui/react-aspect-ratio": "1.1.7",
@@ -57,7 +57,7 @@
     "decimal.js": "10.5.0",
     "drizzle-orm": "~0.40.1",
     "embla-carousel-react": "8.6.0",
-    "framer-motion": "12.12.2",
+    "framer-motion": "12.16.0",
     "hono": "4.7.11",
     "input-otp": "1.4.2",
     "isbot": "5.1.28",
@@ -109,7 +109,7 @@
     "typescript": "5.8.3",
     "vite": "6.3.5",
     "vite-tsconfig-paths": "5.1.4",
-    "vitest": "~3.1.4",
+    "vitest": "3.1.4",
     "wrangler": "4.19.1"
   },
   "engines": {

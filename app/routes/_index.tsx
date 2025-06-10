@@ -78,6 +78,7 @@ export default function Page({ loaderData }: Route.ComponentProps) {
                 open={editModalOpen}
                 onClose={() => setEditModalOpen(false)}
                 transaction={selectedTx}
+                currencies={currencies}
               />
             </>
           )}

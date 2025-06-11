@@ -177,22 +177,24 @@ export default function TransactionsList({
                 <TableCell>
                   {new Date(tx.date).toLocaleDateString("vi-VN")}
                 </TableCell>
-                <TableCell>{tx.category || "Không phân loại"}</TableCell>
+                <TableCell>{tx.category || "Không phân loại"}</TableCell>{" "}
                 <TableCell>
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       tx.type === "income"
-                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                        : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+                        ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300"
+                        : "bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive"
                     }`}
                   >
                     {tx.type === "income" ? "Thu nhập" : "Chi tiêu"}
                   </span>
-                </TableCell>
+                </TableCell>{" "}
                 <TableCell className="text-right">
                   <span
                     className={`font-semibold ${
-                      tx.type === "income" ? "text-green-600" : "text-red-600"
+                      tx.type === "income"
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-destructive"
                     }`}
                   >
                     {tx.type === "income" ? "+" : "-"}

@@ -25,7 +25,6 @@ import { Textarea } from "~/components/ui/textarea";
 import { useCreateTransaction } from "~/features/finance/application/hooks/useCreateTransaction";
 import { useFinanceServices } from "~/features/finance/application/services/FinanceServices";
 
-// Enhanced validation schema
 const createTransactionSchema = z.object({
   type: z.enum(["income", "expense"], {
     required_error: "Vui lòng chọn loại giao dịch",
@@ -101,17 +100,17 @@ export default function CreateTransactionForm({
                   <SelectTrigger>
                     <SelectValue placeholder="Chọn loại giao dịch" />
                   </SelectTrigger>
-                </FormControl>
+                </FormControl>{" "}
                 <SelectContent>
                   <SelectItem value="income">
                     <span className="flex items-center gap-2">
-                      <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                      <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
                       Thu nhập
                     </span>
                   </SelectItem>
                   <SelectItem value="expense">
                     <span className="flex items-center gap-2">
-                      <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                      <span className="w-2 h-2 bg-destructive rounded-full"></span>
                       Chi tiêu
                     </span>
                   </SelectItem>
@@ -123,7 +122,6 @@ export default function CreateTransactionForm({
         />
 
         <div className="grid grid-cols-2 gap-4">
-          {" "}
           <FormField
             control={form.control}
             name="amount"
@@ -139,11 +137,8 @@ export default function CreateTransactionForm({
                     value={field.value || ""}
                     onChange={(e) => {
                       const value = e.target.value;
-                      // Chỉ cho phép số, dấu chấm và dấu phẩy
                       const numericValue = value.replace(/[^0-9.,]/g, "");
-                      // Chuyển dấu phẩy thành dấu chấm
                       const normalizedValue = numericValue.replace(/,/g, ".");
-                      // Đảm bảo chỉ có một dấu chấm
                       const parts = normalizedValue.split(".");
                       const finalValue =
                         parts.length > 2
@@ -154,7 +149,6 @@ export default function CreateTransactionForm({
                       field.onChange(parseFloat(finalValue) || 0);
                     }}
                     onKeyDown={(e) => {
-                      // Ngăn nhập các ký tự không mong muốn
                       const invalidKeys = ["e", "E", "+", "-"];
                       if (invalidKeys.includes(e.key)) {
                         e.preventDefault();

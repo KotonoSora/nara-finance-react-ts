@@ -11,7 +11,7 @@ const app = new Hono<{ Bindings: CloudflareEnvironment }>();
 
 const bodySchema = z.object({
   type: z.enum(["income", "expense"]),
-  amount: z.number().min(1),
+  amount: z.coerce.number().min(0.01, "Amount must be greater than 0"),
   currency_code: z.string().min(1),
   category: z.string().optional(),
   note: z.string().optional(),

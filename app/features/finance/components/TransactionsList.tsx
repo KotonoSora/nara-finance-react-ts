@@ -176,8 +176,8 @@ export default function TransactionsList({
                 </TableCell>
                 <TableCell>
                   {new Date(tx.date).toLocaleDateString("vi-VN")}
-                </TableCell>
-                <TableCell>{tx.category || "Không phân loại"}</TableCell>{" "}
+                </TableCell>{" "}
+                <TableCell>{tx.category || "Không phân loại"}</TableCell>
                 <TableCell>
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -188,7 +188,7 @@ export default function TransactionsList({
                   >
                     {tx.type === "income" ? "Thu nhập" : "Chi tiêu"}
                   </span>
-                </TableCell>{" "}
+                </TableCell>
                 <TableCell className="text-right">
                   <span
                     className={`font-semibold ${

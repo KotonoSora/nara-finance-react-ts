@@ -37,7 +37,7 @@ import { Textarea } from "~/components/ui/textarea";
 // Validation schema
 const editTransactionSchema = z.object({
   note: z.string().min(1, "Ghi chú không được để trống"),
-  amount: z.number().min(0.01, "Số tiền phải lớn hơn 0"),
+  amount: z.coerce.number().min(0.01, "Số tiền phải lớn hơn 0"),
   date: z.string().min(1, "Ngày không được để trống"),
   type: z.enum(["income", "expense"], {
     required_error: "Vui lòng chọn loại giao dịch",

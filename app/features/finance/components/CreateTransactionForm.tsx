@@ -29,7 +29,7 @@ const createTransactionSchema = z.object({
   type: z.enum(["income", "expense"], {
     required_error: "Vui lòng chọn loại giao dịch",
   }),
-  amount: z
+  amount: z.coerce
     .number()
     .positive("Số tiền phải lớn hơn 0")
     .min(0.01, "Số tiền tối thiểu là 0.01"),

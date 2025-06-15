@@ -1,3 +1,5 @@
+import { Decimal } from "decimal.js";
+
 import { Money } from "~/features/finance/domain/value-objects/Money";
 import { TransactionId } from "~/features/finance/domain/value-objects/TransactionId";
 import { TransactionType } from "~/features/finance/domain/value-objects/TransactionType";
@@ -76,13 +78,16 @@ export class Transaction {
   getType(): TransactionType {
     return this.type;
   }
-
   getMoney(): Money {
     return this.money;
   }
 
-  getAmount(): number {
+  getAmount(): Decimal {
     return this.money.getAmount();
+  }
+
+  getAmountAsNumber(): number {
+    return this.money.getAmountAsNumber();
   }
 
   getCurrencyCode(): string {
@@ -138,7 +143,7 @@ export class Transaction {
     category?: string;
   }): Transaction {
     const newMoney = Money.create(
-      params.amount ?? this.money.getAmount(),
+      params.amount ?? this.money.getAmountAsNumber(),
       params.currencyCode ?? this.money.getCurrencyCode(),
     );
 
@@ -153,13 +158,14 @@ export class Transaction {
       new Date(), // Updated timestamp
     );
   }
-
   /**
    * Get transaction impact on balance
    * Positive for income, negative for expense
    */
   getBalanceImpact(): number {
-    return this.isIncome() ? this.money.getAmount() : -this.money.getAmount();
+    return this.isIncome()
+      ? this.money.getAmountAsNumber()
+      : -this.money.getAmountAsNumber();
   }
 
   /**
@@ -179,7 +185,6 @@ export class Transaction {
   isInMonth(year: number, month: number): boolean {
     return this.date.getFullYear() === year && this.date.getMonth() === month;
   }
-
   /**
    * Convert to plain object for serialization
    */
@@ -187,7 +192,7 @@ export class Transaction {
     return {
       id: this.id.getValue(),
       type: this.type,
-      amount: this.money.getAmount(),
+      amount: this.money.getAmountAsNumber(),
       currencyCode: this.money.getCurrencyCode(),
       date: this.date.toISOString(),
       note: this.note,

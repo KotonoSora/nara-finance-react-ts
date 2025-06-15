@@ -25,7 +25,7 @@ export class TransactionRepositoryImpl implements TransactionRepository {
 
     const request: CreateTransactionRequest = {
       type: transaction.getType(),
-      amount: transaction.getAmount(),
+      amount: transaction.getAmountAsNumber(),
       currency_code: transaction.getCurrencyCode(),
       date: dateStr,
       note: transaction.getNote(),
@@ -65,7 +65,7 @@ export class TransactionRepositoryImpl implements TransactionRepository {
 
     const request: UpdateTransactionRequest = {
       type: transaction.getType(),
-      amount: transaction.getAmount(),
+      amount: transaction.getAmountAsNumber(),
       currency_code: transaction.getCurrencyCode(),
       date: dateStr,
       note: transaction.getNote(),

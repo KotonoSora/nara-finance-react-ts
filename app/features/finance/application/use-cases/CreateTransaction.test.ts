@@ -36,10 +36,9 @@ describe("CreateTransactionUseCase", () => {
       (mockRepository.save as any).mockResolvedValue(expectedTransaction);
 
       const result = await useCase.execute(command);
-
       expect(mockRepository.save).toHaveBeenCalledTimes(1);
       expect(result.getType()).toBe(TransactionType.INCOME);
-      expect(result.getAmount()).toBe(1000);
+      expect(result.getAmountAsNumber()).toBe(1000);
       expect(result.getCurrencyCode()).toBe("USD");
       expect(result.getNote()).toBe("Salary payment");
     });

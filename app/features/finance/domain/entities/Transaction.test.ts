@@ -18,9 +18,8 @@ describe("Transaction", () => {
         note: "Salary",
         category: "Work",
       });
-
       expect(transaction.getType()).toBe(TransactionType.INCOME);
-      expect(transaction.getAmount()).toBe(1000);
+      expect(transaction.getAmountAsNumber()).toBe(1000);
       expect(transaction.getCurrencyCode()).toBe("USD");
       expect(transaction.getDate()).toBe(mockDate);
       expect(transaction.getNote()).toBe("Salary");
@@ -37,9 +36,8 @@ describe("Transaction", () => {
         currencyCode: "EUR",
         date: mockDate,
       });
-
       expect(transaction.getType()).toBe(TransactionType.EXPENSE);
-      expect(transaction.getAmount()).toBe(50);
+      expect(transaction.getAmountAsNumber()).toBe(50);
       expect(transaction.getCurrencyCode()).toBe("EUR");
       expect(transaction.getNote()).toBeUndefined();
       expect(transaction.getCategory()).toBeUndefined();
@@ -53,7 +51,7 @@ describe("Transaction", () => {
         date: mockDate,
       });
 
-      expect(transaction.getAmount()).toBe(0);
+      expect(transaction.getAmountAsNumber()).toBe(0);
     });
 
     it("should throw error for negative amount", () => {
@@ -81,10 +79,9 @@ describe("Transaction", () => {
         createdAt: mockCreatedAt,
         updatedAt: mockCreatedAt,
       });
-
       expect(transaction.getId().getValue()).toBe("txn_123");
       expect(transaction.getType()).toBe(TransactionType.EXPENSE);
-      expect(transaction.getAmount()).toBe(75);
+      expect(transaction.getAmountAsNumber()).toBe(75);
       expect(transaction.getCurrencyCode()).toBe("GBP");
       expect(transaction.getCreatedAt()).toBe(mockCreatedAt);
     });
@@ -191,9 +188,8 @@ describe("Transaction", () => {
       const updated = originalTransaction.update({
         type: TransactionType.INCOME,
       });
-
       expect(updated.getType()).toBe(TransactionType.INCOME);
-      expect(updated.getAmount()).toBe(100); // unchanged
+      expect(updated.getAmountAsNumber()).toBe(100); // unchanged
       expect(updated.getId()).toEqual(originalTransaction.getId()); // same ID
       expect(updated.getUpdatedAt()?.getTime()).toBeGreaterThan(
         originalTransaction.getUpdatedAt()?.getTime() || 0,
@@ -205,8 +201,7 @@ describe("Transaction", () => {
         amount: 200,
         currencyCode: "EUR",
       });
-
-      expect(updated.getAmount()).toBe(200);
+      expect(updated.getAmountAsNumber()).toBe(200);
       expect(updated.getCurrencyCode()).toBe("EUR");
     });
 

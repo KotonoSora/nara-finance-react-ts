@@ -6,14 +6,20 @@ describe("Money", () => {
   describe("create", () => {
     it("should create valid Money with positive amount", () => {
       const money = Money.create(100, "USD");
-      expect(money.getAmount()).toBe(100);
+      expect(money.getAmountAsNumber()).toBe(100);
       expect(money.getCurrencyCode()).toBe("USD");
     });
 
     it("should create valid Money with zero amount", () => {
       const money = Money.create(0, "EUR");
-      expect(money.getAmount()).toBe(0);
+      expect(money.getAmountAsNumber()).toBe(0);
       expect(money.getCurrencyCode()).toBe("EUR");
+    });
+
+    it("should create Money with decimal amounts", () => {
+      const money = Money.create(123.45, "USD");
+      expect(money.getAmountAsNumber()).toBe(123.45);
+      expect(money.format()).toBe("USD 123.45");
     });
 
     it("should convert currency code to uppercase", () => {
@@ -44,19 +50,16 @@ describe("Money", () => {
     });
   });
   describe("format", () => {
-    it("should format money correctly", () => {
+    it("should format money correctly with 2 decimal places", () => {
       const money = Money.create(1234.56, "USD");
       const formatted = money.format();
-      expect(formatted).toContain("USD");
-      expect(formatted).toContain("1");
-      expect(formatted).toContain("234");
-      expect(formatted).toContain("56");
+      expect(formatted).toBe("USD 1234.56");
     });
 
     it("should format zero amount", () => {
       const money = Money.create(0, "EUR");
       const formatted = money.format();
-      expect(formatted).toContain("EUR");
+      expect(formatted).toBe("EUR 0.00");
       expect(formatted).toContain("0");
     });
   });
@@ -80,15 +83,23 @@ describe("Money", () => {
       expect(money1.equals(money2)).toBe(false);
     });
   });
-
   describe("add", () => {
     it("should add money with same currency", () => {
       const money1 = Money.create(100, "USD");
       const money2 = Money.create(50, "USD");
       const result = money1.add(money2);
 
-      expect(result.getAmount()).toBe(150);
+      expect(result.getAmountAsNumber()).toBe(150);
       expect(result.getCurrencyCode()).toBe("USD");
+    });
+
+    it("should add decimal amounts correctly", () => {
+      const money1 = Money.create(10.25, "USD");
+      const money2 = Money.create(5.75, "USD");
+      const result = money1.add(money2);
+
+      expect(result.getAmountAsNumber()).toBe(16);
+      expect(result.format()).toBe("USD 16.00");
     });
 
     it("should throw error for different currencies", () => {
@@ -100,15 +111,23 @@ describe("Money", () => {
       );
     });
   });
-
   describe("subtract", () => {
     it("should subtract money with same currency", () => {
       const money1 = Money.create(100, "USD");
       const money2 = Money.create(30, "USD");
       const result = money1.subtract(money2);
 
-      expect(result.getAmount()).toBe(70);
+      expect(result.getAmountAsNumber()).toBe(70);
       expect(result.getCurrencyCode()).toBe("USD");
+    });
+
+    it("should subtract decimal amounts correctly", () => {
+      const money1 = Money.create(25.75, "USD");
+      const money2 = Money.create(10.25, "USD");
+      const result = money1.subtract(money2);
+
+      expect(result.getAmountAsNumber()).toBe(15.5);
+      expect(result.format()).toBe("USD 15.50");
     });
 
     it("should throw error for different currencies", () => {
@@ -119,31 +138,37 @@ describe("Money", () => {
         "Cannot subtract money with different currencies",
       );
     });
-
     it("should allow result to be zero", () => {
       const money1 = Money.create(100, "USD");
       const money2 = Money.create(100, "USD");
       const result = money1.subtract(money2);
 
-      expect(result.getAmount()).toBe(0);
+      expect(result.getAmountAsNumber()).toBe(0);
       expect(result.isZero()).toBe(true);
     });
   });
-
   describe("multiply", () => {
     it("should multiply amount by positive factor", () => {
       const money = Money.create(100, "USD");
       const result = money.multiply(2.5);
 
-      expect(result.getAmount()).toBe(250);
+      expect(result.getAmountAsNumber()).toBe(250);
       expect(result.getCurrencyCode()).toBe("USD");
+    });
+
+    it("should multiply decimal amounts correctly", () => {
+      const money = Money.create(12.5, "USD");
+      const result = money.multiply(3);
+
+      expect(result.getAmountAsNumber()).toBe(37.5);
+      expect(result.format()).toBe("USD 37.50");
     });
 
     it("should multiply by zero", () => {
       const money = Money.create(100, "USD");
       const result = money.multiply(0);
 
-      expect(result.getAmount()).toBe(0);
+      expect(result.getAmountAsNumber()).toBe(0);
       expect(result.isZero()).toBe(true);
     });
 
